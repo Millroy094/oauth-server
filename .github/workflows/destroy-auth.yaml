@@ -1,0 +1,35 @@
+name: Destroy Auth
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Configure AWS Credentials
+        id: aws_credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-west-2
+      - name: Setup Open Tofu
+        uses: opentofu/setup-opentofu@v1
+      - name: Destroy Auth Lambda
+        working-directory: "./infra/backend"
+        run: |
+          tofu init --backend-config="bucket=${{vars.AWS_TERRAFORM_STATE_BUCKET_NAME}}" --backend-config="key=${{vars.AWS_TERRAFORM_STATE_KEY}}.tfstate"
+          tofu destroy -auto-approve
+        env:
+          TF_VAR_aws_account_id: "${{secrets.AWS_ACCOUNT_ID}}"
+          TF_VAR_aws_access_key: "${{secrets.AWS_ACCESS_KEY_ID}}"
+          TF_VAR_aws_secret_key: "${{secrets.AWS_SECRET_ACCESS_KEY}}"
+          TF_VAR_keycloak_auth_server_url: "${{vars.KEYCLOAK_AUTH_SERVER_URL}}"
+          TF_VAR_keycloak_realm: "${{vars.KEYCLOAK_REALM}}"
+          TF_VAR_keycloak_client_id: "${{vars.KEYCLOAK_CLIENT_ID}}"
+          TF_VAR_keycloak_client_secret: "${{vars.KEYCLOAK_CLIENT_SECRET}}"
+          TF_VAR_keycloak_admin_client_id: "${{vars.KEYCLOAK_ADMIN_CLIENT_ID}}"
+          TF_VAR_keycloak_admin_client_secret: "${{vars.KEYCLOAK_ADMIN_CLIENT_SECRET}}"
