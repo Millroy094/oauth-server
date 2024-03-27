@@ -4,7 +4,7 @@ resource "aws_apigatewayv2_api" "auth_api_gw" {
 }
 
 resource "aws_cloudwatch_log_group" "auth_api_gw_log_group" {
-  name = "/aws/api-gw/${aws_apigatewayv2_api.main.name}"
+  name = "/aws/api-gw/${aws_apigatewayv2_api.auth_api_gw.name}"
 
   retention_in_days = 30
 }
