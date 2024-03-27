@@ -1,52 +1,65 @@
-resource "aws_api_gateway_rest_api" "auth_rest_api" {
-  name = "auth-api"
+resource "aws_apigatewayv2_api" "auth_api_gw" {
+  name          = "auth-api"
+  protocol_type = "HTTP"
 }
 
-resource "aws_api_gateway_resource" "auth_rest_api_resource" {
-  rest_api_id = aws_api_gateway_rest_api.auth_rest_api.id
-  parent_id   = aws_api_gateway_rest_api.auth_rest_api.root_resource_id
-  path_part   = var.endpoint_path
+resource "aws_cloudwatch_log_group" "auth_api_gw_log_group" {
+  name = "/aws/api-gw/${aws_apigatewayv2_api.main.name}"
+
+  retention_in_days = 30
 }
 
-resource "aws_api_gateway_method" "auth_rest_api_method" {
-  rest_api_id   = aws_api_gateway_rest_api.auth_rest_api.id
-  resource_id   = aws_api_gateway_resource.auth_rest_api_resource.id
-  http_method   = "GET"
-  authorization = "NONE"
+resource "aws_apigatewayv2_stage" "auth_api_gw_dev_stage" {
+  api_id = aws_apigatewayv2_api.auth_api_gw.id
+
+  name        = "dev"
+  auto_deploy = true
+
+  access_log_settings {
+    destination_arn = aws_cloudwatch_log_group.auth_api_gw_log_group.arn
+
+    format = jsonencode({
+      requestId               = "$context.requestId"
+      sourceIp                = "$context.identity.sourceIp"
+      requestTime             = "$context.requestTime"
+      protocol                = "$context.protocol"
+      httpMethod              = "$context.httpMethod"
+      resourcePath            = "$context.resourcePath"
+      routeKey                = "$context.routeKey"
+      status                  = "$context.status"
+      responseLength          = "$context.responseLength"
+      integrationErrorMessage = "$context.integrationErrorMessage"
+      }
+    )
+  }
 }
 
-resource "aws_api_gateway_integration" "auth_rest_api_integration" {
-  rest_api_id             = aws_api_gateway_rest_api.auth_rest_api.id
-  resource_id             = aws_api_gateway_resource.auth_rest_api_resource.id
-  http_method             = aws_api_gateway_method.auth_rest_api_method.http_method
-  integration_http_method = "POST"
-  type                    = "AWS_PROXY"
-  uri                     = var.auth_lambda_invoke_arn
+resource "aws_apigatewayv2_integration" "auth_api_gw_handler" {
+  api_id = aws_apigatewayv2_api.auth_api_gw.id
+
+  integration_type = "AWS_PROXY"
+  integration_uri  = var.auth_lambda_invoke_arn
 }
 
-resource "aws_lambda_permission" "apigw_lambda_permission" {
-  statement_id  = "AllowExcecumentFromAPIGateway"
+resource "aws_apigatewayv2_route" "auth_login_route" {
+  api_id    = aws_apigatewayv2_api.auth_api_gw.id
+  route_key = "POST /login"
+
+  target = "integrations/${aws_apigatewayv2_integration.auth_api_gw_handler.id}"
+}
+
+resource "aws_apigatewayv2_route" "auth_register_route" {
+  api_id    = aws_apigatewayv2_api.auth_api_gw.id
+  route_key = "POST /register"
+
+  target = "integrations/${aws_apigatewayv2_integration.auth_api_gw_handler.id}"
+}
+
+resource "aws_lambda_permission" "auth_api_gw_lambda_permission" {
+  statement_id  = "AllowExecutionFromAPIGateway"
   action        = "lambda:InvokeFunction"
   function_name = var.auth_lambda_function_name
   principal     = "apigateway.amazonaws.com"
-  source_arn    = "arn:aws:execute-api:${var.aws_region}:${var.aws_account_id}:${aws_api_gateway_rest_api.auth_rest_api.id}/*/${aws_api_gateway_method.auth_rest_api_method.http_method}${aws_api_gateway_resource.auth_rest_api_resource.path}"
-}
 
-resource "aws_api_gateway_deployment" "auth_api_gateway_deployment" {
-  rest_api_id = aws_api_gateway_rest_api.auth_rest_api.id
-  # triggers = {
-  #   redeployment = sha1(jsondecode((aws_api_gateway_rest_api.auth_rest_api.body)))
-  # }
-
-  lifecycle {
-    create_before_destroy = true
-  }
-
-  depends_on = [aws_api_gateway_method.auth_rest_api_method, aws_api_gateway_integration.auth_rest_api_integration]
-}
-
-resource "aws_api_gateway_stage" "auth_rest_api_gateway_stage" {
-  deployment_id = aws_api_gateway_deployment.auth_api_gateway_deployment.id
-  rest_api_id   = aws_api_gateway_rest_api.auth_rest_api.id
-  stage_name    = "dev"
+  source_arn = "${aws_apigatewayv2_api.auth_api_gw.execution_arn}/*/*"
 }

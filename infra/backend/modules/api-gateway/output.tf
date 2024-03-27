@@ -1,3 +1,3 @@
 output "endpoint_url" {
-  value = "${aws_api_gateway_stage.auth_rest_api_gateway_stage.invoke_url}/${var.endpoint_path}"
+  value = aws_apigatewayv2_stage.auth_api_gw_dev_stage.invoke_url
 }

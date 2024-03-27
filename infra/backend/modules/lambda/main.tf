@@ -30,6 +30,31 @@ data "archive_file" "archive_auth_lambda" {
   depends_on = [null_resource.lambda_package_build]
 }
 
+resource "random_pet" "lambda_bucket_name" {
+  prefix = "lambda"
+  length = 2
+}
+
+resource "aws_s3_bucket" "lambda_bucket" {
+  bucket        = random_pet.lambda_bucket_name.id
+  force_destroy = true
+}
+
+resource "aws_s3_bucket_public_access_block" "lambda_bucket" {
+  bucket = aws_s3_bucket.lambda_bucket.id
+
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+}
+
+resource "aws_s3_object" "auth_lambda_code_s3_object" {
+  bucket = aws_s3_bucket.lambda_bucket.id
+  key    = "auth-lambda.zip"
+  source = data.archive_file.archive_auth_lambda.output_path
+  etag   = filemd5(data.archive_file.archive_auth_lambda.output_path)
+}
 
 resource "aws_cloudwatch_log_group" "lambda_logs" {
   name = "/aws/lambda/${aws_lambda_function.auth_lambda_function.function_name}"
@@ -63,7 +88,9 @@ resource "aws_iam_role_policy_attachment" "auth_lambda_policy" {
 resource "aws_lambda_function" "auth_lambda_function" {
   function_name = "auth"
 
-  filename         = data.archive_file.archive_auth_lambda.output_path
+  s3_bucket = aws_s3_bucket.lambda_bucket.id
+  s3_key    = aws_s3_object.auth_lambda_code_s3_object.key
+
   source_code_hash = data.archive_file.archive_auth_lambda.output_base64sha256
 
   runtime = "nodejs20.x"
