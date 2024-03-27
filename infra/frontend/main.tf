@@ -9,7 +9,7 @@ resource "null_resource" "website_package_build" {
 
   provisioner "local-exec" {
     command = <<EOT
-      SOURCE_DIR="${path.module}/../../../../packages/frontend"
+      SOURCE_DIR="${path.module}/../../../packages/frontend"
 
       (cd $SOURCE_DIR && npm ci && npm run build && npm prune --production)
       (cp "$SOURCE_DIR/package.json" "$SOURCE_DIR/build")
@@ -24,8 +24,8 @@ resource "null_resource" "website_package_build" {
 
 data "archive_file" "archive_auth_website" {
   type        = "zip"
-  source_dir  = "${path.module}/../../../../packages/frontend/build"
-  output_path = "${path.module}/../../../../packages/frontend/auth-react_${local.timestamp_suffix}.zip"
+  source_dir  = "${path.module}/../../../packages/frontend/build"
+  output_path = "${path.module}/../../../packages/frontend/auth-react_${local.timestamp_suffix}.zip"
 
   depends_on = [null_resource.website_package_build]
 }
