@@ -36,7 +36,7 @@ resource "random_pet" "auth_website_bucket_name" {
 }
 
 resource "aws_s3_bucket" "auth_website_bucket" {
-  bucket        = random_pet.react_auth_bucket_name.id
+  bucket        = random_pet.auth_website_bucket_name.id
   force_destroy = true
 }
 
