@@ -12,9 +12,9 @@ resource "null_resource" "website_package_build" {
       SOURCE_DIR="${path.module}/../../packages/frontend"
 
       (cd $SOURCE_DIR && npm ci && npm run build)
-      (cp "$SOURCE_DIR/package.json" "$SOURCE_DIR/build")
-      (cp "$SOURCE_DIR/package-lock.json" "$SOURCE_DIR/build")
-      (cd "$SOURCE_DIR/build" && echo "REACT_APP_API_ENDPOINT=${var.auth_lambda_url}" >> .env)
+      (cp "$SOURCE_DIR/package.json" "$SOURCE_DIR/dist")
+      (cp "$SOURCE_DIR/package-lock.json" "$SOURCE_DIR/dist")
+      (cd "$SOURCE_DIR/dist" && echo "REACT_APP_API_ENDPOINT=${var.auth_lambda_url}" >> .env)
 
     EOT
   }
@@ -23,7 +23,7 @@ resource "null_resource" "website_package_build" {
 
 data "archive_file" "archive_auth_website" {
   type        = "zip"
-  source_dir  = "${path.module}/../../packages/frontend/build"
+  source_dir  = "${path.module}/../../packages/frontend/dist"
   output_path = "${path.module}/../../packages/frontend/auth-react_${local.timestamp_suffix}.zip"
 
   depends_on = [null_resource.website_package_build]
