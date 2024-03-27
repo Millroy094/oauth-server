@@ -10,7 +10,7 @@ resource "null_resource" "website_package_build" {
   provisioner "local-exec" {
     command = <<EOT
       SOURCE_DIR="${path.module}/../../packages/frontend"
-      cd $SOURCE_DIR && echo "REACT_APP_API_ENDPOINT=${var.auth_lambda_url}" >> .env && npm ci && npm run build
+      cd $SOURCE_DIR && echo "REACT_APP_API_ENDPOINT=${var.auth_lambda_url}" >> .env && npm i && npm run build
     EOT
   }
 
@@ -77,5 +77,14 @@ resource "aws_s3_bucket_website_configuration" "auth_website_configuration" {
 resource "aws_s3_bucket_acl" "auth_website_bucket_acl" {
   bucket = aws_s3_bucket.auth_website_bucket.id
   acl    = "public-read"
+}
 
+
+resource "aws_s3_bucket_public_access_block" "lambda_bucket" {
+  bucket = aws_s3_bucket.auth_website_bucket.id
+
+  block_public_acls       = false
+  block_public_policy     = false
+  ignore_public_acls      = false
+  restrict_public_buckets = false
 }
