@@ -11,7 +11,7 @@ resource "null_resource" "website_package_build" {
     command = <<EOT
       SOURCE_DIR="${path.module}/../../packages/frontend"
 
-      (cd $SOURCE_DIR && npm ci && npm run build && npm prune --production)
+      (cd $SOURCE_DIR && npm ci && npm run build)
       (cp "$SOURCE_DIR/package.json" "$SOURCE_DIR/build")
       (cp "$SOURCE_DIR/package-lock.json" "$SOURCE_DIR/build")
       (cd "$SOURCE_DIR/build" && echo "REACT_APP_API_ENDPOINT=${var.auth_lambda_url}" >> .env)
