@@ -46,7 +46,8 @@ export const handler: Handler = async (
     };
 
     return response;
-  } catch (err) {
+  } catch (err: any) {
     console.log(err);
+    return { statusCode: 401, body: err.message };
   }
 };
