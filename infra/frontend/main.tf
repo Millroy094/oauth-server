@@ -49,7 +49,6 @@ resource "aws_s3_bucket_policy" "auth_website_bucket_policy" {
         "Version": "2012-10-17",
         "Statement": [
             {
-                "$id": "react_auth_bucket_policy",
                 "Action": [
                     "s3:getObject"
                 ],
