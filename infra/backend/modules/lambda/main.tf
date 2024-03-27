@@ -2,7 +2,6 @@ locals {
   timestamp_suffix = timestamp()
 }
 
-# Use local-exec provisioner to zip TypeScript code and upload
 resource "null_resource" "lambda_package_build" {
   triggers = {
     always_run = "${timestamp()}"
