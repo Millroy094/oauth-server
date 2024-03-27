@@ -18,13 +18,12 @@ jobs:
           aws-region: us-west-2
       - name: Setup Open Tofu
         uses: opentofu/setup-opentofu@v1
-      - name: Provision auth lambda
-        working-directory: "./infra/backend"
+      - name: Provision auth lambda & website
+        working-directory: "./infra"
         run: |
           tofu init --backend-config="bucket=${{vars.AWS_TERRAFORM_STATE_BUCKET_NAME}}" --backend-config="key=${{vars.AWS_TERRAFORM_STATE_KEY}}.tfstate"
           tofu apply -auto-approve
         env:
-          TF_VAR_aws_account_id: "${{secrets.AWS_ACCOUNT_ID}}"
           TF_VAR_aws_access_key: "${{secrets.AWS_ACCESS_KEY_ID}}"
           TF_VAR_aws_secret_key: "${{secrets.AWS_SECRET_ACCESS_KEY}}"
           TF_VAR_keycloak_auth_server_url: "${{vars.KEYCLOAK_AUTH_SERVER_URL}}"
