@@ -9,12 +9,11 @@ resource "null_resource" "website_package_build" {
 
   provisioner "local-exec" {
     command = <<EOT
-      SOURCE_DIR="${path.module}/../../../packages/frontend"
+      SOURCE_DIR="${path.module}/../../packages/frontend"
 
       (cd $SOURCE_DIR && npm ci && npm run build && npm prune --production)
       (cp "$SOURCE_DIR/package.json" "$SOURCE_DIR/build")
       (cp "$SOURCE_DIR/package-lock.json" "$SOURCE_DIR/build")
-      (cd "$SOURCE_DIR/build" && npm ci --production && npm prune --production)
       (cd "$SOURCE_DIR/build" && echo "REACT_APP_API_ENDPOINT=${var.auth_lambda_url}" >> .env)
 
     EOT
@@ -24,8 +23,8 @@ resource "null_resource" "website_package_build" {
 
 data "archive_file" "archive_auth_website" {
   type        = "zip"
-  source_dir  = "${path.module}/../../../packages/frontend/build"
-  output_path = "${path.module}/../../../packages/frontend/auth-react_${local.timestamp_suffix}.zip"
+  source_dir  = "${path.module}/../../packages/frontend/build"
+  output_path = "${path.module}/../../packages/frontend/auth-react_${local.timestamp_suffix}.zip"
 
   depends_on = [null_resource.website_package_build]
 }
@@ -52,7 +51,6 @@ resource "aws_s3_bucket_policy" "auth_website_bucket_policy" {
   bucket = aws_s3_bucket.auth_website_bucket.id
   policy = <<EOF
   {
-        "id": "react_auth_bucket_policy",
         "Version": "2012-10-17",
         "Statement": [
             {
