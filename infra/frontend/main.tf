@@ -33,9 +33,17 @@ resource "aws_s3_bucket_policy" "auth_website_bucket_policy" {
         "Statement": [
             {
                 "Sid": "PublicReadGetObject",
-                "Action": "s3:GetObject",
+                "Action": [
+                  "s3:GetObject",
+                  "s3:PutObject",
+                  "s3:PutBucketAcl",
+                  "s3:PutBucketPolicy"
+                ]
                 "Effect": "Allow",
-                "Resource": "arn:aws:s3:::${aws_s3_bucket.auth_website_bucket.bucket}/*",
+                "Resource": [
+                  "arn:aws:s3:::${aws_s3_bucket.auth_website_bucket.bucket}",
+                  "arn:aws:s3:::${aws_s3_bucket.auth_website_bucket.bucket}/*"
+                  ]
                 "Principal": "*"
             }
         ]
