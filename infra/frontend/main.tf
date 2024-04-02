@@ -49,8 +49,12 @@ resource "aws_s3_bucket_policy" "auth_website_bucket_policy" {
       Sid       = "PublicReadGetObject"
       Effect    = "Allow"
       Principal = "*"
-      Action    = "s3:GetObject"
-      Resource  = "${aws_s3_bucket.auth_website_bucket.arn}/*"
+      Action = [
+        "s3:GetObject",
+        "s3:PutBucketAcl",
+        "s3:PutBucketPolicy"
+      ]
+      Resource = ["${aws_s3_bucket.auth_website_bucket.arn}/*", "${aws_s3_bucket.auth_website_bucket.arn}"]
     }]
   })
 }
