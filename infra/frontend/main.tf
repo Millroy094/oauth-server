@@ -17,3 +17,19 @@ resource "aws_s3_object" "auth_website_code_s3_object" {
   key    = "auth-website"
   source = "${path.module}/../../packages/frontend/dist"
 }
+
+resource "aws_s3_bucket_acl" "auth_website_bucket_acl" {
+  bucket = aws_s3_bucket.auth_website_bucket.id
+  acl    = "public-read"
+}
+
+resource "aws_s3_bucket_website_configuration" "auth_website_code_s3_configuration" {
+
+  bucket = aws_s3_bucket.auth_website_bucket.id
+  index_document {
+    suffix = "index.html"
+  }
+  error_document {
+    key = "index.html"
+  }
+}
