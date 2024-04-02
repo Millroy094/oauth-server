@@ -1,5 +1,3 @@
 .vscode
 node_modules
-./packages/*/node_modules
-./packages/backend/build
 *.env
