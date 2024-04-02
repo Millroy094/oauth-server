@@ -52,7 +52,7 @@ resource "aws_s3_bucket_policy" "auth_website_bucket_policy" {
                 "Sid": "PublicReadGetObject",
                 "Action": [
                     "s3:GetObject",
-                    "s3:PutObject",
+                    "s3:PutBucketPolicy"
                 ],
                 "Effect": "Allow",
                 "Resource": "arn:aws:s3:::${random_pet.auth_website_bucket_name.id}/*",
