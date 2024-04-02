@@ -2,31 +2,10 @@ locals {
   timestamp_suffix = timestamp()
 }
 
-resource "null_resource" "lambda_package_build" {
-  triggers = {
-    always_run = "${timestamp()}"
-  }
-
-  provisioner "local-exec" {
-    command = <<EOT
-      SOURCE_DIR="${path.module}/../../../../packages/backend"
-
-      (cd $SOURCE_DIR && npm ci && npm run build && npm prune --production)
-      (cp "$SOURCE_DIR/package.json" "$SOURCE_DIR/build")
-      (cp "$SOURCE_DIR/package-lock.json" "$SOURCE_DIR/build")
-      (cd "$SOURCE_DIR/build" && npm ci --production && npm prune --production) 
-
-    EOT
-  }
-
-}
-
 data "archive_file" "archive_auth_lambda" {
   type        = "zip"
   source_dir  = "${path.module}/../../../../packages/backend/build"
   output_path = "${path.module}/../../../../packages/backend/auth-lambda_${local.timestamp_suffix}.zip"
-
-  depends_on = [null_resource.lambda_package_build]
 }
 
 resource "random_pet" "lambda_bucket_name" {

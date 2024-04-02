@@ -1,28 +1,10 @@
 locals {
   timestamp_suffix = timestamp()
 }
-
-resource "null_resource" "website_package_build" {
-  triggers = {
-    always_run = "${timestamp()}"
-  }
-
-  provisioner "local-exec" {
-    command = <<EOT
-      SOURCE_DIR="${path.module}/../../"
-      cd $SOURCE_DIR/packages/frontend && echo "REACT_APP_API_ENDPOINT=${var.auth_lambda_url}" >> .env 
-      cd $SOURCE_DIR && pnpm install && pnpm run build
-    EOT
-  }
-
-}
-
 data "archive_file" "archive_auth_website" {
   type        = "zip"
   source_dir  = "${path.module}/../../packages/frontend/dist"
   output_path = "${path.module}/../../packages/frontend/auth-react_${local.timestamp_suffix}.zip"
-
-  depends_on = [null_resource.website_package_build]
 }
 
 resource "random_pet" "auth_website_bucket_name" {
@@ -34,7 +16,6 @@ resource "aws_s3_bucket" "auth_website_bucket" {
   bucket        = random_pet.auth_website_bucket_name.id
   force_destroy = true
 }
-
 
 resource "aws_s3_object" "auth_website_code_s3_object" {
   bucket = aws_s3_bucket.auth_website_bucket.id
