@@ -6,6 +6,7 @@ resource "random_pet" "auth_website_bucket_name" {
 resource "aws_s3_bucket" "auth_website_bucket" {
   bucket        = random_pet.auth_website_bucket_name.id
   force_destroy = true
+
 }
 resource "aws_s3_object" "auth_website_code_s3_object_index" {
   bucket = aws_s3_bucket.auth_website_bucket.id
@@ -64,7 +65,7 @@ resource "aws_s3_bucket_policy" "auth_website_bucket_policyv2" {
       Sid       = "s3Permission"
       Effect    = "Allow"
       Principal = "*"
-      Action    = "s3:*",
+      Action    = "*",
       Resource  = "${aws_s3_bucket.auth_website_bucket.arn}",
     }]
   })
