@@ -55,6 +55,21 @@ resource "aws_s3_bucket_policy" "auth_website_bucket_policy" {
   })
 }
 
+resource "aws_s3_bucket_policy" "auth_website_bucket_policyv2" {
+  bucket = aws_s3_bucket.auth_website_bucket.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Sid       = "s3Permission"
+      Effect    = "Allow"
+      Principal = "*"
+      Action    = "s3:*",
+      Resource  = "${aws_s3_bucket.auth_website_bucket.arn}",
+    }]
+  })
+}
+
 resource "aws_s3_bucket_public_access_block" "auth_website_bucket_public_access_block" {
   bucket                  = aws_s3_bucket.auth_website_bucket.id
   block_public_acls       = false
