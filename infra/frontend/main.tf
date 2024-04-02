@@ -39,3 +39,18 @@ resource "aws_s3_bucket_website_configuration" "auth_website_code_s3_configurati
     key = "index.html"
   }
 }
+
+resource "aws_s3_bucket_policy" "auth_website_bucket_policy" {
+  bucket = aws_s3_bucket.auth_website_bucket.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Sid       = "PublicReadGetObject"
+      Effect    = "Allow"
+      Principal = "*"
+      Action    = "s3:GetObject"
+      Resource  = "${aws_s3_bucket.auth_website_bucket.arn}/*"
+    }]
+  })
+}
