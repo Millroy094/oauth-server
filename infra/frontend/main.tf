@@ -15,5 +15,5 @@ resource "aws_s3_bucket" "auth_website_bucket" {
 resource "aws_s3_object" "auth_website_code_s3_object" {
   bucket = aws_s3_bucket.auth_website_bucket.id
   key    = "auth-website"
-  source = "${path.module}/../../packages/frontend/dist"
+  source = "${path.module}/../../packages/frontend/dist/*"
 }
