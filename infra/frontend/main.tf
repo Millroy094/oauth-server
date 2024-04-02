@@ -82,6 +82,6 @@ resource "aws_s3_bucket_ownership_controls" "mybucket" {
   bucket = aws_s3_bucket.auth_website_bucket.id
 
   rule {
-    object_ownership = "BucketOwnerEnforced"
+    object_ownership = "ObjectWriter"
   }
 }
