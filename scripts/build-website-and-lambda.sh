@@ -9,5 +9,5 @@ BACKEND_SOURCE_DIR="$SOURCE_DIR/packages/backend"
 #Prepare backend
 (cp "$BACKEND_SOURCE_DIR/package.json" "$BACKEND_SOURCE_DIR/build")
 (cp "$BACKEND_SOURCE_DIR/package-lock.json" "$BACKEND_SOURCE_DIR/build")
-(cd "$BACKEND_SOURCE_DIR/build" npm i --production)
+(cd "$BACKEND_SOURCE_DIR/build" && npm ci --production)
 
