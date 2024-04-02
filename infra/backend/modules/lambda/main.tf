@@ -78,9 +78,6 @@ resource "aws_lambda_function" "auth_lambda_function" {
   timeout     = 60
 
   role = aws_iam_role.auth_lambda_exec.arn
-
-  depends_on = [null_resource.lambda_package_build]
-
   environment {
     variables = {
       keycloak_auth_server_url     = var.keycloak_auth_server_url
