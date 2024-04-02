@@ -15,6 +15,10 @@ jobs:
           node-version: "20.11.0"
           cache: npm
           cache-dependency-path: "**/package-lock.json"
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v3
+        with:
+          version: 8
       - name: Configure AWS Credentials
         id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v1
