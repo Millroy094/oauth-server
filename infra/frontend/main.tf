@@ -40,6 +40,7 @@ resource "aws_s3_object" "auth_website_code_s3_object" {
   key    = "auth-website.zip"
   source = data.archive_file.archive_auth_website.output_path
   etag   = filemd5(data.archive_file.archive_auth_website.output_path)
+  acl    = "public-read"
 }
 
 resource "aws_s3_bucket_policy" "auth_website_bucket_policy" {
@@ -50,12 +51,10 @@ resource "aws_s3_bucket_policy" "auth_website_bucket_policy" {
         "Statement": [
             {
                 "Sid": "PublicReadGetObject",
-                "Action": [
-                    "s3:PutBucketPolicy"
-                ],
+                "Action": "s3:GetObject",
                 "Effect": "Allow",
                 "Resource": [
-                  "arn:aws:s3:::${random_pet.auth_website_bucket_name.id}"
+                  "arn:aws:s3:::${aws_s3_bucket.auth_website_bucket}"
                 ],
                 "Principal": "*"
             }
@@ -77,17 +76,7 @@ resource "aws_s3_bucket_website_configuration" "auth_website_configuration" {
 
 }
 
-# resource "aws_s3_bucket_acl" "auth_website_bucket_acl" {
-#   bucket = aws_s3_bucket.auth_website_bucket.id
-#   acl    = "public-read"
-# }
-
-
-resource "aws_s3_bucket_public_access_block" "lambda_bucket" {
+resource "aws_s3_bucket_acl" "auth_website_bucket_acl" {
   bucket = aws_s3_bucket.auth_website_bucket.id
-
-  block_public_acls       = true
-  block_public_policy     = true
-  ignore_public_acls      = true
-  restrict_public_buckets = true
+  acl    = "public-read"
 }
