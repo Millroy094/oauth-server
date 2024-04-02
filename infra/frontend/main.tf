@@ -56,28 +56,28 @@ resource "aws_s3_bucket_policy" "auth_website_bucket_policy" {
   })
 }
 
-resource "aws_s3_bucket_policy" "auth_website_bucket_policyv2" {
-  bucket = aws_s3_bucket.auth_website_bucket.id
+# resource "aws_s3_bucket_policy" "auth_website_bucket_policyv2" {
+#   bucket = aws_s3_bucket.auth_website_bucket.id
 
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [{
-      Sid       = "s3Permission"
-      Effect    = "Allow"
-      Principal = "*"
-      Action    = "*",
-      Resource  = "${aws_s3_bucket.auth_website_bucket.arn}",
-    }]
-  })
-}
+#   policy = jsonencode({
+#     Version = "2012-10-17"
+#     Statement = [{
+#       Sid       = "s3Permission"
+#       Effect    = "Allow"
+#       Principal = "*"
+#       Action    = "*",
+#       Resource  = "${aws_s3_bucket.auth_website_bucket.arn}",
+#     }]
+#   })
+# }
 
-resource "aws_s3_bucket_public_access_block" "auth_website_bucket_public_access_block" {
-  bucket                  = aws_s3_bucket.auth_website_bucket.id
-  block_public_acls       = false
-  block_public_policy     = false
-  ignore_public_acls      = false
-  restrict_public_buckets = false
-}
+# resource "aws_s3_bucket_public_access_block" "auth_website_bucket_public_access_block" {
+#   bucket                  = aws_s3_bucket.auth_website_bucket.id
+#   block_public_acls       = false
+#   block_public_policy     = false
+#   ignore_public_acls      = false
+#   restrict_public_buckets = false
+# }
 
 resource "aws_s3_bucket_ownership_controls" "mybucket" {
   bucket = aws_s3_bucket.auth_website_bucket.id
