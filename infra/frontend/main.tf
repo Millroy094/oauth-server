@@ -54,3 +54,10 @@ resource "aws_s3_bucket_policy" "auth_website_bucket_policy" {
     }]
   })
 }
+
+resource "aws_s3_account_public_access_block" "auth_website_bucket_public_access_block" {
+  block_public_acls       = false
+  block_public_policy     = false
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+}
