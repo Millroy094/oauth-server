@@ -10,7 +10,7 @@ resource "null_resource" "website_package_build" {
   provisioner "local-exec" {
     command = <<EOT
       SOURCE_DIR="${path.module}/../../packages/frontend"
-      cd $SOURCE_DIR && echo "REACT_APP_API_ENDPOINT=${var.auth_lambda_url}" >> .env && npm i && npm run build
+      cd $SOURCE_DIR && echo "REACT_APP_API_ENDPOINT=${var.auth_lambda_url}" >> .env && npm ci && npm run build
     EOT
   }
 
@@ -55,7 +55,10 @@ resource "aws_s3_bucket_policy" "auth_website_bucket_policy" {
                     "s3:PutBucketPolicy"
                 ],
                 "Effect": "Allow",
-                "Resource": "arn:aws:s3:::${random_pet.auth_website_bucket_name.id}/*",
+                "Resource": [
+                  "arn:aws:s3:::${random_pet.auth_website_bucket_name.id}", 
+                  "arn:aws:s3:::${random_pet.auth_website_bucket_name.id}/*"
+                ],
                 "Principal": "*"
             }
         ]
