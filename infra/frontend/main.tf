@@ -29,6 +29,7 @@ resource "aws_s3_object" "auth_website_code_s3_object_asset" {
 resource "aws_s3_bucket_acl" "auth_website_bucket_acl" {
   bucket = aws_s3_bucket.auth_website_bucket.id
   acl    = "public-read"
+  depends_on = [ aws_s3_bucket_public_access_block.auth_website_bucket_public_access_block, aws_s3_bucket_policy.auth_website_bucket_policy,   ]
 }
 
 resource "aws_s3_bucket_website_configuration" "auth_website_code_s3_configuration" {
@@ -54,6 +55,8 @@ resource "aws_s3_bucket_policy" "auth_website_bucket_policy" {
       Resource  = "${aws_s3_bucket.auth_website_bucket.arn}/*",
     }]
   })
+
+  depends_on = [ aws_s3_bucket_public_access_block.auth_website_bucket_public_access_block ]
 }
 
 # resource "aws_s3_bucket_policy" "auth_website_bucket_policyv2" {
@@ -71,18 +74,18 @@ resource "aws_s3_bucket_policy" "auth_website_bucket_policy" {
 #   })
 # }
 
-# resource "aws_s3_bucket_public_access_block" "auth_website_bucket_public_access_block" {
-#   bucket                  = aws_s3_bucket.auth_website_bucket.id
-#   block_public_acls       = false
-#   block_public_policy     = false
-#   ignore_public_acls      = false
-#   restrict_public_buckets = false
-# }
-
-resource "aws_s3_bucket_ownership_controls" "mybucket" {
-  bucket = aws_s3_bucket.auth_website_bucket.id
-
-  rule {
-    object_ownership = "ObjectWriter"
-  }
+resource "aws_s3_bucket_public_access_block" "auth_website_bucket_public_access_block" {
+  bucket                  = aws_s3_bucket.auth_website_bucket.id
+  block_public_acls       = false
+  block_public_policy     = false
+  ignore_public_acls      = false
+  restrict_public_buckets = false
 }
+
+# resource "aws_s3_bucket_ownership_controls" "mybucket" {
+#   bucket = aws_s3_bucket.auth_website_bucket.id
+
+#   rule {
+#     object_ownership = "ObjectWriter"
+#   }
+# }
