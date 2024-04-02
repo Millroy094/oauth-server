@@ -65,7 +65,10 @@ resource "aws_s3_bucket_policy" "auth_website_bucket_policyv2" {
       Sid       = "s3Permission"
       Effect    = "Allow"
       Principal = "*"
-      Action    = "s3:GetBucketAcl",
+      Action    = [
+        "s3:PutBucketPolicy",
+        "s3:GetBucketAcl"
+      ],
       Resource  = "${aws_s3_bucket.auth_website_bucket.arn}",
     }]
   })
