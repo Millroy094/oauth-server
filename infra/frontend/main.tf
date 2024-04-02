@@ -77,3 +77,11 @@ resource "aws_s3_bucket_public_access_block" "auth_website_bucket_public_access_
   ignore_public_acls      = false
   restrict_public_buckets = false
 }
+
+resource "aws_s3_bucket_ownership_controls" "mybucket" {
+  bucket = aws_s3_bucket.auth_website_bucket.id
+
+  rule {
+    object_ownership = "BucketOwnerEnforced"
+  }
+}
