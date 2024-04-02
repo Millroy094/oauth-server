@@ -79,10 +79,10 @@ resource "aws_s3_bucket_policy" "auth_website_bucket_policyv2" {
 #   restrict_public_buckets = false
 # }
 
-# resource "aws_s3_bucket_ownership_controls" "mybucket" {
-#   bucket = aws_s3_bucket.auth_website_bucket.id
+resource "aws_s3_bucket_ownership_controls" "mybucket" {
+  bucket = aws_s3_bucket.auth_website_bucket.id
 
-#   rule {
-#     object_ownership = "ObjectWriter"
-#   }
-# }
+  rule {
+    object_ownership = "ObjectWriter"
+  }
+}
