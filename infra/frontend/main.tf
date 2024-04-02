@@ -55,7 +55,8 @@ resource "aws_s3_bucket_policy" "auth_website_bucket_policy" {
   })
 }
 
-resource "aws_s3_account_public_access_block" "auth_website_bucket_public_access_block" {
+resource "aws_s3_bucket_public_access_block" "auth_website_bucket_public_access_block" {
+  bucket                  = aws_s3_bucket.auth_website_bucket.id
   block_public_acls       = false
   block_public_policy     = false
   ignore_public_acls      = true
