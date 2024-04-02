@@ -11,7 +11,7 @@ resource "null_resource" "website_package_build" {
     command = <<EOT
       SOURCE_DIR="${path.module}/../../"
       cd $SOURCE_DIR/packages/frontend && echo "REACT_APP_API_ENDPOINT=${var.auth_lambda_url}" >> .env 
-      cd $SOURCE_DIR && pnpm ci && pnpm run build
+      cd $SOURCE_DIR && pnpm install && pnpm run build
     EOT
   }
 
