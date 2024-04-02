@@ -1,6 +1,6 @@
 #!/bin/bash
 
-SOURCE_DIR="./"
+SOURCE_DIR="."
 
 BACKEND_SOURCE_DIR="$SOURCE_DIR/packages/backend"
 
