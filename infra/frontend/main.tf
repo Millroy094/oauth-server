@@ -10,9 +10,7 @@ resource "null_resource" "website_package_build" {
   provisioner "local-exec" {
     command = <<EOT
       SOURCE_DIR="${path.module}/../../packages/frontend"
-      (cd $SOURCE_DIR && echo "REACT_APP_API_ENDPOINT=${var.auth_lambda_url}" >> .env)
-      (cd $SOURCE_DIR && npm ci && ls)
-      (cd $SOURCE_DIR && npm run build)
+      cd $SOURCE_DIR && echo "REACT_APP_API_ENDPOINT=${var.auth_lambda_url}" >> .env && npm -v && node -v && tsc -v && npm ci && npm run build
     EOT
   }
 
