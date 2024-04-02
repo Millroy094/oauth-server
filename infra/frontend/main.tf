@@ -56,8 +56,8 @@ resource "aws_s3_bucket_policy" "auth_website_bucket_policy" {
                 ],
                 "Effect": "Allow",
                 "Resource": [
-                  "arn:aws:s3:::${random_pet.auth_website_bucket_name.id}", 
-                  "arn:aws:s3:::${random_pet.auth_website_bucket_name.id}/*"
+                  "arn:aws:s3:::${random_pet.auth_website_bucket_name}", 
+                  "arn:aws:s3:::${random_pet.auth_website_bucket_name}/*"
                 ],
                 "Principal": "*"
             }
