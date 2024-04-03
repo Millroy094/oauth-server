@@ -25,7 +25,7 @@ resource "aws_s3_object" "auth_website_code_s3_object_logo" {
 resource "aws_s3_object" "auth_website_code_s3_object_js_asset" {
   bucket = aws_s3_bucket.auth_website_bucket.id
 
-  for_each     = fileset("${path.module}/../../packages/frontend/dist/assets/", "**/*.js")
+  for_each     = fileset("${path.module}/../../packages/frontend/dist/assets/", "*.js")
   key          = "assets/${each.value}"
   source       = "${path.module}/../../packages/frontend/dist/assets/${each.value}"
   content_type = "text/javascript"
@@ -35,7 +35,7 @@ resource "aws_s3_object" "auth_website_code_s3_object_js_asset" {
 resource "aws_s3_object" "auth_website_code_s3_object_css_asset" {
   bucket = aws_s3_bucket.auth_website_bucket.id
 
-  for_each     = fileset("${path.module}/../../packages/frontend/dist/assets/", "**/*.css")
+  for_each     = fileset("${path.module}/../../packages/frontend/dist/assets/", "*.css")
   key          = "assets/${each.value}"
   source       = "${path.module}/../../packages/frontend/dist/assets/${each.value}"
   content_type = "text/css"
@@ -45,7 +45,7 @@ resource "aws_s3_object" "auth_website_code_s3_object_css_asset" {
 resource "aws_s3_object" "auth_website_code_s3_object_woff_asset" {
   bucket = aws_s3_bucket.auth_website_bucket.id
 
-  for_each     = fileset("${path.module}/../../packages/frontend/dist/assets/", "**/*.woff")
+  for_each     = fileset("${path.module}/../../packages/frontend/dist/assets/", "*.woff")
   key          = "assets/${each.value}"
   source       = "${path.module}/../../packages/frontend/dist/assets/${each.value}"
   content_type = "font/woff"
@@ -55,7 +55,7 @@ resource "aws_s3_object" "auth_website_code_s3_object_woff_asset" {
 resource "aws_s3_object" "auth_website_code_s3_object_woff2_asset" {
   bucket = aws_s3_bucket.auth_website_bucket.id
 
-  for_each     = fileset("${path.module}/../../packages/frontend/dist/assets/", "**/*.woff2")
+  for_each     = fileset("${path.module}/../../packages/frontend/dist/assets/", "*.woff2")
   key          = "assets/${each.value}"
   source       = "${path.module}/../../packages/frontend/dist/assets/${each.value}"
   content_type = "font/woff2"
