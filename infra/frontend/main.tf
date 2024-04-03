@@ -9,15 +9,17 @@ resource "aws_s3_bucket" "auth_website_bucket" {
 
 }
 resource "aws_s3_object" "auth_website_code_s3_object_index" {
-  bucket = aws_s3_bucket.auth_website_bucket.id
-  key    = "index.html"
-  source = "${path.module}/../../packages/frontend/dist/index.html"
+  bucket       = aws_s3_bucket.auth_website_bucket.id
+  key          = "index.html"
+  source       = "${path.module}/../../packages/frontend/dist/index.html"
+  content_type = "text/html"
 }
 
 resource "aws_s3_object" "auth_website_code_s3_object_logo" {
-  bucket = aws_s3_bucket.auth_website_bucket.id
-  key    = "mtech.svg"
-  source = "${path.module}/../../packages/frontend/dist/mtech.svg"
+  bucket       = aws_s3_bucket.auth_website_bucket.id
+  key          = "mtech.svg"
+  source       = "${path.module}/../../packages/frontend/dist/mtech.svg"
+  content_type = "image/svg+xml"
 }
 resource "aws_s3_object" "auth_website_code_s3_object_asset" {
   bucket = aws_s3_bucket.auth_website_bucket.id
