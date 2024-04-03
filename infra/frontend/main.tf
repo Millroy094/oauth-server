@@ -104,9 +104,11 @@ resource "aws_s3_bucket_ownership_controls" "auth_website_ownership_controls" {
 }
 
 resource "aws_s3_bucket_acl" "auth_website_bucket_acl" {
-  bucket     = aws_s3_bucket.auth_website_bucket.id
-  acl        = "public-read"
-  depends_on = [aws_s3_bucket_public_access_block.auth_website_bucket_public_access_block, aws_s3_bucket_ownership_controls.auth_website_ownership_controls]
+
+  depends_on = [aws_s3_bucket_ownership_controls.auth_website_ownership_controls, aws_s3_bucket_public_access_block.auth_website_bucket_public_access_block]
+
+  bucket = aws_s3_bucket.auth_website_bucket.id
+  acl    = "public-read"
 }
 
 resource "aws_cloudfront_origin_access_identity" "auth_oai" {
