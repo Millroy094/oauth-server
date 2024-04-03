@@ -21,12 +21,45 @@ resource "aws_s3_object" "auth_website_code_s3_object_logo" {
   source       = "${path.module}/../../packages/frontend/dist/mtech.svg"
   content_type = "image/svg+xml"
 }
-resource "aws_s3_object" "auth_website_code_s3_object_asset" {
+
+resource "aws_s3_object" "auth_website_code_s3_object_js_asset" {
   bucket = aws_s3_bucket.auth_website_bucket.id
 
-  for_each = fileset("${path.module}/../../packages/frontend/dist/assets/", "**/*.*")
-  key      = "assets/${each.value}"
-  source   = "${path.module}/../../packages/frontend/dist/assets/${each.value}"
+  for_each     = fileset("${path.module}/../../packages/frontend/dist/assets/", "**/*.js")
+  key          = "assets/${each.value}"
+  source       = "${path.module}/../../packages/frontend/dist/assets/${each.value}"
+  content_type = "text/javascript"
+
+}
+
+resource "aws_s3_object" "auth_website_code_s3_object_css_asset" {
+  bucket = aws_s3_bucket.auth_website_bucket.id
+
+  for_each     = fileset("${path.module}/../../packages/frontend/dist/assets/", "**/*.js")
+  key          = "assets/${each.value}"
+  source       = "${path.module}/../../packages/frontend/dist/assets/${each.value}"
+  content_type = "text/css"
+
+}
+
+resource "aws_s3_object" "auth_website_code_s3_object_woff_asset" {
+  bucket = aws_s3_bucket.auth_website_bucket.id
+
+  for_each     = fileset("${path.module}/../../packages/frontend/dist/assets/", "**/*.woff")
+  key          = "assets/${each.value}"
+  source       = "${path.module}/../../packages/frontend/dist/assets/${each.value}"
+  content_type = "font/woff"
+
+}
+
+resource "aws_s3_object" "auth_website_code_s3_object_woff2_asset" {
+  bucket = aws_s3_bucket.auth_website_bucket.id
+
+  for_each     = fileset("${path.module}/../../packages/frontend/dist/assets/", "**/*.woff2")
+  key          = "assets/${each.value}"
+  source       = "${path.module}/../../packages/frontend/dist/assets/${each.value}"
+  content_type = "font/woff2"
+
 }
 
 resource "aws_s3_bucket_website_configuration" "auth_website_code_s3_configuration" {
@@ -76,20 +109,43 @@ resource "aws_s3_bucket_acl" "auth_website_bucket_acl" {
   depends_on = [aws_s3_bucket_public_access_block.auth_website_bucket_public_access_block, aws_s3_bucket_ownership_controls.auth_website_ownership_controls]
 }
 
+resource "aws_cloudfront_origin_access_identity" "auth_oai" {
+  comment = "auth-website OAI"
+}
+
 resource "aws_cloudfront_distribution" "auth_distribution" {
   origin {
-    domain_name = aws_s3_bucket.auth_website_bucket.bucket_domain_name
+    domain_name = aws_s3_bucket.auth_website_bucket.bucket_regional_domain_name
     origin_id   = "auth-origin"
 
     s3_origin_config {
-      origin_access_identity = "" # Leave this empty if you don't want to use an OAI
+      origin_access_identity = aws_cloudfront_origin_access_identity.auth_oai.cloudfront_access_identity_path
     }
+  }
+
+  enabled         = true
+  is_ipv6_enabled = true
+
+  default_root_object = "index.html"
+  retain_on_delete    = true
+
+  custom_error_response {
+    error_caching_min_ttl = 300
+    error_code            = 403
+    response_code         = 200
+    response_page_path    = "./index.html"
+  }
+
+  custom_error_response {
+    error_caching_min_ttl = 300
+    error_code            = 404
+    response_code         = 200
+    response_page_path    = "./index.html"
   }
 
   restrictions {
     geo_restriction {
-      restriction_type = "whitelist"
-      locations        = ["US", "CA", "GB"]
+      restriction_type = "none"
     }
   }
 
@@ -99,24 +155,46 @@ resource "aws_cloudfront_distribution" "auth_distribution" {
 
   default_cache_behavior {
 
-    allowed_methods        = ["GET", "HEAD"]
-    cached_methods         = ["GET", "HEAD"]
-    target_origin_id       = "auth-origin"
-    viewer_protocol_policy = "redirect-to-https"
+    allowed_methods  = ["GET", "HEAD", "OPTIONS"]
+    cached_methods   = ["GET", "HEAD"]
+    target_origin_id = "auth-origin"
 
-    # Cache settings
     default_ttl = 3600
     min_ttl     = 0
     max_ttl     = 86400
+    compress    = true
 
     forwarded_values {
-      query_string = true
+      query_string = false
       cookies {
-        forward = "all"
+        forward = "none"
       }
     }
+
+    viewer_protocol_policy = "redirect-to-https"
+
   }
 
-  enabled             = true
-  default_root_object = "index.html"
+  ordered_cache_behavior {
+    path_pattern     = "./index.html"
+    allowed_methods  = ["GET", "HEAD", "OPTIONS"]
+    cached_methods   = ["GET", "HEAD", "OPTIONS"]
+    target_origin_id = "auth-origin"
+
+    default_ttl = 3600
+    min_ttl     = 0
+    max_ttl     = 86400
+    compress    = true
+
+    forwarded_values {
+      query_string = false
+      cookies {
+        forward = "none"
+      }
+    }
+
+    viewer_protocol_policy = "redirect-to-https"
+  }
+
+
 }
