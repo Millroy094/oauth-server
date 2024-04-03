@@ -76,7 +76,7 @@ resource "aws_s3_bucket_acl" "auth_website_bucket_acl" {
 
 resource "aws_cloudfront_distribution" "auth_distribution" {
   origin {
-    domain_name = aws_s3_bucket.auth_website_bucket.website_domain
+    domain_name = aws_s3_bucket.auth_website_bucket.bucket_domain_name
     origin_id   = "auth-origin"
 
     s3_origin_config {
