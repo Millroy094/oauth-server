@@ -35,7 +35,7 @@ resource "aws_s3_object" "auth_website_code_s3_object_js_asset" {
 resource "aws_s3_object" "auth_website_code_s3_object_css_asset" {
   bucket = aws_s3_bucket.auth_website_bucket.id
 
-  for_each     = fileset("${path.module}/../../packages/frontend/dist/assets/", "**/*.js")
+  for_each     = fileset("${path.module}/../../packages/frontend/dist/assets/", "**/*.css")
   key          = "assets/${each.value}"
   source       = "${path.module}/../../packages/frontend/dist/assets/${each.value}"
   content_type = "text/css"
