@@ -106,6 +106,13 @@ resource "aws_cloudfront_distribution" "auth_distribution" {
     default_ttl = 3600
     min_ttl     = 0
     max_ttl     = 86400
+
+    forwarded_values {
+      query_string = true
+      cookies {
+        forward = "all"
+      }
+    }
   }
 
   enabled             = true
