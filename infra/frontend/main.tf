@@ -69,7 +69,45 @@ resource "aws_s3_bucket_ownership_controls" "auth_website_ownership_controls" {
 }
 
 resource "aws_s3_bucket_acl" "auth_website_bucket_acl" {
-  bucket = aws_s3_bucket.auth_website_bucket.id
-  acl    = "public-read"
-  depends_on = [ aws_s3_bucket_public_access_block.auth_website_bucket_public_access_block, aws_s3_bucket_ownership_controls.auth_website_ownership_controls ]
+  bucket     = aws_s3_bucket.auth_website_bucket.id
+  acl        = "public-read"
+  depends_on = [aws_s3_bucket_public_access_block.auth_website_bucket_public_access_block, aws_s3_bucket_ownership_controls.auth_website_ownership_controls]
+}
+
+resource "aws_cloudfront_distribution" "auth_distribution" {
+  origin {
+    domain_name = aws_s3_bucket.auth_website_bucket.website_domain
+    origin_id   = "S3Origin"
+
+    s3_origin_config {
+      origin_access_identity = "" # Leave this empty if you don't want to use an OAI
+    }
+  }
+
+  restrictions {
+    geo_restriction {
+      restriction_type = "whitelist"
+      locations        = ["US", "CA", "GB"]
+    }
+  }
+
+  viewer_certificate {
+    cloudfront_default_certificate = true
+  }
+
+  default_cache_behavior {
+
+    allowed_methods        = ["GET", "HEAD"]
+    cached_methods         = ["GET", "HEAD"]
+    target_origin_id       = "auth-origin"
+    viewer_protocol_policy = "redirect-to-https"
+
+    # Cache settings
+    default_ttl = 3600
+    min_ttl     = 0
+    max_ttl     = 86400
+  }
+
+  enabled             = true
+  default_root_object = "index.html"
 }
