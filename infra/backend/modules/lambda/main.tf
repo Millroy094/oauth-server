@@ -9,7 +9,7 @@ resource "null_resource" "auth_lambda_package_build" {
   provisioner "local-exec" {
     command = <<EOT
       SOURCE_DIR="${path.root}"
-      BACKEND_SOURCE_DIR="$SOURCE_DIR/packages/backend"
+      BACKEND_SOURCE_DIR="${path.module}/../../../../packages/backend"
 
       cd $SOURCE_DIR 
       pnpm --filter @auth/backend install

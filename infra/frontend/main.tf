@@ -8,7 +8,7 @@ resource "null_resource" "auth_website_package_build" {
   provisioner "local-exec" {
     command = <<EOT
       SOURCE_DIR="${path.root}"
-      FRONTEND_SOURCE_DIR="$SOURCE_DIR/packages/frontend"
+      FRONTEND_SOURCE_DIR="${path.module}/../../../../packages/frontend"
 
       (cd $FRONTEND_SOURCE_DIR && echo "REACT_APP_API_ENDPOINT=${var.auth_lambda_url}" >> .env )
 
@@ -31,12 +31,15 @@ resource "aws_s3_bucket" "auth_website_bucket" {
   bucket        = random_pet.auth_website_bucket_name.id
   force_destroy = true
 
+depends_on = [ null_resource.auth_website_package_build ]
 }
 resource "aws_s3_object" "auth_website_code_s3_object_index" {
   bucket       = aws_s3_bucket.auth_website_bucket.id
   key          = "index.html"
   source       = "${path.module}/../../packages/frontend/dist/index.html"
   content_type = "text/html"
+
+  depends_on = [ aws_s3_bucket.auth_website_bucket ]
 }
 
 resource "aws_s3_object" "auth_website_code_s3_object_logo" {
@@ -44,6 +47,9 @@ resource "aws_s3_object" "auth_website_code_s3_object_logo" {
   key          = "mtech.svg"
   source       = "${path.module}/../../packages/frontend/dist/mtech.svg"
   content_type = "image/svg+xml"
+
+  depends_on = [ aws_s3_bucket.auth_website_bucket ]
+
 }
 
 resource "aws_s3_object" "auth_website_code_s3_object_js_asset" {
@@ -54,6 +60,8 @@ resource "aws_s3_object" "auth_website_code_s3_object_js_asset" {
   source       = "${path.module}/../../packages/frontend/dist/assets/${each.value}"
   content_type = "text/javascript"
 
+  depends_on = [ aws_s3_bucket.auth_website_bucket ]
+
 }
 
 resource "aws_s3_object" "auth_website_code_s3_object_css_asset" {
@@ -63,6 +71,8 @@ resource "aws_s3_object" "auth_website_code_s3_object_css_asset" {
   key          = "assets/${each.value}"
   source       = "${path.module}/../../packages/frontend/dist/assets/${each.value}"
   content_type = "text/css"
+
+  depends_on = [ aws_s3_bucket.auth_website_bucket ]
 
 }
 
@@ -83,6 +93,8 @@ resource "aws_s3_object" "auth_website_code_s3_object_woff2_asset" {
   key          = "assets/${each.value}"
   source       = "${path.module}/../../packages/frontend/dist/assets/${each.value}"
   content_type = "font/woff2"
+
+  depends_on = [ aws_s3_bucket.auth_website_bucket ]
 
 }
 
