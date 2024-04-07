@@ -12,18 +12,13 @@ jobs:
       - name: Use Node.js 20
         uses: actions/setup-node@v3
         with:
-          node-version: "20.11.0"
+          node-version: '20.11.0'
           cache: npm
-          cache-dependency-path: "**/package-lock.json"
+          cache-dependency-path: '**/package-lock.json'
       - name: Setup PNPM
         uses: pnpm/action-setup@v3
         with:
           version: 8
-      - name: Prepare lambda & website code
-        run: |
-          chmod +x ./scripts/build-website-and-lambda.sh
-          ./scripts/build-website-and-lambda.sh
-        shell: bash
       - name: Configure AWS Credentials
         id: aws_credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -34,16 +29,16 @@ jobs:
       - name: Setup Open Tofu
         uses: opentofu/setup-opentofu@v1
       - name: Provision auth lambda & website
-        working-directory: "./infra"
+        working-directory: './infra'
         run: |
           tofu init --backend-config="bucket=${{vars.AWS_TERRAFORM_STATE_BUCKET_NAME}}" --backend-config="key=${{vars.AWS_TERRAFORM_STATE_KEY}}.tfstate"
           tofu apply -auto-approve
         env:
-          TF_VAR_aws_access_key: "${{secrets.AWS_ACCESS_KEY_ID}}"
-          TF_VAR_aws_secret_key: "${{secrets.AWS_SECRET_ACCESS_KEY}}"
-          TF_VAR_keycloak_auth_server_url: "${{vars.KEYCLOAK_AUTH_SERVER_URL}}"
-          TF_VAR_keycloak_realm: "${{vars.KEYCLOAK_REALM}}"
-          TF_VAR_keycloak_client_id: "${{vars.KEYCLOAK_CLIENT_ID}}"
-          TF_VAR_keycloak_client_secret: "${{vars.KEYCLOAK_CLIENT_SECRET}}"
-          TF_VAR_keycloak_admin_client_id: "${{vars.KEYCLOAK_ADMIN_CLIENT_ID}}"
-          TF_VAR_keycloak_admin_client_secret: "${{vars.KEYCLOAK_ADMIN_CLIENT_SECRET}}"
+          TF_VAR_aws_access_key: '${{secrets.AWS_ACCESS_KEY_ID}}'
+          TF_VAR_aws_secret_key: '${{secrets.AWS_SECRET_ACCESS_KEY}}'
+          TF_VAR_keycloak_auth_server_url: '${{vars.KEYCLOAK_AUTH_SERVER_URL}}'
+          TF_VAR_keycloak_realm: '${{vars.KEYCLOAK_REALM}}'
+          TF_VAR_keycloak_client_id: '${{vars.KEYCLOAK_CLIENT_ID}}'
+          TF_VAR_keycloak_client_secret: '${{vars.KEYCLOAK_CLIENT_SECRET}}'
+          TF_VAR_keycloak_admin_client_id: '${{vars.KEYCLOAK_ADMIN_CLIENT_ID}}'
+          TF_VAR_keycloak_admin_client_secret: '${{vars.KEYCLOAK_ADMIN_CLIENT_SECRET}}'

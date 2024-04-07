@@ -2,6 +2,30 @@ locals {
   timestamp_suffix = timestamp()
 }
 
+resource "null_resource" "auth_lambda_package_build" {
+  triggers = {
+    always_run = local.timestamp_suffix
+  }
+  provisioner "local-exec" {
+    command = <<EOT
+      SOURCE_DIR="${path.root}"
+      BACKEND_SOURCE_DIR="$SOURCE_DIR/packages/backend"
+
+      cd $SOURCE_DIR 
+      pnpm --filter $BACKEND_SOURCE_DIR install
+      pnpm --filter $BACKEND_SOURCE_DIR run build
+
+      cp "$BACKEND_SOURCE_DIR/package.json" "$BACKEND_SOURCE_DIR/build"
+      cp "$BACKEND_SOURCE_DIR/package-lock.json" "$BACKEND_SOURCE_DIR/build"
+
+      cd "$BACKEND_SOURCE_DIR/build"
+      npm ci --production
+
+    EOT
+  }
+
+}
+
 data "archive_file" "archive_auth_lambda" {
   type        = "zip"
   source_dir  = "${path.module}/../../../../packages/backend/build"

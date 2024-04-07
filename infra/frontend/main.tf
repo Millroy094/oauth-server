@@ -1,3 +1,27 @@
+locals {
+  timestamp_suffix = timestamp()
+}
+resource "null_resource" "auth_website_package_build" {
+  triggers = {
+    always_run = local.timestamp_suffix
+  }
+  provisioner "local-exec" {
+    command = <<EOT
+      SOURCE_DIR="${path.root}"
+      FRONTEND_SOURCE_DIR="$SOURCE_DIR/packages/frontend"
+
+      (cd $FRONTEND_SOURCE_DIR && echo "REACT_APP_API_ENDPOINT=${var.auth_lambda_url}" >> .env )
+
+      cd $SOURCE_DIR 
+      pnpm --filter $FRONTEND_SOURCE_DIR install
+      pnpm --filter $FRONTEND_SOURCE_DIR run build
+
+    EOT
+  }
+
+}
+
+
 resource "random_pet" "auth_website_bucket_name" {
   prefix = "auth-website"
   length = 2
@@ -129,7 +153,6 @@ resource "aws_cloudfront_distribution" "auth_distribution" {
   is_ipv6_enabled = true
 
   default_root_object = "index.html"
-  retain_on_delete    = true
 
   restrictions {
     geo_restriction {
