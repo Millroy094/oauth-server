@@ -12,8 +12,8 @@ resource "null_resource" "auth_lambda_package_build" {
       BACKEND_SOURCE_DIR="$SOURCE_DIR/packages/backend"
 
       cd $SOURCE_DIR 
-      pnpm --filter $BACKEND_SOURCE_DIR install
-      pnpm --filter $BACKEND_SOURCE_DIR run build
+      pnpm --filter @auth/backend install
+      pnpm --filter @auth/backend run build
 
       cp "$BACKEND_SOURCE_DIR/package.json" "$BACKEND_SOURCE_DIR/build"
       cp "$BACKEND_SOURCE_DIR/package-lock.json" "$BACKEND_SOURCE_DIR/build"

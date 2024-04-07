@@ -13,8 +13,8 @@ resource "null_resource" "auth_website_package_build" {
       (cd $FRONTEND_SOURCE_DIR && echo "REACT_APP_API_ENDPOINT=${var.auth_lambda_url}" >> .env )
 
       cd $SOURCE_DIR 
-      pnpm --filter $FRONTEND_SOURCE_DIR install
-      pnpm --filter $FRONTEND_SOURCE_DIR run build
+      pnpm --filter @auth/frontend install
+      pnpm --filter @auth/frontend run build
 
     EOT
   }
