@@ -10,7 +10,7 @@ resource "null_resource" "auth_website_package_build" {
       SOURCE_DIR="${path.root}"
       FRONTEND_SOURCE_DIR="${path.module}/../../../../packages/frontend"
 
-      (cd $FRONTEND_SOURCE_DIR && echo "REACT_APP_API_ENDPOINT=${var.auth_lambda_url}" >> .env )
+      (cd $FRONTEND_SOURCE_DIR && echo "REACT_APP_API_ENDPOINT=${var.auth_lambda_url}" >> .env.production )
 
       cd $SOURCE_DIR 
       pnpm --filter @auth/frontend install

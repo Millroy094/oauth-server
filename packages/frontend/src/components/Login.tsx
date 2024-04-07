@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Container, Card, Grid, TextField, Button } from "@mui/material";
 import Logo from "../assets/mtech.svg";
+import login from "../api/login";
 
 const Login = () => {
   const [credentials, setCredentials] = useState({ email: "", password: "" });
@@ -9,6 +10,10 @@ const Login = () => {
     const { name, value } = e.target;
     setCredentials({ ...credentials, [name]: value });
   };
+
+  const handleLogin = async () => {
+    await login(credentials.email, credentials.password)
+  }
 
   return (
     <Container maxWidth="sm" sx={{ paddingTop: 10 }}>
@@ -39,7 +44,7 @@ const Login = () => {
             />
           </Grid>
           <Grid container item xs={12} justifyContent="flex-end">
-            <Button variant="contained">Log In</Button>
+            <Button variant="contained" onClick={handleLogin}>Log In</Button>
           </Grid>
         </Grid>
       </Card>
