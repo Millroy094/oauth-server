@@ -30,6 +30,8 @@ data "archive_file" "archive_auth_lambda" {
   type        = "zip"
   source_dir  = "${path.module}/../../../../packages/backend/build"
   output_path = "${path.module}/../../../../packages/backend/auth-lambda_${local.timestamp_suffix}.zip"
+
+  depends_on = [ null_resource.auth_lambda_package_build ]
 }
 
 resource "random_pet" "lambda_bucket_name" {
