@@ -4,8 +4,6 @@ import {
   APIGatewayProxyResultV2,
 } from "aws-lambda";
 
-import { add, getUnixTime } from "date-fns";
-
 import dotenv from "dotenv";
 import { getAccessTokenFromUserCredentials } from "./utils/keycloak.js";
 dotenv.config();
@@ -16,6 +14,7 @@ export const handler: Handler = async (
   try {
     const { username, password } = JSON.parse(event.body ?? "");
 
+    console.log(username, password);
     const tokens = await getAccessTokenFromUserCredentials(username, password);
 
     const response = {
