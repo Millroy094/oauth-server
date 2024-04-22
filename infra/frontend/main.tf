@@ -15,9 +15,7 @@ resource "null_resource" "auth_website_package_build" {
 
       (cd $FRONTEND_SOURCE_DIR && echo "VITE_AUTH_API_ENDPOINT=${var.auth_lambda_url}" >> .env.production )
 
-      cd $SOURCE_DIR 
-      pnpm --filter @auth/frontend install
-      pnpm --filter @auth/frontend run build
+      (cd $SOURCE_DIR && pnpm --filter @auth/frontend install && pnpm --filter @auth/frontend run build)
 
       aws s3 sync "$FRONTEND_SOURCE_DIR/dist" s3://${aws_s3_bucket.auth_website_bucket.bucket} --delete --exact-timestamps
 
