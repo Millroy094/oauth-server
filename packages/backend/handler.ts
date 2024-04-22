@@ -20,6 +20,7 @@ export const handler: Handler = async (
     const response = {
       statusCode: 200,
       body: JSON.stringify({ tokens }),
+      headers:{ 'Access-Control-Allow-Origin' : '*' },
     };
 
     return response;
