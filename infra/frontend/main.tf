@@ -109,6 +109,9 @@ resource "aws_s3_bucket_website_configuration" "auth_website_code_s3_configurati
 }
 
 resource "aws_s3_bucket_policy" "auth_website_bucket_policy" {
+
+  depends_on = [aws_s3_bucket_acl.auth_website_bucket_acl]
+
   bucket = aws_s3_bucket.auth_website_bucket.id
 
   policy = jsonencode({
