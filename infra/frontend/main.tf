@@ -2,6 +2,9 @@ locals {
   timestamp_suffix = timestamp()
 }
 resource "null_resource" "auth_website_package_build" {
+
+  depends_on = [aws_s3_bucket.auth_website_bucket]
+
   triggers = {
     always_run = local.timestamp_suffix
   }
@@ -15,6 +18,8 @@ resource "null_resource" "auth_website_package_build" {
       cd $SOURCE_DIR 
       pnpm --filter @auth/frontend install
       pnpm --filter @auth/frontend run build
+
+      aws s3 sync s3://${aws_s3_bucket.auth_website_bucket.bucket} "$FRONTEND_SOURCE_DIR/dist"
 
     EOT
   }
@@ -31,53 +36,53 @@ resource "aws_s3_bucket" "auth_website_bucket" {
   bucket        = random_pet.auth_website_bucket_name.id
   force_destroy = true
 
-  depends_on = [null_resource.auth_website_package_build]
+  # depends_on = [null_resource.auth_website_package_build]
 }
-resource "aws_s3_object" "auth_website_code_s3_object_js_asset" {
-  bucket = aws_s3_bucket.auth_website_bucket.id
+# resource "aws_s3_object" "auth_website_code_s3_object_js_asset" {
+#   bucket = aws_s3_bucket.auth_website_bucket.id
 
-  for_each     = fileset("${path.module}/../../packages/frontend/dist/assets/", "*.js")
-  key          = "assets/${each.value}"
-  source       = "${path.module}/../../packages/frontend/dist/assets/${each.value}"
-  content_type = "text/javascript"
+#   for_each     = fileset("${path.module}/../../packages/frontend/dist/assets/", "*.js")
+#   key          = "assets/${each.value}"
+#   source       = "${path.module}/../../packages/frontend/dist/assets/${each.value}"
+#   content_type = "text/javascript"
 
-  depends_on = [aws_s3_bucket.auth_website_bucket]
+#   depends_on = [aws_s3_bucket.auth_website_bucket]
 
-}
+# }
 
-resource "aws_s3_object" "auth_website_code_s3_object_css_asset" {
-  bucket = aws_s3_bucket.auth_website_bucket.id
+# resource "aws_s3_object" "auth_website_code_s3_object_css_asset" {
+#   bucket = aws_s3_bucket.auth_website_bucket.id
 
-  for_each     = fileset("${path.module}/../../packages/frontend/dist/assets/", "*.css")
-  key          = "assets/${each.value}"
-  source       = "${path.module}/../../packages/frontend/dist/assets/${each.value}"
-  content_type = "text/css"
+#   for_each     = fileset("${path.module}/../../packages/frontend/dist/assets/", "*.css")
+#   key          = "assets/${each.value}"
+#   source       = "${path.module}/../../packages/frontend/dist/assets/${each.value}"
+#   content_type = "text/css"
 
-  depends_on = [aws_s3_bucket.auth_website_bucket]
+#   depends_on = [aws_s3_bucket.auth_website_bucket]
 
-}
+# }
 
-resource "aws_s3_object" "auth_website_code_s3_object_woff_asset" {
-  bucket = aws_s3_bucket.auth_website_bucket.id
+# resource "aws_s3_object" "auth_website_code_s3_object_woff_asset" {
+#   bucket = aws_s3_bucket.auth_website_bucket.id
 
-  for_each     = fileset("${path.module}/../../packages/frontend/dist/assets/", "*.woff")
-  key          = "assets/${each.value}"
-  source       = "${path.module}/../../packages/frontend/dist/assets/${each.value}"
-  content_type = "font/woff"
+#   for_each     = fileset("${path.module}/../../packages/frontend/dist/assets/", "*.woff")
+#   key          = "assets/${each.value}"
+#   source       = "${path.module}/../../packages/frontend/dist/assets/${each.value}"
+#   content_type = "font/woff"
 
-}
+# }
 
-resource "aws_s3_object" "auth_website_code_s3_object_woff2_asset" {
-  bucket = aws_s3_bucket.auth_website_bucket.id
+# resource "aws_s3_object" "auth_website_code_s3_object_woff2_asset" {
+#   bucket = aws_s3_bucket.auth_website_bucket.id
 
-  for_each     = fileset("${path.module}/../../packages/frontend/dist/assets/", "*.woff2")
-  key          = "assets/${each.value}"
-  source       = "${path.module}/../../packages/frontend/dist/assets/${each.value}"
-  content_type = "font/woff2"
+#   for_each     = fileset("${path.module}/../../packages/frontend/dist/assets/", "*.woff2")
+#   key          = "assets/${each.value}"
+#   source       = "${path.module}/../../packages/frontend/dist/assets/${each.value}"
+#   content_type = "font/woff2"
 
-  depends_on = [aws_s3_bucket.auth_website_bucket]
+#   depends_on = [aws_s3_bucket.auth_website_bucket]
 
-}
+# }
 
 resource "aws_s3_object" "auth_website_code_s3_object_logo" {
   bucket       = aws_s3_bucket.auth_website_bucket.id
