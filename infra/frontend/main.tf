@@ -17,7 +17,7 @@ resource "null_resource" "auth_website_package_build" {
 
       (cd $SOURCE_DIR && pnpm --filter @auth/frontend install && pnpm --filter @auth/frontend run build)
 
-      aws s3 sync "../packages/frontend" s3://${aws_s3_bucket.auth_website_bucket.bucket} --delete --exact-timestamps
+      aws s3 sync "../packages/frontend/dist" s3://${aws_s3_bucket.auth_website_bucket.bucket} --delete --exact-timestamps
 
     EOT
   }
