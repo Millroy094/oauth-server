@@ -3,7 +3,7 @@ import { Container, Card, Grid, TextField, Button } from "@mui/material";
 import Logo from "../assets/mtech.svg";
 import login from "../api/login";
 
-const Login = () => {
+const Login: React.FunctionComponent = () => {
   const [credentials, setCredentials] = useState({ email: "", password: "" });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -11,7 +11,7 @@ const Login = () => {
     setCredentials({ ...credentials, [name]: value });
   };
 
-  const handleLogin = async () => {
+  const handleLogin = async (): Promise<void> => {
     await login(credentials.email, credentials.password)
   }
 
