@@ -1,6 +1,13 @@
 resource "aws_apigatewayv2_api" "auth_api_gw" {
   name          = "auth-api"
   protocol_type = "HTTP"
+
+  cors_configuration {
+    allow_origins = ["*"]
+    allow_methods = ["POST", "GET", "OPTIONS"]
+    allow_headers = ["content-type"]
+    max_age = 300
+  }
 }
 
 resource "aws_cloudwatch_log_group" "auth_api_gw_log_group" {
