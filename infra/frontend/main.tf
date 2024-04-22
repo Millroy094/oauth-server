@@ -11,7 +11,7 @@ resource "null_resource" "auth_website_package_build" {
   provisioner "local-exec" {
     command = <<EOT
       SOURCE_DIR="${path.root}"
-      FRONTEND_SOURCE_DIR="${path.module}/../../../../packages/frontend"
+      FRONTEND_SOURCE_DIR="$SOURCE_DIR/packages/frontend"
 
       (cd $FRONTEND_SOURCE_DIR && echo "VITE_AUTH_API_ENDPOINT=${var.auth_lambda_url}" >> .env.production )
 
