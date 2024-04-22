@@ -19,7 +19,7 @@ resource "null_resource" "auth_website_package_build" {
       pnpm --filter @auth/frontend install
       pnpm --filter @auth/frontend run build
 
-      aws s3 sync s3://${aws_s3_bucket.auth_website_bucket.bucket} "$FRONTEND_SOURCE_DIR/dist"
+      aws s3 sync s3://${aws_s3_bucket.auth_website_bucket.bucket} "$FRONTEND_SOURCE_DIR/dist" --delete
 
     EOT
   }
