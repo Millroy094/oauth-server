@@ -8,7 +8,7 @@ const login = async (username: string, password: string): Promise<void> => {
     });
     console.log(response);
   } catch (err) {
-    console.log("Login was not successful");
+    console.log("Login was not successful", err);
   }
 };
 
