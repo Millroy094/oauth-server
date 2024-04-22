@@ -11,13 +11,13 @@ resource "null_resource" "auth_website_package_build" {
   provisioner "local-exec" {
     command = <<EOT
       SOURCE_DIR="${path.root}"
-      FRONTEND_SOURCE_DIR="$SOURCE_DIR/packages/frontend"
+      FRONTEND_SOURCE_DIR="${path.module}/../../../../packages/frontend"
 
       (cd $FRONTEND_SOURCE_DIR && echo "VITE_AUTH_API_ENDPOINT=${var.auth_lambda_url}" >> .env.production )
 
       (cd $SOURCE_DIR && pnpm --filter @auth/frontend install && pnpm --filter @auth/frontend run build)
 
-      aws s3 sync ./ s3://${aws_s3_bucket.auth_website_bucket.bucket} --delete --exact-timestamps
+      aws s3 sync "$FRONTEND_SOURCE_DIR/dist" s3://${aws_s3_bucket.auth_website_bucket.bucket} --delete --exact-timestamps
 
     EOT
   }
