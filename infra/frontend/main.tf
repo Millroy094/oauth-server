@@ -33,73 +33,7 @@ resource "random_pet" "auth_website_bucket_name" {
 resource "aws_s3_bucket" "auth_website_bucket" {
   bucket        = random_pet.auth_website_bucket_name.id
   force_destroy = true
-
-  # depends_on = [null_resource.auth_website_package_build]
 }
-# resource "aws_s3_object" "auth_website_code_s3_object_js_asset" {
-#   bucket = aws_s3_bucket.auth_website_bucket.id
-
-#   for_each     = fileset("${path.module}/../../packages/frontend/dist/assets/", "*.js")
-#   key          = "assets/${each.value}"
-#   source       = "${path.module}/../../packages/frontend/dist/assets/${each.value}"
-#   content_type = "text/javascript"
-
-#   depends_on = [aws_s3_bucket.auth_website_bucket]
-
-# }
-
-# resource "aws_s3_object" "auth_website_code_s3_object_css_asset" {
-#   bucket = aws_s3_bucket.auth_website_bucket.id
-
-#   for_each     = fileset("${path.module}/../../packages/frontend/dist/assets/", "*.css")
-#   key          = "assets/${each.value}"
-#   source       = "${path.module}/../../packages/frontend/dist/assets/${each.value}"
-#   content_type = "text/css"
-
-#   depends_on = [aws_s3_bucket.auth_website_bucket]
-
-# }
-
-# resource "aws_s3_object" "auth_website_code_s3_object_woff_asset" {
-#   bucket = aws_s3_bucket.auth_website_bucket.id
-
-#   for_each     = fileset("${path.module}/../../packages/frontend/dist/assets/", "*.woff")
-#   key          = "assets/${each.value}"
-#   source       = "${path.module}/../../packages/frontend/dist/assets/${each.value}"
-#   content_type = "font/woff"
-
-# }
-
-# resource "aws_s3_object" "auth_website_code_s3_object_woff2_asset" {
-#   bucket = aws_s3_bucket.auth_website_bucket.id
-
-#   for_each     = fileset("${path.module}/../../packages/frontend/dist/assets/", "*.woff2")
-#   key          = "assets/${each.value}"
-#   source       = "${path.module}/../../packages/frontend/dist/assets/${each.value}"
-#   content_type = "font/woff2"
-
-#   depends_on = [aws_s3_bucket.auth_website_bucket]
-
-# }
-
-# resource "aws_s3_object" "auth_website_code_s3_object_logo" {
-#   bucket       = aws_s3_bucket.auth_website_bucket.id
-#   key          = "mtech.svg"
-#   source       = "${path.module}/../../packages/frontend/dist/mtech.svg"
-#   content_type = "image/svg+xml"
-
-#   depends_on = [aws_s3_bucket.auth_website_bucket]
-
-# }
-
-# resource "aws_s3_object" "auth_website_code_s3_object_index" {
-#   bucket       = aws_s3_bucket.auth_website_bucket.id
-#   key          = "index.html"
-#   source       = "${path.module}/../../packages/frontend/dist/index.html"
-#   content_type = "text/html"
-
-#   depends_on = [aws_s3_bucket.auth_website_bucket, aws_s3_object.auth_website_code_s3_object_logo, aws_s3_object.auth_website_code_s3_object_js_asset, aws_s3_object.auth_website_code_s3_object_css_asset, aws_s3_object.auth_website_code_s3_object_woff_asset, aws_s3_object.auth_website_code_s3_object_woff2_asset]
-# }
 
 resource "aws_s3_bucket_website_configuration" "auth_website_code_s3_configuration" {
   bucket = aws_s3_bucket.auth_website_bucket.id
