@@ -3,10 +3,11 @@ resource "aws_apigatewayv2_api" "auth_api_gw" {
   protocol_type = "HTTP"
 
   cors_configuration {
-    allow_origins = ["*"]
-    allow_methods = ["POST"]
-    allow_headers = ["*"]
-    max_age = 300
+    allow_credentials = true
+    allow_headers     = ["*"]
+    allow_methods     = ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
+    allow_origins     = ["*"]
+    max_age           = 3000
   }
 }
 
