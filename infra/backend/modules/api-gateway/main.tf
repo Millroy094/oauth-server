@@ -5,7 +5,7 @@ resource "aws_apigatewayv2_api" "auth_api_gw" {
   cors_configuration {
     allow_headers = ["*"]
     allow_methods = ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
-    allow_origins = ["${var.react_auth_website_endpoint}"]
+    allow_origins = ["https://${var.react_auth_website_endpoint}"]
     max_age       = 3000
   }
 }
