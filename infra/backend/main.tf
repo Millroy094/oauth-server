@@ -9,10 +9,10 @@ module "lambda" {
 }
 
 module "apigateway" {
-  source                    = "./modules/api-gateway"
-  auth_lambda_invoke_arn    = module.lambda.auth_lambda_function_invoke_arn
-  auth_lambda_function_name = module.lambda.auth_lambda_function_name
-  website_url               = var.cloudfront.cloudfront.react_auth_website_endpoint
+  source                      = "./modules/api-gateway"
+  auth_lambda_invoke_arn      = module.lambda.auth_lambda_function_invoke_arn
+  auth_lambda_function_name   = module.lambda.auth_lambda_function_name
+  react_auth_website_endpoint = var.cloudfront.cloudfront.react_auth_website_endpoint
 
   depends_on = [var.cloudfront]
 }
