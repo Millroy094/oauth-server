@@ -56,6 +56,13 @@ resource "aws_apigatewayv2_route" "auth_login_route" {
   target = "integrations/${aws_apigatewayv2_integration.auth_api_gw_handler.id}"
 }
 
+resource "aws_apigatewayv2_route" "options_route" {
+  api_id    = aws_apigatewayv2_api.auth_api_gw.id
+  route_key = "OPTIONS /{proxy+}" # Replace "{proxy+}" with your route pattern if needed
+
+  target = "integrations/${aws_apigatewayv2_integration.options_integration.id}"
+}
+
 resource "aws_apigatewayv2_route" "auth_register_route" {
   api_id    = aws_apigatewayv2_api.auth_api_gw.id
   route_key = "POST /register"
