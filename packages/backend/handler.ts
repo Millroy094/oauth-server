@@ -31,6 +31,15 @@ export const handler: Handler = async (
     return response;
   } catch (err: any) {
     console.log(err);
-    return { statusCode: 401, body: err.message };
+    return {
+      statusCode: 401,
+      body: err.message,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+        "Access-Control-Allow-Headers": "Content-Type",
+        "Access-Control-Allow-Credentials": true,
+      },
+    };
   }
 };
