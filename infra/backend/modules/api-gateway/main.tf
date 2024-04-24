@@ -48,19 +48,6 @@ resource "aws_apigatewayv2_integration" "auth_api_gw_handler" {
   integration_type = "AWS_PROXY"
   integration_uri  = var.auth_lambda_invoke_arn
 }
-
-resource "aws_apigatewayv2_integration_response" "options_integration_response" {
-  api_id                   = aws_apigatewayv2_api.auth_api_gw.id
-  integration_id           = aws_apigatewayv2_integration.auth_api_gw_handler.id
-  integration_response_key = "$default"
-
-  response_parameters = {
-    "method.response.header.Access-Control-Allow-Headers" = "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
-    "method.response.header.Access-Control-Allow-Origin"  = "'${var.react_auth_website_endpoint}'"
-    "method.response.header.Access-Control-Allow-Methods" = "'POST,OPTIONS'"
-  }
-}
-
 resource "aws_apigatewayv2_route" "auth_login_route" {
   api_id    = aws_apigatewayv2_api.auth_api_gw.id
   route_key = "POST /login"
