@@ -58,7 +58,7 @@ resource "aws_apigatewayv2_route" "auth_login_route" {
 
 resource "aws_apigatewayv2_route" "options_route" {
   api_id    = aws_apigatewayv2_api.auth_api_gw.id
-  route_key = "OPTIONS /login"
+  route_key = "OPTIONS /{proxy+}"
 
   target = "integrations/${aws_apigatewayv2_integration.auth_api_gw_handler.id}"
 }
