@@ -11,6 +11,7 @@ dotenv.config();
 export const handler: Handler = async (
   event: APIGatewayProxyEventV2
 ): Promise<APIGatewayProxyResultV2 | void> => {
+  console.log(event);
   try {
     const { username, password } = JSON.parse(event.body ?? "");
 
