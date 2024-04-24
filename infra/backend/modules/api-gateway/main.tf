@@ -6,7 +6,7 @@ resource "aws_apigatewayv2_api" "auth_api_gw" {
     allow_credentials = true
     allow_headers     = ["Content-Type", "X-Amz-Date", "Authorization", "X-Api-Key", "X-Amz-Security-Token"]
     allow_methods     = ["POST", "OPTIONS"]
-    allow_origins     = ["*"]
+    allow_origins     = "*"
     max_age           = 3000
   }
 }
