@@ -3,10 +3,11 @@ resource "aws_apigatewayv2_api" "auth_api_gw" {
   protocol_type = "HTTP"
 
   cors_configuration {
-    allow_headers = ["*"]
-    allow_methods = ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
-    allow_origins = ["https://${var.react_auth_website_endpoint}"]
-    max_age       = 3000
+    allow_credentials = true
+    allow_headers     = ["*"]
+    allow_methods     = ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
+    allow_origins     = ["https://${var.react_auth_website_endpoint}"]
+    max_age           = 3000
   }
 }
 
