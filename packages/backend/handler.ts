@@ -33,6 +33,10 @@ export const handler: Handler = async (
       statusDescription: "Temporary Redirect",
       headers: {
         location: "https://jwt.io",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+        "Access-Control-Allow-Headers": "Content-Type",
+        "Access-Control-Allow-Credentials": true,
       },
       cookies: [],
     };
