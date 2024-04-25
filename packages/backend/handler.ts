@@ -17,9 +17,24 @@ export const handler: Handler = async (
     console.log(username, password);
     const tokens = await getAccessTokenFromUserCredentials(username, password);
 
+    // const response = {
+    //   statusCode: 200,
+    //   body: JSON.stringify({ tokens }),
+    //   headers: {
+    //     "Access-Control-Allow-Origin": "*",
+    //     "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+    //     "Access-Control-Allow-Headers": "Content-Type",
+    //     "Access-Control-Allow-Credentials": true,
+    //   },
+    // };
+
     const response = {
-      statusCode: 200,
-      body: JSON.stringify({ tokens }),
+      statusCode: 307,
+      statusDescription: "Temporary Redirect",
+      headers: {
+        location: "https://jwt.io",
+      },
+      cookies: [],
     };
 
     return response;
@@ -28,6 +43,12 @@ export const handler: Handler = async (
     return {
       statusCode: 401,
       body: err.message,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+        "Access-Control-Allow-Headers": "Content-Type",
+        "Access-Control-Allow-Credentials": true,
+      },
     };
   }
 };
