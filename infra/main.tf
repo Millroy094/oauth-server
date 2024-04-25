@@ -12,7 +12,6 @@ module "backend" {
   keycloak_admin_client_secret = var.keycloak_admin_client_secret
   keycloak_client_id           = var.keycloak_client_id
   keycloak_client_secret       = var.keycloak_client_secret
-  cloudfront                   = module.frontend.cloudfront
 }
 
 module "frontend" {

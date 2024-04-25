@@ -4,4 +4,3 @@ variable "keycloak_client_id" {}
 variable "keycloak_client_secret" {}
 variable "keycloak_admin_client_id" {}
 variable "keycloak_admin_client_secret" {}
-variable "cloudfront" {}
