@@ -43,6 +43,8 @@ export const handler: Handler = async (
       cookies: [],
     };
 
+    return response;
+
   } catch (err: any) {
     console.log(err);
     return {
