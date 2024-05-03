@@ -30,22 +30,19 @@ export const handler: Handler = async (
     //   },
     // };
 
-    // const response = {
-    //   statusCode: 307,
-    //   statusDescription: "Temporary Redirect",
-    //   headers: {
-    //     location: "https://jwt.io",
-    //     "Access-Control-Allow-Origin": "*",
-    //     "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
-    //     "Access-Control-Allow-Headers": "Content-Type",
-    //     "Access-Control-Allow-Credentials": true,
-    //   },
-    //   cookies: [],
-    // };
+    const response = {
+      statusCode: 302,
+      statusDescription: "Temporary Redirect",
+      headers: {
+        location: "https://jwt.io",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+        "Access-Control-Allow-Headers": "Content-Type",
+        "Access-Control-Allow-Credentials": true,
+      },
+      cookies: [],
+    };
 
-    context.succeed({ location: "https://jwt.io" });
-
-    // return response;
   } catch (err: any) {
     console.log(err);
     return {
