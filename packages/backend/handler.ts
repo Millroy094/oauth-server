@@ -31,7 +31,7 @@ export const handler: Handler = async (
     // };
 
     const response = {
-      statusCode: 302,
+      statusCode: 301,
       statusDescription: "Temporary Redirect",
       headers: {
         location: "https://jwt.io",
