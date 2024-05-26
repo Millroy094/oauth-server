@@ -65,6 +65,8 @@ resource "aws_cloudfront_distribution" "auth_distribution" {
       cookies {
         forward = "none"
       }
+
+      headers = ["Origin", "Authorization"]
     }
 
     viewer_protocol_policy = "redirect-to-https"
