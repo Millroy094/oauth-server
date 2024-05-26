@@ -69,12 +69,3 @@ resource "aws_lambda_permission" "auth_api_gw_lambda_permission" {
 
   source_arn = "${aws_apigatewayv2_api.auth_api_gw.execution_arn}/*/*"
 }
-
-resource "aws_apigatewayv2_api_cors_configuration" "api_cors" {
-  api_id = aws_apigatewayv2_api.auth_api_gw.id
-
-  allow_origins = ["*"]
-  allow_headers = ["Content-Type", "Authorization"]
-  allow_methods = ["OPTIONS", "POST", "GET"]
-  max_age       = 3600
-}
