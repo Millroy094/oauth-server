@@ -8,9 +8,25 @@ const OIDCStoreSchema = new Schema(
       type: String,
       hashKey: true,
     },
+    payload: {
+      type: Object,
+    },
+    expiresAt: {
+      type: Number,
+    },
+    userCode: {
+      type: String,
+    },
+    uid: {
+      type: String,
+    },
+    grantId: {
+      type: String,
+    },
   },
   {
     timestamps: true,
+    saveUnknown: ['payload.**'],
   },
 );
 const OIDCStore = model('OIDCStore', OIDCStoreSchema);

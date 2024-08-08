@@ -1,8 +1,10 @@
 import express from 'express';
 import dynamoose from 'dynamoose';
 import Provider from 'oidc-provider';
-import DynamoDBAdapter from './adapter/DynamoDbAdapter';
+import dotenv from 'dotenv';
+import getConfiguration from './support/get-configuration';
 
+dotenv.config();
 const app = express();
 
 if (process.env.NODE_ENV === 'development') {
@@ -17,8 +19,16 @@ if (process.env.NODE_ENV === 'development') {
   dynamoose.aws.ddb.set(ddb);
 }
 
-const oidc = new Provider('http://localhost:3000', {
-  adapter: DynamoDBAdapter,
+const oidc = new Provider('http://localhost:3000', getConfiguration());
+
+app.get('/interaction/intiate', async (req, res) => {
+  const { prompt, jti } = await oidc.interactionDetails(req, res);
+
+  switch (prompt.name) {
+    case 'login':
+      res.redirect(`http://localhost:5173/login/interaction/${jti}`);
+      break;
+  }
 });
 
 app.use('/oidc', oidc.callback());

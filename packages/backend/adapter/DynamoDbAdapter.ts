@@ -13,14 +13,14 @@ class DynamoDBAdapter implements Adapter {
     payload: AdapterPayload,
     expiresIn: number,
   ): Promise<void | undefined> {
-    const modelId = `${this.name}-${id}`;
+    const modelId = `${this.name}:${id}`;
     try {
       const expiresAt = expiresIn
         ? Math.floor(Date.now() / 1000) + expiresIn
         : null;
 
       await OIDCStore.update(modelId, {
-        payload,
+        payload: { ...payload },
         ...(expiresAt ? { expiresAt } : {}),
         ...(payload.userCode ? { userCode: payload.userCode } : {}),
         ...(payload.uid ? { uid: payload.uid } : {}),
@@ -33,7 +33,7 @@ class DynamoDBAdapter implements Adapter {
   }
 
   async find(id: string): Promise<void | AdapterPayload | undefined> {
-    const modelId = `${this.name}-${id}`;
+    const modelId = `${this.name}:${id}`;
     try {
       const record = await OIDCStore.get(modelId);
 
@@ -92,7 +92,7 @@ class DynamoDBAdapter implements Adapter {
     }
   }
   async consume(id: string): Promise<void | undefined> {
-    const modelId = `${this.name}-${id}`;
+    const modelId = `${this.name}:${id}`;
     try {
       const record = await OIDCStore.get(modelId);
       record.payload = {
@@ -106,7 +106,7 @@ class DynamoDBAdapter implements Adapter {
     }
   }
   async destroy(id: string): Promise<void | undefined> {
-    const modelId = `${this.name}-${id}`;
+    const modelId = `${this.name}:${id}`;
     try {
       await OIDCStore.delete(modelId);
     } catch (error) {

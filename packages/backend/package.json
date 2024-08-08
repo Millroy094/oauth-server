@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "node --experimental-specifier-resolution=node --loader ts-node/esm index.ts",
+    "start": "nodemon --exec node --experimental-specifier-resolution=node --loader ts-node/esm index.ts",
     "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -14,15 +14,18 @@
   "devDependencies": {
     "@types/express": "^4.17.21",
     "@types/node": "^20.11.27",
+    "@types/node-jose": "^1.1.13",
     "@types/oidc-provider": "^8.5.1",
+    "node-jose": "^2.2.0",
     "nodemon": "^3.1.0",
     "ts-node": "^10.9.2",
-    "ts-node-dev": "^2.0.0",
     "typescript": "^5.4.2"
   },
   "dependencies": {
     "dotenv": "^16.4.5",
+    "dynamoose": "^4.0.1",
     "express": "^4.19.2",
-    "oidc-provider": "^8.5.1"
+    "oidc-provider": "^8.5.1",
+    "rsa-pem-to-jwk": "^1.1.3"
   }
 }
