@@ -1,4 +1,4 @@
-import { Configuration } from 'oidc-provider';
+import { Configuration, interactionPolicy } from 'oidc-provider';
 import DynamoDBAdapter from '../adapter/DynamoDbAdapter';
 import jwks from '../keys.json' assert { type: 'json' };
 
@@ -7,6 +7,8 @@ const getConfiguration = (): Configuration => ({
   jwks,
   cookies: {
     keys: [...JSON.parse(process?.env?.COOKIE_SECRETS ?? '[]')],
+    long: { httpOnly: false },
+    short: { httpOnly: false },
   },
   features: {
     devInteractions: { enabled: false },
@@ -51,9 +53,10 @@ const getConfiguration = (): Configuration => ({
     ],
   },
   interactions: {
-    url() {
+    // policy: basePolicy,
+    url(ctx, interaction) {
       // eslint-disable-line no-unused-vars
-      return '/interaction/intiate';
+      return `http://localhost:5173?interactionId=${interaction.jti}`;
     },
   },
 });
