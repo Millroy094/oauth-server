@@ -9,12 +9,12 @@ import {
   TextField,
   styled,
 } from '@mui/material';
-import PasswordField from '../../../components/PasswordField';
+import PasswordField from '../../components/PasswordField';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import schema from './schema';
 import { useParams, useNavigate } from 'react-router-dom';
-import validateCredentialsForInteraction from '../../../api/validate-credentials-for-interaction';
+import validateCredentialsForInteraction from '../../api/validate-credentials-for-interaction';
 
 const StyledCard = styled(Card)({
   borderTop: '2px solid red',
@@ -54,6 +54,8 @@ const Login: FC<{}> = () => {
               <Grid item>
                 <TextField
                   {...register('email')}
+                  label='Email Address'
+                  variant='outlined'
                   fullWidth
                   error={!!errors.email}
                   helperText={errors.email ? errors.email.message : ''}
@@ -62,7 +64,9 @@ const Login: FC<{}> = () => {
               <Grid item>
                 <PasswordField
                   name='password'
+                  label='Password'
                   register={register}
+                  required
                   error={!!errors.password}
                   helperText={errors.password ? errors.password.message : ''}
                 />

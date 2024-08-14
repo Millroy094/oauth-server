@@ -1,10 +1,11 @@
+import { useEffect } from 'react';
 import { Route, Routes, useNavigate, useSearchParams } from 'react-router-dom';
 import Login from './Login';
 import Confirm from './Confirm';
-import { FC, useEffect } from 'react';
-import getAuthenticationStatus from '../../api/get-authentication-status';
+import getAuthenticationStatus from '../api/get-authentication-status';
+import Register from './Register';
 
-const Authenication: FC<{}> = () => {
+function Pages() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
@@ -12,7 +13,7 @@ const Authenication: FC<{}> = () => {
     interactionId: string,
   ): Promise<void> => {
     const status = await getAuthenticationStatus(interactionId);
-    navigate(`/${status}/${searchParams.get('interactionId')}`);
+    navigate(`/oauth/${status}/${searchParams.get('interactionId')}`);
   };
 
   useEffect(() => {
@@ -23,10 +24,11 @@ const Authenication: FC<{}> = () => {
 
   return (
     <Routes>
-      <Route path={`/login/:interactionId`} element={<Login />} />
-      <Route path={`/consent/:interactionId`} element={<Confirm />} />
+      <Route path={`/register`} element={<Register />} />
+      <Route path={`/oauth/login/:interactionId`} element={<Login />} />
+      <Route path={`/oauth/consent/:interactionId`} element={<Confirm />} />
     </Routes>
   );
-};
+}
 
-export default Authenication;
+export default Pages;

@@ -1,10 +1,11 @@
 import { BrowserRouter as Router } from 'react-router-dom';
-import Authentication from './pages/Authenication';
+
+import Pages from './pages';
 
 function App() {
   return (
     <Router>
-      <Authentication />
+      <Pages />
     </Router>
   );
 }

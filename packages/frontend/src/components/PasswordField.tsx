@@ -6,12 +6,15 @@ import { UseFormRegister } from 'react-hook-form';
 interface PasswordFieldProps {
   register: UseFormRegister<any>;
   name: string;
+  label?: string;
+  required?: boolean;
   error: boolean;
   helperText?: string;
+  onFocus?: React.FocusEventHandler;
 }
 
 const PasswordField: FC<PasswordFieldProps> = (props) => {
-  const { name, register, error, helperText } = props;
+  const { name, label, register, error, helperText, required, onFocus } = props;
   const [showPassword, setShowPassword] = useState(false);
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -23,9 +26,12 @@ const PasswordField: FC<PasswordFieldProps> = (props) => {
   return (
     <TextField
       {...register(name)}
+      label={label ?? name}
+      required={required ?? false}
       error={error}
       helperText={helperText}
       type={showPassword ? 'text' : 'password'}
+      variant='outlined'
       InputProps={{
         endAdornment: (
           <InputAdornment position='end' sx={{ p: 1 }}>
@@ -40,6 +46,7 @@ const PasswordField: FC<PasswordFieldProps> = (props) => {
           </InputAdornment>
         ),
       }}
+      onFocus={onFocus}
       fullWidth
     />
   );

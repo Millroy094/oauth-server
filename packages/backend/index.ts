@@ -7,6 +7,7 @@ import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 
 import getConfiguration from './support/get-configuration';
+import AccountService from './models/Account';
 
 dotenv.config();
 const app = express();
@@ -48,16 +49,20 @@ app.post('/interaction/:uid/login', async (req, res) => {
   } = await oidc.interactionDetails(req, res);
   console.log(name);
   if (name === 'login') {
+    const [userAccount] = await AccountService.scan('email')
+      .eq(req.body.email)
+      .exec();
+
+    if (!userAccount) {
+      res.send('Not Found').status(404);
+    }
+
     const redirect = await oidc.interactionResult(
       req,
       res,
       {
         login: {
-          accountId: 'test',
-          acr: 'test', // acr value for the authentication
-          amr: ['test'], // amr values for the authentication
-          remember: false, // true if provider should use a persistent cookie rather than a session one, defaults to true
-          ts: 2242323,
+          accountId: userAccount.userId,
         },
       },
       { mergeWithLastSubmission: false },

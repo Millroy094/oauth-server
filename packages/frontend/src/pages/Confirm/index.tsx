@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 
 import { useParams } from 'react-router-dom';
-import authoriseLogin from '../../../api/authorise-login';
+import authoriseLogin from '../../api/authorise-login';
 
 const StyledCard = styled(Card)({
   borderTop: '2px solid red',
