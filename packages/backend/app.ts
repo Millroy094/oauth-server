@@ -3,18 +3,16 @@ import dynamoose from 'dynamoose';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
-import dotenv from 'dotenv';
 import { oidcRoutes, userRoutes } from './routes';
 
 class Application {
-  private expressApp;
+  private readonly expressApp;
 
   constructor() {
     this.expressApp = express();
   }
 
   private setupDependencies(): void {
-    dotenv.config();
     if (process.env.NODE_ENV === 'development') {
       const ddb = new dynamoose.aws.ddb.DynamoDB({
         endpoint: process.env.DYNAMO_DB_ENDPOINT,

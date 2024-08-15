@@ -1,11 +1,9 @@
 import { Router } from 'express';
 import AccountService from '../models/Account';
+import { UserController } from '../controllers';
 
 const router = Router();
 
-router.post('/register', async (req, res) => {
-  await AccountService.create(req.body);
-  res.send('success').status(200);
-});
+router.post('/register', UserController.registerUser);
 
 export default router;

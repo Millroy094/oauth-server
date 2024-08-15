@@ -11,7 +11,7 @@ const authenicateInteraction = async (
 ): Promise<AxiosResponse> => {
   const { email, password, interactionId } = args;
   const response = await axios.post(
-    `http://localhost:3000/oidc/interaction/${interactionId}/login`,
+    `http://localhost:3000/oidc/interaction/${interactionId}/authenticate`,
     {
       email,
       password,

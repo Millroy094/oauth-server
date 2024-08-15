@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 
 import { useParams } from 'react-router-dom';
-import authoriseInteraction from '../../api/authorise-interaction';
+import authorizeInteraction from '../../api/authorize-interaction';
 
 const StyledCard = styled(Card)({
   borderTop: '2px solid red',
@@ -22,7 +22,7 @@ const Confirm: FC<{}> = () => {
 
   const onAuthorize = async (): Promise<void> => {
     try {
-      const response = await authoriseInteraction(interactionId ?? '');
+      const response = await authorizeInteraction(interactionId ?? '');
       if (response.data.redirect) {
         window.location.href = response.data.redirect;
       }
