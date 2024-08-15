@@ -16,7 +16,6 @@ class OIDCController {
       const {
         prompt: { name },
       } = await OIDCController.oidc.interactionDetails(req, res);
-
       res.status(200).json({ status: name });
     } catch (err) {
       console.log(err);

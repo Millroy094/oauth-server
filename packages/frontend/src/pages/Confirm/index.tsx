@@ -9,8 +9,11 @@ import {
   Typography,
   styled,
 } from '@mui/material';
+import { AxiosError } from 'axios';
 
 import { useParams } from 'react-router-dom';
+import { useSnackbar } from 'notistack';
+
 import authorizeInteraction from '../../api/authorize-interaction';
 
 const StyledCard = styled(Card)({
@@ -19,7 +22,7 @@ const StyledCard = styled(Card)({
 
 const Confirm: FC<{}> = () => {
   const { interactionId } = useParams();
-
+  const { enqueueSnackbar } = useSnackbar();
   const onAuthorize = async (): Promise<void> => {
     try {
       const response = await authorizeInteraction(interactionId ?? '');
@@ -27,7 +30,12 @@ const Confirm: FC<{}> = () => {
         window.location.href = response.data.redirect;
       }
     } catch (err) {
-      console.log(err);
+      enqueueSnackbar(
+        err instanceof AxiosError && err?.response?.data?.error
+          ? err.response.data.error
+          : 'Failed to authorize request, please try again.',
+        { variant: 'error' },
+      );
     }
   };
 

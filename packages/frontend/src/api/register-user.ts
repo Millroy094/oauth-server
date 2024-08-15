@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 
 type registerUserArgs = {
   email: string;
@@ -8,9 +8,9 @@ type registerUserArgs = {
   mobile?: string;
 };
 
-const registerUser = async (args: registerUserArgs): Promise<void> => {
+const registerUser = async (args: registerUserArgs): Promise<AxiosResponse> => {
   const { email, password, firstName, lastName, mobile } = args;
-  await axios.post(
+  const response = await axios.post(
     'http://localhost:3000/user/register',
     {
       email,
@@ -21,6 +21,8 @@ const registerUser = async (args: registerUserArgs): Promise<void> => {
     },
     { withCredentials: true },
   );
+
+  return response;
 };
 
 export default registerUser;

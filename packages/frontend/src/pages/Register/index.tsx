@@ -12,20 +12,24 @@ import {
 import PasswordField from '../../components/PasswordField';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
+import { omit } from 'lodash';
+import { AxiosError } from 'axios';
+import { useSnackbar } from 'notistack';
 import schema from './schema';
 import PasswordPopover from './PasswordPopover';
 import registerUser from '../../api/register-user';
-import { omit } from 'lodash';
 
 const StyledCard = styled(Card)({
   borderTop: '2px solid red',
 });
 
 const Register: FC<{}> = () => {
+  const { enqueueSnackbar } = useSnackbar();
   const {
     register,
     handleSubmit,
     formState: { errors, dirtyFields },
+    reset,
   } = useForm<IRegisterFormInput>({
     resolver: yupResolver(schema, {}),
     criteriaMode: 'all',
@@ -53,9 +57,18 @@ const Register: FC<{}> = () => {
 
   const onSubmit = async (data: IRegisterFormInput): Promise<void> => {
     try {
-      await registerUser(omit(data, 'confirmPassword'));
+      const response = await registerUser(omit(data, 'confirmPassword'));
+      enqueueSnackbar(
+        response?.data?.message ?? 'Successfully registered user',
+      );
+      reset();
     } catch (err) {
-      console.log('error registering user');
+      enqueueSnackbar(
+        err instanceof AxiosError && err?.response?.data?.error
+          ? err.response.data.error
+          : 'There was an issue registering the user, please try again',
+        { variant: 'error' },
+      );
     }
   };
 

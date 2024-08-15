@@ -1,11 +1,15 @@
 import { useEffect } from 'react';
 import { Route, Routes, useNavigate, useSearchParams } from 'react-router-dom';
+import { useSnackbar } from 'notistack';
+
 import Login from './Login';
 import Confirm from './Confirm';
 import getInteractionStatus from '../api/get-interaction-status';
 import Register from './Register';
+import { AxiosError } from 'axios';
 
 function Pages() {
+  const { enqueueSnackbar } = useSnackbar();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
@@ -20,7 +24,12 @@ function Pages() {
         );
       }
     } catch (err) {
-      console.log(err);
+      enqueueSnackbar(
+        err instanceof AxiosError && err?.response?.data?.error
+          ? err.response.data.error
+          : 'Failed to process authentication',
+        { variant: 'error' },
+      );
     }
   };
 

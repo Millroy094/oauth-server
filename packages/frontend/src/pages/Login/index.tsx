@@ -14,6 +14,8 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import schema from './schema';
 import { useParams } from 'react-router-dom';
+import { useSnackbar } from 'notistack';
+import { AxiosError } from 'axios';
 import authenticateInteraction from '../../api/authenicate-interaction';
 
 const StyledCard = styled(Card)({
@@ -22,6 +24,7 @@ const StyledCard = styled(Card)({
 
 const Login: FC<{}> = () => {
   const { interactionId } = useParams();
+  const { enqueueSnackbar } = useSnackbar();
   const {
     register,
     handleSubmit,
@@ -42,7 +45,12 @@ const Login: FC<{}> = () => {
         window.location.href = response.data.redirect;
       }
     } catch (err) {
-      console.log(err);
+      enqueueSnackbar(
+        err instanceof AxiosError && err?.response?.data?.error
+          ? err.response.data.error
+          : 'Failed to authenticate credentials, please try again.',
+        { variant: 'error' },
+      );
     }
   };
 
