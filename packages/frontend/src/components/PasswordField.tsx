@@ -1,7 +1,7 @@
-import React, { FC, useState } from 'react';
-import { IconButton, InputAdornment, TextField } from '@mui/material';
-import { VisibilityOff, Visibility } from '@mui/icons-material';
-import { UseFormRegister } from 'react-hook-form';
+import React, { FC, useState } from "react";
+import { IconButton, InputAdornment, TextField } from "@mui/material";
+import { VisibilityOff, Visibility } from "@mui/icons-material";
+import { UseFormRegister } from "react-hook-form";
 
 interface PasswordFieldProps {
   register: UseFormRegister<any>;
@@ -11,15 +11,25 @@ interface PasswordFieldProps {
   error: boolean;
   helperText?: string;
   onFocus?: React.FocusEventHandler;
+  onBlur?: React.FocusEventHandler;
 }
 
 const PasswordField: FC<PasswordFieldProps> = (props) => {
-  const { name, label, register, error, helperText, required, onFocus } = props;
+  const {
+    name,
+    label,
+    register,
+    error,
+    helperText,
+    required,
+    onFocus,
+    onBlur,
+  } = props;
   const [showPassword, setShowPassword] = useState(false);
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const handleMouseDownPassword = (
-    event: React.MouseEvent<HTMLButtonElement>,
+    event: React.MouseEvent<HTMLButtonElement>
   ) => {
     event.preventDefault();
   };
@@ -30,16 +40,16 @@ const PasswordField: FC<PasswordFieldProps> = (props) => {
       required={required ?? false}
       error={error}
       helperText={helperText}
-      type={showPassword ? 'text' : 'password'}
-      variant='outlined'
+      type={showPassword ? "text" : "password"}
+      variant="outlined"
       InputProps={{
         endAdornment: (
-          <InputAdornment position='end' sx={{ p: 1 }}>
+          <InputAdornment position="end" sx={{ p: 1 }}>
             <IconButton
-              aria-label='toggle password visibility'
+              aria-label="toggle password visibility"
               onClick={handleClickShowPassword}
               onMouseDown={handleMouseDownPassword}
-              edge='end'
+              edge="end"
             >
               {showPassword ? <VisibilityOff /> : <Visibility />}
             </IconButton>
@@ -47,6 +57,7 @@ const PasswordField: FC<PasswordFieldProps> = (props) => {
         ),
       }}
       onFocus={onFocus}
+      onBlur={onBlur}
       fullWidth
     />
   );
