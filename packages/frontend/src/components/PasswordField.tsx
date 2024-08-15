@@ -4,8 +4,8 @@ import { VisibilityOff, Visibility } from "@mui/icons-material";
 import { UseFormRegister } from "react-hook-form";
 
 interface PasswordFieldProps {
-  register: UseFormRegister<any>;
-  name: string;
+  register: UseFormRegister<IRegisterFormInput>;
+  name: keyof IRegisterFormInput;
   label?: string;
   required?: boolean;
   error: boolean;
