@@ -11,7 +11,7 @@ type registerUserArgs = {
 const registerUser = async (args: registerUserArgs): Promise<void> => {
   const { email, password, firstName, lastName, mobile } = args;
   await axios.post(
-    `http://localhost:3000/register-account`,
+    'http://localhost:3000/user/register',
     {
       email,
       password,

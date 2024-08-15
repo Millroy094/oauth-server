@@ -13,8 +13,8 @@ import PasswordField from '../../components/PasswordField';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import schema from './schema';
-import { useParams, useNavigate } from 'react-router-dom';
-import validateCredentialsForInteraction from '../../api/validate-credentials-for-interaction';
+import { useParams } from 'react-router-dom';
+import authenticateInteraction from '../../api/authenicate-interaction';
 
 const StyledCard = styled(Card)({
   borderTop: '2px solid red',
@@ -22,7 +22,6 @@ const StyledCard = styled(Card)({
 
 const Login: FC<{}> = () => {
   const { interactionId } = useParams();
-  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -34,13 +33,16 @@ const Login: FC<{}> = () => {
 
   const onSubmit = async (data: ILoginFormInput): Promise<void> => {
     try {
-      await validateCredentialsForInteraction({
+      const response = await authenticateInteraction({
         ...data,
         interactionId: interactionId ?? '',
       });
-      navigate(`/confirm/${interactionId}`);
+
+      if (response.data.redirect) {
+        window.location.href = response.data.redirect;
+      }
     } catch (err) {
-      console.log('error logging in');
+      console.log(err);
     }
   };
 

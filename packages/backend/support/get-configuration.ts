@@ -1,4 +1,4 @@
-import { Configuration, interactionPolicy } from 'oidc-provider';
+import { Configuration } from 'oidc-provider';
 import DynamoDBAdapter from '../adapter/DynamoDbAdapter';
 import jwks from '../keys.json' assert { type: 'json' };
 

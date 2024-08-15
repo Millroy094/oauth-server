@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 
 type validateCredentialsArgs = {
   email: string;
@@ -6,19 +6,19 @@ type validateCredentialsArgs = {
   interactionId: string;
 };
 
-const validateCredentialsForInteraction = async (
+const authenicateInteraction = async (
   args: validateCredentialsArgs,
-): Promise<void> => {
+): Promise<AxiosResponse> => {
   const { email, password, interactionId } = args;
   const response = await axios.post(
-    `http://localhost:3000/interaction/${interactionId}/login`,
+    `http://localhost:3000/oidc/interaction/${interactionId}/login`,
     {
       email,
       password,
     },
     { withCredentials: true },
   );
-  window.location.href = response.data.redirect;
+  return response;
 };
 
-export default validateCredentialsForInteraction;
+export default authenicateInteraction;

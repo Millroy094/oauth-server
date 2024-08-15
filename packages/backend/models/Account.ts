@@ -1,5 +1,6 @@
 import dynamoose from 'dynamoose';
-
+import bcrypt from 'bcryptjs';
+import { v4 as uuid } from 'uuid';
 const { Schema, model } = dynamoose;
 
 const AccountSchema = new Schema(
@@ -7,6 +8,16 @@ const AccountSchema = new Schema(
     userId: {
       type: String,
       hashKey: true,
+      default: uuid(),
+    },
+    email: {
+      type: String,
+      required: true,
+      rangeKey: true,
+    },
+    emailVerified: {
+      type: Boolean,
+      default: false,
     },
     firstName: {
       type: String,
@@ -16,16 +27,16 @@ const AccountSchema = new Schema(
       type: String,
       default: '',
     },
-    email: {
-      type: String,
-      required: true,
-    },
-    emailVerified: {
-      type: Boolean,
-      default: false,
-    },
     mobile: {
       type: String,
+    },
+    password: {
+      type: String,
+      set: async (value) => {
+        const salt = await bcrypt.genSalt(10);
+        const encryptedPassword = bcrypt.hash(value as string, salt);
+        return encryptedPassword;
+      },
     },
   },
   {

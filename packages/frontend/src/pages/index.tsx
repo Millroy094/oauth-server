@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { Route, Routes, useNavigate, useSearchParams } from 'react-router-dom';
 import Login from './Login';
 import Confirm from './Confirm';
-import getAuthenticationStatus from '../api/get-authentication-status';
+import getInteractionStatus from '../api/get-interaction-status';
 import Register from './Register';
 
 function Pages() {
@@ -12,8 +12,16 @@ function Pages() {
   const navigateByInteractionStage = async (
     interactionId: string,
   ): Promise<void> => {
-    const status = await getAuthenticationStatus(interactionId);
-    navigate(`/oauth/${status}/${searchParams.get('interactionId')}`);
+    try {
+      const response = await getInteractionStatus(interactionId);
+      if (response.data.status) {
+        navigate(
+          `/oauth/${response.data.status}/${searchParams.get('interactionId')}`,
+        );
+      }
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   useEffect(() => {

@@ -1,11 +1,11 @@
-import React, { FC, useState } from "react";
-import { IconButton, InputAdornment, TextField } from "@mui/material";
-import { VisibilityOff, Visibility } from "@mui/icons-material";
-import { UseFormRegister } from "react-hook-form";
+import React, { FC, useState } from 'react';
+import { IconButton, InputAdornment, TextField } from '@mui/material';
+import { VisibilityOff, Visibility } from '@mui/icons-material';
+import { UseFormRegister } from 'react-hook-form';
 
 interface PasswordFieldProps {
-  register: UseFormRegister<IRegisterFormInput>;
-  name: keyof IRegisterFormInput;
+  register: UseFormRegister<any>;
+  name: keyof IRegisterFormInput | keyof ILoginFormInput;
   label?: string;
   required?: boolean;
   error: boolean;
@@ -29,7 +29,7 @@ const PasswordField: FC<PasswordFieldProps> = (props) => {
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const handleMouseDownPassword = (
-    event: React.MouseEvent<HTMLButtonElement>
+    event: React.MouseEvent<HTMLButtonElement>,
   ) => {
     event.preventDefault();
   };
@@ -40,16 +40,16 @@ const PasswordField: FC<PasswordFieldProps> = (props) => {
       required={required ?? false}
       error={error}
       helperText={helperText}
-      type={showPassword ? "text" : "password"}
-      variant="outlined"
+      type={showPassword ? 'text' : 'password'}
+      variant='outlined'
       InputProps={{
         endAdornment: (
-          <InputAdornment position="end" sx={{ p: 1 }}>
+          <InputAdornment position='end' sx={{ p: 1 }}>
             <IconButton
-              aria-label="toggle password visibility"
+              aria-label='toggle password visibility'
               onClick={handleClickShowPassword}
               onMouseDown={handleMouseDownPassword}
-              edge="end"
+              edge='end'
             >
               {showPassword ? <VisibilityOff /> : <Visibility />}
             </IconButton>
