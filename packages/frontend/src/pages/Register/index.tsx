@@ -19,7 +19,7 @@ const StyledCard = styled(Card)({
   borderTop: "2px solid red",
 });
 
-const Register: FC<{}> = () => {
+const Register: FC<null> = () => {
   const {
     register,
     handleSubmit,
@@ -138,7 +138,6 @@ const Register: FC<{}> = () => {
           <PasswordPopover
             open={open}
             anchorEl={anchorEl}
-            handleClose={handleClose}
             errors={errors}
             dirtyFields={dirtyFields}
           />

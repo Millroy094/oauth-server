@@ -1,4 +1,4 @@
-import { FC, LegacyRef, useState } from "react";
+import { FC } from "react";
 import get from "lodash/get";
 import { Grid, Popper, Typography, styled } from "@mui/material";
 import { Close, Check } from "@mui/icons-material";
@@ -6,7 +6,6 @@ import { FieldErrors } from "react-hook-form";
 import { grey } from "@mui/material/colors";
 
 const StyledPopper = styled(Popper)(({ theme }) => ({
-  marginLeft: "10px",
   backgroundColor: `${theme.palette.mode === "dark" ? grey[900] : "#fff"}`,
   borderRadius: "8px",
   border: `1px solid ${theme.palette.mode === "dark" ? grey[700] : grey[200]}`,
@@ -21,21 +20,6 @@ const StyledPopper = styled(Popper)(({ theme }) => ({
   opacity: 1,
   margin: "0.25rem 0",
 }));
-
-const Arrow = styled("span")({
-  position: "absolute",
-  fontSize: 7,
-  width: "3em",
-  height: "3em",
-  "&::before": {
-    content: '""',
-    margin: "auto",
-    display: "block",
-    width: 0,
-    height: 0,
-    borderStyle: "solid",
-  },
-});
 
 interface PasswordPopoverProps {
   open: boolean;
@@ -61,7 +45,6 @@ const passwordFieldValidationMessages = {
 
 const PasswordPopover: FC<PasswordPopoverProps> = (props) => {
   const { open, anchorEl, errors, dirtyFields } = props;
-  const [arrowRef, setArrowRef] = useState(null);
 
   const fieldName = anchorEl?.firstElementChild?.getAttribute("name") ?? "";
 
@@ -90,13 +73,6 @@ const PasswordPopover: FC<PasswordPopoverProps> = (props) => {
       placement="right"
       modifiers={[
         {
-          name: "arrow",
-          enabled: true,
-          options: {
-            element: arrowRef,
-          },
-        },
-        {
           name: "offset",
           options: {
             offset: [-10, 20],
@@ -117,7 +93,6 @@ const PasswordPopover: FC<PasswordPopoverProps> = (props) => {
           </Grid>
         ))}
       </Grid>
-      <Arrow ref={setArrowRef as LegacyRef<HTMLSpanElement>} />
     </StyledPopper>
   );
 };
