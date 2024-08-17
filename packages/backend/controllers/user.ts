@@ -71,7 +71,7 @@ class UserController {
   }
 
   public static async isAuthenticated(req: Request, res: Response) {
-    res.send(HTTP_STATUSES.ok).json({
+    res.status(HTTP_STATUSES.ok).json({
       user: req.user,
     });
   }
