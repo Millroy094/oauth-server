@@ -78,6 +78,7 @@ const Login: FC<{}> = () => {
         <Link
           variant='caption'
           underline='none'
+          sx={{ cursor: 'pointer' }}
           onClick={() => navigate('/registration')}
         >
           Click here
@@ -119,7 +120,6 @@ const Login: FC<{}> = () => {
                   name='password'
                   label='Password'
                   register={register}
-                  required
                   error={!!errors.password}
                   helperText={errors.password ? errors.password.message : ''}
                 />

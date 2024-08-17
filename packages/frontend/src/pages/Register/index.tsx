@@ -89,6 +89,7 @@ const Register: FC<{}> = () => {
               <Link
                 variant='caption'
                 underline='none'
+                sx={{ cursor: 'pointer' }}
                 onClick={() => navigate('/login')}
               >
                 Click here

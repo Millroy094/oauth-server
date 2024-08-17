@@ -15,6 +15,7 @@ import Register from './Register';
 import { AxiosError } from 'axios';
 import isAuthenticated from '../api/is-authenicated-user';
 import { PUBLIC_ROUTES } from '../constants';
+import Account from './Account';
 
 function Pages() {
   const { enqueueSnackbar } = useSnackbar();
@@ -63,7 +64,7 @@ function Pages() {
     <Routes>
       <Route path={`/registration`} element={<Register />} />
       <Route path={`/login`} element={<Login />} />
-      <Route path={`/account`} element={<div>WIP</div>} />
+      <Route path={`/account`} element={<Account />} />
       <Route path={`/oauth/login/:interactionId`} element={<Login />} />
       <Route path={`/oauth/consent/:interactionId`} element={<Confirm />} />
     </Routes>
