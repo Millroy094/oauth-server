@@ -1,5 +1,5 @@
 import { Adapter, AdapterPayload } from 'oidc-provider';
-import OIDCStore from '../models/OIDCStore';
+import { OIDCStore } from '../models';
 
 class DynamoDBAdapter implements Adapter {
   name: string;

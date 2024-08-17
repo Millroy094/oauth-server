@@ -3,7 +3,7 @@ import bcrypt from 'bcryptjs';
 import { v4 as uuid } from 'uuid';
 const { Schema, model } = dynamoose;
 
-const AccountSchema = new Schema(
+const UserSchema = new Schema(
   {
     userId: {
       type: String,
@@ -43,6 +43,6 @@ const AccountSchema = new Schema(
     timestamps: true,
   },
 );
-const Account = model('Account', AccountSchema);
+const User = model('User', UserSchema);
 
-export default Account;
+export default User;

@@ -1,5 +1,11 @@
 import { useEffect } from 'react';
-import { Route, Routes, useNavigate, useSearchParams } from 'react-router-dom';
+import {
+  Route,
+  Routes,
+  useLocation,
+  useNavigate,
+  useSearchParams,
+} from 'react-router-dom';
 import { useSnackbar } from 'notistack';
 
 import Login from './Login';
@@ -7,9 +13,11 @@ import Confirm from './Confirm';
 import getInteractionStatus from '../api/get-interaction-status';
 import Register from './Register';
 import { AxiosError } from 'axios';
+import isAuthenticated from '../api/is-authenicated-user';
 
 function Pages() {
   const { enqueueSnackbar } = useSnackbar();
+  const { pathname } = useLocation();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
@@ -33,15 +41,28 @@ function Pages() {
     }
   };
 
+  const handleAuthenicatedUser = async (): Promise<void> => {
+    try {
+      await isAuthenticated();
+      navigate('/account');
+    } catch (err) {
+      navigate('/login');
+    }
+  };
+
   useEffect(() => {
-    if (searchParams.has('interactionId')) {
+    if (pathname === '/' && searchParams.has('interactionId')) {
       navigateByInteractionStage(searchParams.get('interactionId') ?? '');
+    } else if (pathname === '/') {
+      handleAuthenicatedUser();
     }
   }, []);
 
   return (
     <Routes>
       <Route path={`/register`} element={<Register />} />
+      <Route path={`/login`} element={<Login />} />
+      <Route path={`/account`} element={<div>WIP</div>} />
       <Route path={`/oauth/login/:interactionId`} element={<Login />} />
       <Route path={`/oauth/consent/:interactionId`} element={<Confirm />} />
     </Routes>

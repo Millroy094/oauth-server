@@ -1,9 +1,7 @@
 import { Request, Response } from 'express';
 import Provider from 'oidc-provider';
-import bcrypt from 'bcryptjs';
-import isEmpty from 'lodash/isEmpty';
-import AccountService from '../models/Account';
 import getConfiguration from '../support/get-configuration';
+import { UserService } from '../services';
 
 class OIDCController {
   private static readonly oidc = new Provider(
@@ -38,22 +36,11 @@ class OIDCController {
         throw new Error('Interaction is not at login stage');
       }
 
-      const [userAccount] = await AccountService.scan('email')
-        .eq(req.body.email)
-        .exec();
-
-      if (isEmpty(userAccount)) {
-        throw new Error('User does not exist');
-      }
-
-      const passwordCompare = await bcrypt.compare(
+      const userAccount = await UserService.validateUserCredentials(
+        req.body.email,
         req.body.password,
-        userAccount.password,
       );
 
-      if (!passwordCompare) {
-        throw new Error('Invalid password');
-      }
       result = {
         login: {
           accountId: userAccount.userId,

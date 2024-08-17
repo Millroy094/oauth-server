@@ -13,10 +13,11 @@ import PasswordField from '../../components/PasswordField';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import schema from './schema';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
 import { AxiosError } from 'axios';
 import authenticateInteraction from '../../api/authenicate-interaction';
+import authenicateUser from '../../api/authenicate-user';
 
 const StyledCard = styled(Card)({
   borderTop: '2px solid red',
@@ -24,6 +25,7 @@ const StyledCard = styled(Card)({
 
 const Login: FC<{}> = () => {
   const { interactionId } = useParams();
+  const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const {
     register,
@@ -36,13 +38,21 @@ const Login: FC<{}> = () => {
 
   const onSubmit = async (data: ILoginFormInput): Promise<void> => {
     try {
-      const response = await authenticateInteraction({
-        ...data,
-        interactionId: interactionId ?? '',
-      });
+      if (interactionId) {
+        const response = await authenticateInteraction({
+          ...data,
+          interactionId: interactionId,
+        });
 
-      if (response.data.redirect) {
-        window.location.href = response.data.redirect;
+        if (response.data.redirect) {
+          window.location.href = response.data.redirect;
+        }
+      } else {
+        await authenicateUser({
+          ...data,
+        });
+
+        navigate('/account');
       }
     } catch (err) {
       enqueueSnackbar(

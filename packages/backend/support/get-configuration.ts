@@ -1,7 +1,7 @@
 import { Configuration } from 'oidc-provider';
 import DynamoDBAdapter from '../adapter/DynamoDbAdapter';
 import jwks from '../keys.json' assert { type: 'json' };
-import AccountService from '../models/Account';
+import { User } from '../models';
 
 const getConfiguration = (): Configuration => ({
   adapter: DynamoDBAdapter,
@@ -15,7 +15,7 @@ const getConfiguration = (): Configuration => ({
     devInteractions: { enabled: false },
   },
   findAccount: async (_, id) => {
-    const account = await AccountService.get(id);
+    const account = await User.get(id);
     return (
       account && {
         accountId: id,

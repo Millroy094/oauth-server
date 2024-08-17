@@ -3,7 +3,9 @@ import dynamoose from 'dynamoose';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
+import passport from 'passport';
 import { oidcRoutes, userRoutes } from './routes';
+import configureAuthenicationStrategy from './support/configure-authenication-strategy';
 
 class Application {
   private readonly expressApp;
@@ -24,6 +26,7 @@ class Application {
       });
       dynamoose.aws.ddb.set(ddb);
     }
+    configureAuthenicationStrategy(passport);
   }
 
   private setupMiddleware(): void {
@@ -35,6 +38,7 @@ class Application {
     );
     this.expressApp.use(cookieParser());
     this.expressApp.use(bodyParser.json());
+    this.expressApp.use(passport.initialize());
   }
 
   private setupRoutes(): void {
