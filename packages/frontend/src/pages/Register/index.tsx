@@ -60,6 +60,7 @@ const Register: FC<{}> = () => {
       const response = await registerUser(omit(data, 'confirmPassword'));
       enqueueSnackbar(
         response?.data?.message ?? 'Successfully registered user',
+        { variant: 'success' },
       );
       reset();
     } catch (err) {
