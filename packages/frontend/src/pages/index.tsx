@@ -14,6 +14,7 @@ import getInteractionStatus from '../api/get-interaction-status';
 import Register from './Register';
 import { AxiosError } from 'axios';
 import isAuthenticated from '../api/is-authenicated-user';
+import { PUBLIC_ROUTES } from '../constants';
 
 function Pages() {
   const { enqueueSnackbar } = useSnackbar();
@@ -41,7 +42,7 @@ function Pages() {
     }
   };
 
-  const handleAuthenicatedUser = async (): Promise<void> => {
+  const secureRoutes = async (): Promise<void> => {
     try {
       await isAuthenticated();
       navigate('/account');
@@ -53,14 +54,14 @@ function Pages() {
   useEffect(() => {
     if (pathname === '/' && searchParams.has('interactionId')) {
       navigateByInteractionStage(searchParams.get('interactionId') ?? '');
-    } else if (pathname === '/') {
-      handleAuthenicatedUser();
+    } else if (!PUBLIC_ROUTES.includes(pathname)) {
+      secureRoutes();
     }
   }, []);
 
   return (
     <Routes>
-      <Route path={`/register`} element={<Register />} />
+      <Route path={`/registration`} element={<Register />} />
       <Route path={`/login`} element={<Login />} />
       <Route path={`/account`} element={<div>WIP</div>} />
       <Route path={`/oauth/login/:interactionId`} element={<Login />} />

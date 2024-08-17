@@ -6,6 +6,7 @@ import cookieParser from 'cookie-parser';
 import passport from 'passport';
 import { oidcRoutes, userRoutes } from './routes';
 import configureAuthenicationStrategy from './support/configure-authenication-strategy';
+import { getEnviromentConfiguration } from './support/get-environment-configuration';
 
 class Application {
   private readonly expressApp;
@@ -15,9 +16,14 @@ class Application {
   }
 
   private setupDependencies(): void {
-    if (process.env.NODE_ENV === 'development') {
+    const NODE_ENV = getEnviromentConfiguration('NODE_ENV', 'development');
+
+    if (NODE_ENV === 'development') {
       const ddb = new dynamoose.aws.ddb.DynamoDB({
-        endpoint: process.env.DYNAMO_DB_ENDPOINT,
+        endpoint: getEnviromentConfiguration(
+          'DYNAMO_DB_ENDPOINT',
+          'http://localhost:8000',
+        ),
         credentials: {
           accessKeyId: 'LOCAL',
           secretAccessKey: 'LOCAL',

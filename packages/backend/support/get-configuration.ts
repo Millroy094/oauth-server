@@ -2,12 +2,13 @@ import { Configuration } from 'oidc-provider';
 import DynamoDBAdapter from '../adapter/DynamoDbAdapter';
 import jwks from '../keys.json' assert { type: 'json' };
 import { User } from '../models';
+import { getEnviromentConfiguration } from './get-environment-configuration';
 
 const getConfiguration = (): Configuration => ({
   adapter: DynamoDBAdapter,
   jwks,
   cookies: {
-    keys: [...JSON.parse(process?.env?.COOKIE_SECRETS ?? '[]')],
+    keys: [...JSON.parse(getEnviromentConfiguration('COOKIE_SECRETS', '[]'))],
     long: { httpOnly: true, sameSite: 'strict' },
     short: { httpOnly: true, sameSite: 'strict' },
   },

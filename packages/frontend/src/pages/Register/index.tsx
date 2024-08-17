@@ -1,5 +1,6 @@
 import React, { FC } from 'react';
 import {
+  Link,
   Button,
   Card,
   CardContent,
@@ -7,6 +8,7 @@ import {
   Container,
   Grid,
   TextField,
+  Typography,
   styled,
 } from '@mui/material';
 import PasswordField from '../../components/PasswordField';
@@ -18,6 +20,7 @@ import { useSnackbar } from 'notistack';
 import schema from './schema';
 import PasswordPopover from './PasswordPopover';
 import registerUser from '../../api/register-user';
+import { useNavigate } from 'react-router-dom';
 
 const StyledCard = styled(Card)({
   borderTop: '2px solid red',
@@ -25,6 +28,7 @@ const StyledCard = styled(Card)({
 
 const Register: FC<{}> = () => {
   const { enqueueSnackbar } = useSnackbar();
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -76,7 +80,28 @@ const Register: FC<{}> = () => {
   return (
     <Container maxWidth='sm'>
       <StyledCard sx={{ marginTop: 15 }}>
-        <CardHeader title='Register' />
+        <CardHeader
+          title='Register a new user'
+          titleTypographyProps={{ align: 'center' }}
+          subheader={
+            <>
+              <Typography variant='caption'>Already registered?</Typography>
+              <Link
+                variant='caption'
+                underline='none'
+                onClick={() => navigate('/login')}
+              >
+                Click here
+              </Link>
+              <Typography variant='caption'>to login</Typography>
+            </>
+          }
+          subheaderTypographyProps={{
+            display: 'flex',
+            gap: '4px',
+            justifyContent: 'center',
+          }}
+        />
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)}>
             <Grid container direction='column' spacing={2} sx={{ p: 2 }}>

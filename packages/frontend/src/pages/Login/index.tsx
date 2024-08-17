@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, ReactElement } from 'react';
 import {
   Button,
   Card,
@@ -6,7 +6,9 @@ import {
   CardHeader,
   Container,
   Grid,
+  Link,
   TextField,
+  Typography,
   styled,
 } from '@mui/material';
 import PasswordField from '../../components/PasswordField';
@@ -64,10 +66,41 @@ const Login: FC<{}> = () => {
     }
   };
 
+  const extraProps: {
+    subheader?: ReactElement;
+    subheaderTypographyProps?: Record<string, string | number>;
+  } = {};
+
+  if (!interactionId) {
+    extraProps.subheader = (
+      <>
+        <Typography variant='caption'>Not registered?</Typography>
+        <Link
+          variant='caption'
+          underline='none'
+          onClick={() => navigate('/registration')}
+        >
+          Click here
+        </Link>
+        <Typography variant='caption'>to register</Typography>
+      </>
+    );
+
+    extraProps.subheaderTypographyProps = {
+      display: 'flex',
+      gap: '4px',
+      justifyContent: 'center',
+    };
+  }
+
   return (
     <Container maxWidth='sm'>
       <StyledCard sx={{ marginTop: 15 }}>
-        <CardHeader title='Log In' />
+        <CardHeader
+          title='Log In'
+          titleTypographyProps={{ align: 'center' }}
+          {...extraProps}
+        />
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)}>
             <Grid container direction='column' spacing={2} sx={{ p: 2 }}>

@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import Provider from 'oidc-provider';
 import getConfiguration from '../support/get-configuration';
 import { UserService } from '../services';
+import { HTTP_STATUSES } from '../constants';
 
 class OIDCController {
   private static readonly oidc = new Provider(
@@ -14,10 +15,12 @@ class OIDCController {
       const {
         prompt: { name },
       } = await OIDCController.oidc.interactionDetails(req, res);
-      res.status(200).json({ status: name });
+      res.status(HTTP_STATUSES.ok).json({ status: name });
     } catch (err) {
       console.log(err);
-      res.status(400).json({ error: 'Unable to process authentication' });
+      res
+        .status(HTTP_STATUSES.badRequest)
+        .json({ error: 'Unable to process authentication' });
     }
   }
 
@@ -54,7 +57,9 @@ class OIDCController {
           mergeWithLastSubmission: false,
         },
       );
-      res.status(200).json({ redirect, message: 'Login successful!' });
+      res
+        .status(HTTP_STATUSES.ok)
+        .json({ redirect, message: 'Login successful!' });
     } catch (err) {
       console.log(err);
       if ((err as Error).message === 'Interaction is not at login stage') {
@@ -70,9 +75,11 @@ class OIDCController {
             mergeWithLastSubmission: false,
           },
         );
-        res.status(200).json({ redirect });
+        res.status(HTTP_STATUSES.ok).json({ redirect });
       } else {
-        res.status(401).json({ error: 'Invalid email or password' });
+        res
+          .status(HTTP_STATUSES.unauthorised)
+          .json({ error: 'Invalid email or password' });
       }
     }
   }
@@ -127,7 +134,9 @@ class OIDCController {
             mergeWithLastSubmission: true,
           },
         );
-        res.json({ redirect, message: 'Authorisation successful!' });
+        res
+          .json({ redirect, message: 'Authorisation successful!' })
+          .status(HTTP_STATUSES.ok);
       }
     } catch (err) {
       console.log(err);
@@ -144,9 +153,11 @@ class OIDCController {
             mergeWithLastSubmission: false,
           },
         );
-        res.status(200).json({ redirect });
+        res.status(HTTP_STATUSES.ok).json({ redirect });
       } else {
-        res.status(401).json({ error: 'Authorisation failed' });
+        res
+          .status(HTTP_STATUSES.unauthorised)
+          .json({ error: 'Authorisation failed' });
       }
     }
   }
