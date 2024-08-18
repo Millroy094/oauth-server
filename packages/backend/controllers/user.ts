@@ -75,6 +75,37 @@ class UserController {
       user: req.user,
     });
   }
+
+  public static async getProfileDetails(req: Request, res: Response) {
+    try {
+      const { user } = req;
+      const { userId } = user as any;
+
+      const userRecord = await UserService.getUserById(userId);
+      res.status(HTTP_STATUSES.ok).json({ user: userRecord });
+    } catch (err) {
+      console.log(err);
+      res
+        .status(HTTP_STATUSES.notFound)
+        .json({ error: 'There was an issue fetching user info' });
+    }
+  }
+
+  public static async updateProfileDetails(req: Request, res: Response) {
+    try {
+      const { user } = req;
+      const { userId } = user as any;
+      await UserService.updateUser(userId, req.body);
+      res
+        .status(HTTP_STATUSES.ok)
+        .json({ message: 'Successfully updated user record!' });
+    } catch (err) {
+      console.log(err);
+      res
+        .status(HTTP_STATUSES.notFound)
+        .json({ error: 'There was an issue updating user info' });
+    }
+  }
 }
 
 export default UserController;

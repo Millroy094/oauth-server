@@ -12,5 +12,16 @@ router.get(
   passport.authenticate('jwt', { session: false }),
   UserController.isAuthenticated,
 );
+router.get(
+  '/profile-details',
+  passport.authenticate('jwt', { session: false }),
+  UserController.getProfileDetails,
+);
+
+router.put(
+  '/profile-details',
+  passport.authenticate('jwt', { session: false }),
+  UserController.updateProfileDetails,
+);
 
 export default router;

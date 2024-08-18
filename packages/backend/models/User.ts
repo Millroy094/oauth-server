@@ -13,7 +13,6 @@ const UserSchema = new Schema(
     email: {
       type: String,
       required: true,
-      rangeKey: true,
     },
     emailVerified: {
       type: Boolean,

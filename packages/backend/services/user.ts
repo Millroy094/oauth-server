@@ -42,6 +42,25 @@ class UserService {
 
     await User.create(fields);
   }
+
+  public static async getUserById(id: string): Promise<AnyItem> {
+    const userAccount = await User.get(id);
+
+    if (isEmpty(userAccount)) {
+      throw new Error('User does not exists');
+    }
+
+    return userAccount;
+  }
+
+  public static async updateUser(
+    userId: string,
+    updatedFields: any,
+  ): Promise<boolean> {
+    await User.update(userId, updatedFields);
+
+    return true;
+  }
 }
 
 export default UserService;
