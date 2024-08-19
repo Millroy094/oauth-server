@@ -23,9 +23,12 @@ const StyledCard = styled(Card)({
 const Confirm: FC<{}> = () => {
   const { interactionId } = useParams();
   const { enqueueSnackbar } = useSnackbar();
-  const onAuthorize = async (): Promise<void> => {
+  const onAuthorize = async (authorize: boolean): Promise<void> => {
     try {
-      const response = await authorizeInteraction(interactionId ?? '');
+      const response = await authorizeInteraction(
+        interactionId ?? '',
+        authorize,
+      );
       if (response.data.redirect) {
         window.location.href = response.data.redirect;
       }
@@ -44,14 +47,31 @@ const Confirm: FC<{}> = () => {
       <StyledCard sx={{ marginTop: 15 }}>
         <CardHeader title='Authorize' />
         <CardContent>
-          <Grid container direction='column' spacing={1}>
+          <Grid container direction='column' spacing={2}>
             <Grid item>
-              <Typography>Can you confirm you want to authorize?</Typography>
+              <Typography>
+                Can you confirm you want to authorize this request?
+              </Typography>
             </Grid>
-            <Grid item>
-              <Button variant='contained' onClick={onAuthorize}>
-                Authorize
-              </Button>
+            <Grid item container spacing={1}>
+              <Grid item>
+                <Button
+                  variant='contained'
+                  onClick={() => onAuthorize(true)}
+                  color='success'
+                >
+                  Yes
+                </Button>
+              </Grid>
+              <Grid item>
+                <Button
+                  variant='contained'
+                  onClick={() => onAuthorize(false)}
+                  color='error'
+                >
+                  No
+                </Button>
+              </Grid>
             </Grid>
           </Grid>
         </CardContent>

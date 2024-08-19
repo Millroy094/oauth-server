@@ -87,6 +87,7 @@ class OIDCController {
   public static async authorizeInteraction(req: Request, res: Response) {
     let result = {};
     try {
+      const { authorize } = req.body;
       const interactionDetails = await OIDCController.oidc.interactionDetails(
         req,
         res,
@@ -99,6 +100,10 @@ class OIDCController {
 
       if (name !== 'consent') {
         throw new Error('Interaction is not at consent stage');
+      }
+
+      if (!authorize) {
+        throw new Error('User does not authorize this request');
       }
 
       const grant = interactionDetails.grantId
@@ -140,7 +145,12 @@ class OIDCController {
       }
     } catch (err) {
       console.log(err);
-      if ((err as Error).message === 'Interaction is not at consent stage') {
+      if (
+        [
+          'Interaction is not at consent stage',
+          'User does not authorize this request',
+        ].includes((err as Error).message)
+      ) {
         result = {
           error: 'access_denied',
           error_description: 'Authorisation failed.',
