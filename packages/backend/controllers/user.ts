@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
-import { UserService } from '../services';
+import { OIDCService, UserService } from '../services';
 import {
   doesEnvironmentVariableValueMatch,
   getEnviromentConfiguration,
@@ -104,6 +104,51 @@ class UserController {
       res
         .status(HTTP_STATUSES.notFound)
         .json({ error: 'There was an issue updating user info' });
+    }
+  }
+
+  public static async getSessions(req: Request, res: Response) {
+    try {
+      const { user } = req;
+      const { userId } = user as any;
+      const sessions = await OIDCService.getSessions(userId);
+      res.status(HTTP_STATUSES.ok).json({ sessions });
+    } catch (err) {
+      console.log(err);
+      res
+        .status(HTTP_STATUSES.notFound)
+        .json({ error: 'Unable to retreive user sessions' });
+    }
+  }
+
+  public static async deleteAllSessions(req: Request, res: Response) {
+    try {
+      const { user } = req;
+      const { userId } = user as any;
+      await OIDCService.deleteAllSessions(userId);
+      res
+        .status(HTTP_STATUSES.ok)
+        .json({ message: 'Successfully deleted all user sessions' });
+    } catch (err) {
+      console.log(err);
+      res
+        .status(HTTP_STATUSES.notFound)
+        .json({ error: 'Unable to delete user sessions' });
+    }
+  }
+
+  public static async deleteSession(req: Request, res: Response) {
+    try {
+      const { sessionId } = req.params;
+      await OIDCService.deleteSession(sessionId);
+      res
+        .status(HTTP_STATUSES.ok)
+        .json({ message: 'Successfully deleted all user sessions' });
+    } catch (err) {
+      console.log(err);
+      res
+        .status(HTTP_STATUSES.notFound)
+        .json({ error: 'Unable to delete user sessions' });
     }
   }
 }

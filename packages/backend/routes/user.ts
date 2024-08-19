@@ -24,4 +24,22 @@ router.put(
   UserController.updateProfileDetails,
 );
 
+router.get(
+  '/sessions',
+  passport.authenticate('jwt', { session: false }),
+  UserController.getSessions,
+);
+
+router.delete(
+  '/sessions',
+  passport.authenticate('jwt', { session: false }),
+  UserController.deleteAllSessions,
+);
+
+router.delete(
+  '/sessions/:sessionId',
+  passport.authenticate('jwt', { session: false }),
+  UserController.deleteSession,
+);
+
 export default router;

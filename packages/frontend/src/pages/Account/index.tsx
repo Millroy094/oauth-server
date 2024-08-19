@@ -10,19 +10,21 @@ import { useNavigate } from 'react-router-dom';
 import { AppBar, Button, Container, Toolbar } from '@mui/material';
 import Profile from './Profile';
 import logoutUser from '../../api/logout-user';
+import Sessions from './Sessions';
 
 interface TabPanelProps {
   children?: React.ReactNode;
   index: number;
   value: number;
+  size: 'sm' | 'md' | 'lg' | 'xl';
 }
 
 function TabPanel(props: TabPanelProps) {
-  const { children, value, index } = props;
+  const { children, value, index, size } = props;
 
   return (
     value === index && (
-      <Container maxWidth='sm' sx={{ p: 2 }}>
+      <Container maxWidth={size} sx={{ p: 2 }}>
         {children}
       </Container>
     )
@@ -98,14 +100,12 @@ export default function Account() {
           <Tab label='Security' icon={<Security color='warning' />} />
           <Tab label='Sessions' icon={<VpnKey color='success' />} />
         </Tabs>
-        <TabPanel value={value} index={0}>
+        <TabPanel value={value} index={0} size='sm'>
           <Profile />
         </TabPanel>
-        <TabPanel value={value} index={1}>
-          Item Two
-        </TabPanel>
-        <TabPanel value={value} index={2}>
-          Item Three
+        <TabPanel value={value} index={1} size='sm'></TabPanel>
+        <TabPanel value={value} index={2} size='md'>
+          <Sessions />
         </TabPanel>
       </Box>
     </>

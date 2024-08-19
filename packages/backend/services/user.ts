@@ -1,7 +1,8 @@
 import { AnyItem } from 'dynamoose/dist/Item';
 import isEmpty from 'lodash/isEmpty';
 import bcrypt from 'bcryptjs';
-import { User } from '../models';
+import { OIDCStore, User } from '../models';
+import { ObjectType } from 'dynamoose/dist/General';
 
 class UserService {
   public static async validateUserCredentials(
