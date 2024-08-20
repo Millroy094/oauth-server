@@ -3,7 +3,13 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import { AccountBox, Security, VpnKey } from '@mui/icons-material';
+import {
+  AccountBox,
+  Business,
+  VpnKey,
+  RecentActors,
+  LocalPolice,
+} from '@mui/icons-material';
 import { useSnackbar } from 'notistack';
 import { AxiosError } from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -11,6 +17,8 @@ import { AppBar, Button, Container, Toolbar } from '@mui/material';
 import Profile from './Profile';
 import logoutUser from '../../api/logout-user';
 import Sessions from './Sessions';
+import Clients from './Clients';
+import Users from './Users';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -97,15 +105,22 @@ export default function Account() {
           sx={{ borderRight: 1, borderColor: 'divider', width: 100 }}
         >
           <Tab label='Profile' icon={<AccountBox color='error' />} />
-          <Tab label='Security' icon={<Security color='warning' />} />
           <Tab label='Sessions' icon={<VpnKey color='success' />} />
+          <Tab label='Security' icon={<LocalPolice color='warning' />} />
+          <Tab label='Clients' icon={<Business color='info' />} />
+          <Tab label='Users' icon={<RecentActors color='secondary' />} />
         </Tabs>
         <TabPanel value={value} index={0} size='sm'>
           <Profile />
         </TabPanel>
-        <TabPanel value={value} index={1} size='sm'></TabPanel>
-        <TabPanel value={value} index={2} size='md'>
+        <TabPanel value={value} index={1} size='md'>
           <Sessions />
+        </TabPanel>
+        <TabPanel value={value} index={3} size='md'>
+          <Clients />
+        </TabPanel>
+        <TabPanel value={value} index={4} size='md'>
+          <Users />
         </TabPanel>
       </Box>
     </>
