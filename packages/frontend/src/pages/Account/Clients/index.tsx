@@ -1,8 +1,18 @@
-import { FC, useState } from 'react';
-import { Button, Card, CardContent, CardHeader } from '@mui/material';
-import { Add } from '@mui/icons-material';
+import { FC, useEffect, useState } from 'react';
+import {
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  IconButton,
+} from '@mui/material';
+import { AddBusiness, Delete } from '@mui/icons-material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import ClientPopup from './ClientPopup';
+import getClients from '../../../api/get-clients';
+import { AxiosError } from 'axios';
+import { useSnackbar } from 'notistack';
+import deleteClient from '../../../api/delete-client';
 
 interface Client {
   id: string;
@@ -13,14 +23,52 @@ interface Client {
 const Clients: FC<{}> = () => {
   const [open, setOpen] = useState(false);
   const [clients, setClients] = useState<Client[]>([]);
+  const { enqueueSnackbar } = useSnackbar();
+
+  const fetchClients = async () => {
+    try {
+      const response = await getClients();
+      setClients(response.data.results);
+    } catch (err) {
+      enqueueSnackbar(
+        err instanceof AxiosError && err?.response?.data?.error
+          ? err.response.data.error
+          : 'There was an issue retreiving clients, please try again',
+        { variant: 'error' },
+      );
+    }
+  };
+
+  const handleDelete = async (id: string): Promise<void> => {
+    try {
+      const response = await deleteClient(id);
+      enqueueSnackbar(
+        response?.data?.message ?? 'Successfully deleted cleint',
+        { variant: 'success' },
+      );
+      setClients(clients.filter((client) => client.id !== id));
+    } catch (err) {
+      enqueueSnackbar(
+        err instanceof AxiosError && err?.response?.data?.error
+          ? err.response.data.error
+          : 'There was an issue deleting the client, please try again',
+        { variant: 'error' },
+      );
+    }
+  };
+
+  useEffect(() => {
+    fetchClients();
+  }, []);
 
   const onClose = () => {
     setOpen(false);
+    fetchClients();
   };
 
   const columns: GridColDef<(typeof clients)[number]>[] = [
     {
-      field: 'name',
+      field: 'clientName',
       headerName: 'Name',
       width: 200,
       editable: false,
@@ -30,6 +78,17 @@ const Clients: FC<{}> = () => {
       headerName: 'Secret',
       width: 200,
       editable: false,
+    },
+    {
+      field: 'id',
+      headerName: '',
+      width: 10,
+      editable: false,
+      renderCell: (params) => (
+        <IconButton color='error' onClick={() => handleDelete(params.value)}>
+          <Delete />
+        </IconButton>
+      ),
     },
   ];
 
@@ -41,7 +100,7 @@ const Clients: FC<{}> = () => {
           <Button
             variant='outlined'
             color='success'
-            startIcon={<Add />}
+            startIcon={<AddBusiness />}
             onClick={() => setOpen(true)}
           >
             Create new Client

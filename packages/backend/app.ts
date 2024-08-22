@@ -4,7 +4,7 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import passport from 'passport';
-import { oidcRoutes, userRoutes } from './routes';
+import { adminRoutes, oidcRoutes, userRoutes } from './routes';
 import configureAuthenicationStrategy from './support/configure-authenication-strategy';
 import { getEnviromentConfiguration } from './support/get-environment-configuration';
 
@@ -50,6 +50,7 @@ class Application {
   private setupRoutes(): void {
     this.expressApp.use('/oidc', oidcRoutes);
     this.expressApp.use('/user', userRoutes);
+    this.expressApp.use('/admin', adminRoutes);
   }
 
   public start() {

@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useMemo } from 'react';
 import {
   Button,
   Card,
@@ -9,15 +9,23 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { AddLinkRounded, Delete } from '@mui/icons-material';
-
+import {
+  AddLinkRounded,
+  Business,
+  BusinessCenter,
+  Delete,
+} from '@mui/icons-material';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import schema from './schema';
 import has from 'lodash/has';
 import get from 'lodash/get';
-import { uniqueId } from 'lodash';
+import { useSnackbar } from 'notistack';
+import { AxiosError } from 'axios';
+import { snakeCase, uniqueId } from 'lodash';
+
 import ControlledSelect from '../../../../components/ControlledSelect';
+import createClient from '../../../../api/create-client';
 
 interface ClientPopupProps {
   open: boolean;
@@ -26,24 +34,28 @@ interface ClientPopupProps {
 
 const ClientPopup: FC<ClientPopupProps> = (props) => {
   const { open, onClose } = props;
-
+  const { enqueueSnackbar } = useSnackbar();
   const {
     control,
     register,
     handleSubmit,
     formState: { errors },
     reset,
+    watch,
   } = useForm<IClientPopupInput>({
     resolver: yupResolver(schema),
     criteriaMode: 'all',
     mode: 'onChange',
     defaultValues: {
-      name: '',
+      clientName: '',
       grants: [],
       scopes: [],
       redirectUris: [{ id: uniqueId(), value: '' }],
     },
   });
+
+  const clientName = watch('clientName', '');
+  const clientId = useMemo(() => snakeCase(clientName), [clientName]);
 
   const {
     fields: redirectUriFields,
@@ -60,7 +72,26 @@ const ClientPopup: FC<ClientPopupProps> = (props) => {
     redirectUriFields.length - 1 === index;
   console.log(errors);
   const onSubmit = async (data: IClientPopupInput): Promise<void> => {
-    console.log(data);
+    try {
+      const response = await createClient({
+        ...data,
+        clientId,
+        redirectUris: data.redirectUris.map((redirectUri) => redirectUri.value),
+      });
+      enqueueSnackbar(
+        response?.data?.message ?? 'Successfully created client',
+        { variant: 'success' },
+      );
+      reset();
+      onClose();
+    } catch (err) {
+      enqueueSnackbar(
+        err instanceof AxiosError && err?.response?.data?.error
+          ? err.response.data.error
+          : 'There was an issue creating the client, please try again',
+        { variant: 'error' },
+      );
+    }
   };
 
   return (
@@ -81,18 +112,36 @@ const ClientPopup: FC<ClientPopupProps> = (props) => {
           p: 2,
         }}
       >
-        <Typography variant='h6'>Create Client</Typography>
-        <Divider sx={{ m: '15px 0 20px' }} />
+        <Grid container spacing={1} sx={{ p: '10px 0' }}>
+          <Grid item>
+            <Business color='primary' />
+          </Grid>
+          <Grid item>
+            <Typography variant='h6' color='primary'>
+              Create Client
+            </Typography>
+          </Grid>
+        </Grid>
+        <Divider />
         <form onSubmit={handleSubmit(onSubmit)}>
           <Grid container direction='column' spacing={2} sx={{ p: 2 }}>
             <Grid item>
               <TextField
-                {...register('name')}
+                label='Client Id'
+                variant='outlined'
+                fullWidth
+                disabled
+                value={clientId}
+              />
+            </Grid>
+            <Grid item>
+              <TextField
+                {...register('clientName')}
                 label='Client Name'
                 variant='outlined'
                 fullWidth
-                error={!!errors.name}
-                helperText={errors.name ? errors.name.message : ''}
+                error={!!errors.clientName}
+                helperText={errors.clientName ? errors.clientName.message : ''}
               />
             </Grid>
             <Grid item container spacing={2}>

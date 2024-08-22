@@ -14,10 +14,9 @@ const ClientSchema = new Schema(
     },
     clientId: {
       type: String,
-      hashKey: true,
       required: true,
     },
-    name: {
+    clientName: {
       type: String,
       required: true,
     },
