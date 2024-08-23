@@ -70,7 +70,7 @@ const ClientPopup: FC<ClientPopupProps> = (props) => {
 
   const isLastRedirectUri = (index: number): boolean =>
     redirectUriFields.length - 1 === index;
-  console.log(errors);
+
   const onSubmit = async (data: IClientPopupInput): Promise<void> => {
     try {
       const response = await createClient({

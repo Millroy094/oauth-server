@@ -22,7 +22,7 @@ const ClientSchema = new Schema(
     },
     secret: {
       type: String,
-      default: crypto.randomBytes(64).toString('hex'),
+      default: crypto.randomBytes(32).toString('base64'),
       set: (value: ValueType) => encryptData(value as string),
       get: (value: ValueType) => decryptData(value as string),
     },

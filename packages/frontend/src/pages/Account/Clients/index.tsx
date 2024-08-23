@@ -1,12 +1,14 @@
 import { FC, useEffect, useState } from 'react';
 import {
+  Box,
   Button,
   Card,
   CardContent,
   CardHeader,
   IconButton,
+  Typography,
 } from '@mui/material';
-import { AddBusiness, Delete } from '@mui/icons-material';
+import { AddBusiness, Delete, ContentCopy } from '@mui/icons-material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import ClientPopup from './ClientPopup';
 import getClients from '../../../api/get-clients';
@@ -68,22 +70,55 @@ const Clients: FC<{}> = () => {
 
   const columns: GridColDef<(typeof clients)[number]>[] = [
     {
-      field: 'clientName',
-      headerName: 'Name',
-      width: 200,
+      field: 'clientId',
+      headerName: 'Client ID',
+      width: 275,
       editable: false,
     },
+    {
+      field: 'clientName',
+      headerName: 'Name',
+      width: 275,
+      editable: false,
+    },
+
     {
       field: 'secret',
       headerName: 'Secret',
       width: 200,
       editable: false,
+      renderCell: (params) => (
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            height: '100%',
+          }}
+        >
+          <Typography
+            variant='caption'
+            component='div'
+            sx={{ userSelect: 'none' }}
+          >
+            ************************
+          </Typography>
+          <IconButton
+            size='small'
+            color='primary'
+            onClick={() => navigator.clipboard.writeText(params.value)}
+          >
+            <ContentCopy fontSize='small' />
+          </IconButton>
+        </Box>
+      ),
     },
     {
       field: 'id',
       headerName: '',
       width: 10,
       editable: false,
+      sortable: false,
       renderCell: (params) => (
         <IconButton color='error' onClick={() => handleDelete(params.value)}>
           <Delete />
