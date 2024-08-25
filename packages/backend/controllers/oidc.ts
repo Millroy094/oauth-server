@@ -1,20 +1,13 @@
 import { Request, Response } from 'express';
-import Provider from 'oidc-provider';
-import getConfiguration from '../support/get-configuration';
 import { UserService } from '../services';
 import { HTTP_STATUSES } from '../constants';
 
 class OIDCController {
-  private static readonly oidc = new Provider(
-    'http://localhost:3000',
-    getConfiguration(),
-  );
-
   public static async getInteractionStatus(req: Request, res: Response) {
     try {
       const {
         prompt: { name },
-      } = await OIDCController.oidc.interactionDetails(req, res);
+      } = await req.oidcProvider.interactionDetails(req, res);
       res.status(HTTP_STATUSES.ok).json({ status: name });
     } catch (err) {
       console.log(err);
@@ -27,7 +20,7 @@ class OIDCController {
   public static async authenticateInteraction(req: Request, res: Response) {
     let result = {};
     try {
-      const interactionDetails = await OIDCController.oidc.interactionDetails(
+      const interactionDetails = await req.oidcProvider.interactionDetails(
         req,
         res,
       );
@@ -49,7 +42,7 @@ class OIDCController {
           accountId: userAccount.userId,
         },
       };
-      const redirect = await OIDCController.oidc.interactionResult(
+      const redirect = await req.oidcProvider.interactionResult(
         req,
         res,
         result,
@@ -67,7 +60,7 @@ class OIDCController {
           error: 'access_denied',
           error_description: 'Username or password is incorrect.',
         };
-        const redirect = await OIDCController.oidc.interactionResult(
+        const redirect = await req.oidcProvider.interactionResult(
           req,
           res,
           result,
@@ -88,7 +81,7 @@ class OIDCController {
     let result = {};
     try {
       const { authorize } = req.body;
-      const interactionDetails = await OIDCController.oidc.interactionDetails(
+      const interactionDetails = await req.oidcProvider.interactionDetails(
         req,
         res,
       );
@@ -107,8 +100,8 @@ class OIDCController {
       }
 
       const grant = interactionDetails.grantId
-        ? await OIDCController.oidc.Grant.find(interactionDetails.grantId)
-        : new OIDCController.oidc.Grant({
+        ? await req.oidcProvider.Grant.find(interactionDetails.grantId)
+        : new req.oidcProvider.Grant({
             accountId,
             clientId: params.client_id as string,
           });
@@ -131,7 +124,7 @@ class OIDCController {
         const grantId = await grant.save();
 
         const result = { consent: { grantId } };
-        const redirect = await OIDCController.oidc.interactionResult(
+        const redirect = await req.oidcProvider.interactionResult(
           req,
           res,
           result,
@@ -155,7 +148,7 @@ class OIDCController {
           error: 'access_denied',
           error_description: 'Authorisation failed.',
         };
-        const redirect = await OIDCController.oidc.interactionResult(
+        const redirect = await req.oidcProvider.interactionResult(
           req,
           res,
           result,
@@ -173,7 +166,7 @@ class OIDCController {
   }
 
   public static async setupOidc(req: Request, res: Response) {
-    const cb = OIDCController.oidc.callback();
+    const cb = req.oidcProvider.callback();
     return cb(req, res);
   }
 }

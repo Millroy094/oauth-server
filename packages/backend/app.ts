@@ -7,6 +7,7 @@ import passport from 'passport';
 import { adminRoutes, oidcRoutes, userRoutes } from './routes';
 import configureAuthenicationStrategy from './support/configure-authenication-strategy';
 import { getEnviromentConfiguration } from './support/get-environment-configuration';
+import addOIDCProvider from './middleware/add-oidc-provider';
 
 class Application {
   private readonly expressApp;
@@ -45,6 +46,7 @@ class Application {
     this.expressApp.use(cookieParser());
     this.expressApp.use(bodyParser.json());
     this.expressApp.use(passport.initialize());
+    this.expressApp.use(addOIDCProvider);
   }
 
   private setupRoutes(): void {
