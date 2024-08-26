@@ -38,10 +38,10 @@ const authenicate = (req: Request, res: Response, next: NextFunction) => {
         refreshTokenSecret,
       ) as JwtPayload;
       const newAccessToken = jwt.sign({ userId, email }, accessTokenSecret, {
-        expiresIn: getEnviromentConfiguration('ACCESS_JWT_EXPIRY'),
+        expiresIn: getEnviromentConfiguration('ACCESS_JWT_EXPIRY', '1h'),
       });
       const newRefreshToken = jwt.sign({ userId, email }, accessTokenSecret, {
-        expiresIn: getEnviromentConfiguration('REFRESH_JWT_EXPIRY'),
+        expiresIn: getEnviromentConfiguration('REFRESH_JWT_EXPIRY', '1d'),
       });
 
       res

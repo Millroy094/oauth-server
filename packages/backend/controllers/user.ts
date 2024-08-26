@@ -35,7 +35,7 @@ class UserController {
 
       const accessToken = jwt.sign(
         payload,
-        getEnviromentConfiguration('ACCESS_JWT_SECRET', 'TEST'),
+        getEnviromentConfiguration('ACCESS_JWT_SECRET'),
         {
           expiresIn: getEnviromentConfiguration('ACCESS_JWT_EXPIRY', '1h'),
         },
@@ -43,7 +43,7 @@ class UserController {
 
       const refreshToken = jwt.sign(
         payload,
-        getEnviromentConfiguration('REFRESH_JWT_SECRET', 'TEST'),
+        getEnviromentConfiguration('REFRESH_JWT_SECRET'),
         {
           expiresIn: getEnviromentConfiguration('REFRESH_JWT_EXPIRY', '1d'),
         },
