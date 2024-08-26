@@ -1,44 +1,28 @@
 import { Router } from 'express';
-import passport from 'passport';
 import { UserController } from '../controllers';
+import { authenicate } from '../middleware';
 
 const router = Router();
 
 router.post('/register', UserController.register);
 router.post('/login', UserController.login);
 router.get('/logout', UserController.logout);
-router.get(
-  '/is-authenticated',
-  passport.authenticate('jwt', { session: false }),
-  UserController.isAuthenticated,
-);
-router.get(
-  '/profile-details',
-  passport.authenticate('jwt', { session: false }),
-  UserController.getProfileDetails,
-);
+router.get('/is-authenticated', authenicate, UserController.isAuthenticated);
+router.get('/profile-details', authenicate, UserController.getProfileDetails);
 
 router.put(
   '/profile-details',
-  passport.authenticate('jwt', { session: false }),
+  authenicate,
   UserController.updateProfileDetails,
 );
 
-router.get(
-  '/sessions',
-  passport.authenticate('jwt', { session: false }),
-  UserController.getSessions,
-);
+router.get('/sessions', authenicate, UserController.getSessions);
 
-router.delete(
-  '/sessions',
-  passport.authenticate('jwt', { session: false }),
-  UserController.deleteAllSessions,
-);
+router.delete('/sessions', authenicate, UserController.deleteAllSessions);
 
 router.delete(
   '/sessions/:sessionId',
-  passport.authenticate('jwt', { session: false }),
+  authenicate,
   UserController.deleteSession,
 );
 

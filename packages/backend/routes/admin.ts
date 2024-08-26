@@ -1,33 +1,13 @@
 import { Router } from 'express';
-import passport from 'passport';
 import { AdminController } from '../controllers';
+import { authenicate } from '../middleware';
 
 const router = Router();
 
-router.get(
-  '/clients',
-  passport.authenticate('jwt', { session: false }),
-  AdminController.getClients,
-);
-router.post(
-  '/clients/new',
-  passport.authenticate('jwt', { session: false }),
-  AdminController.createClient,
-);
-router.get(
-  '/clients/:id',
-  passport.authenticate('jwt', { session: false }),
-  AdminController.getClient,
-);
-router.put(
-  '/clients/:id',
-  passport.authenticate('jwt', { session: false }),
-  AdminController.updateClient,
-);
-router.delete(
-  '/clients/:id',
-  passport.authenticate('jwt', { session: false }),
-  AdminController.deleteClient,
-);
+router.get('/clients', authenicate, AdminController.getClients);
+router.post('/clients/new', authenicate, AdminController.createClient);
+router.get('/clients/:id', authenicate, AdminController.getClient);
+router.put('/clients/:id', authenicate, AdminController.updateClient);
+router.delete('/clients/:id', authenicate, AdminController.deleteClient);
 
 export default router;

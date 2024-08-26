@@ -5,7 +5,7 @@ import {
   doesEnvironmentVariableValueMatch,
   getEnviromentConfiguration,
 } from '../support/get-environment-configuration';
-import { ACCESS_TOKEN, HTTP_STATUSES } from '../constants';
+import { ACCESS_TOKEN, HTTP_STATUSES, REFRESH_TOKEN } from '../constants';
 
 class UserController {
   public static async register(req: Request, res: Response) {
@@ -31,18 +31,30 @@ class UserController {
       const payload = {
         userId: user.userId,
         email: user.email,
-        expiration:
-          Date.now() +
-          parseInt(getEnviromentConfiguration('JWT_EXPIRATION_TIME', '600000')),
       };
 
-      const token = jwt.sign(
-        JSON.stringify(payload),
-        getEnviromentConfiguration('JWT_SECRET', 'TEST'),
+      const accessToken = jwt.sign(
+        payload,
+        getEnviromentConfiguration('ACCESS_JWT_SECRET', 'TEST'),
+        {
+          expiresIn: getEnviromentConfiguration('ACCESS_JWT_EXPIRY', '1h'),
+        },
+      );
+
+      const refreshToken = jwt.sign(
+        payload,
+        getEnviromentConfiguration('REFRESH_JWT_SECRET', 'TEST'),
+        {
+          expiresIn: getEnviromentConfiguration('REFRESH_JWT_EXPIRY', '1d'),
+        },
       );
 
       res
-        .cookie(ACCESS_TOKEN, token, {
+        .cookie(ACCESS_TOKEN, accessToken, {
+          httpOnly: true,
+          secure: doesEnvironmentVariableValueMatch('NODE_ENV', 'production'),
+        })
+        .cookie(REFRESH_TOKEN, refreshToken, {
           httpOnly: true,
           secure: doesEnvironmentVariableValueMatch('NODE_ENV', 'production'),
         })
@@ -59,15 +71,13 @@ class UserController {
   }
 
   public static async logout(req: Request, res: Response) {
-    if (req.cookies[ACCESS_TOKEN]) {
-      res.clearCookie(ACCESS_TOKEN).status(HTTP_STATUSES.ok).json({
+    res
+      .clearCookie(ACCESS_TOKEN)
+      .clearCookie(REFRESH_TOKEN)
+      .status(HTTP_STATUSES.ok)
+      .json({
         message: 'Successfully logged out',
       });
-    } else {
-      res.status(HTTP_STATUSES.unauthorised).json({
-        error: 'Failed to logout user',
-      });
-    }
   }
 
   public static async isAuthenticated(req: Request, res: Response) {

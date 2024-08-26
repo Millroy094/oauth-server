@@ -2,14 +2,6 @@ import { Request, Response, NextFunction } from 'express';
 import Provider from 'oidc-provider';
 import getConfiguration from '../support/get-configuration';
 
-declare global {
-  namespace Express {
-    interface Request {
-      oidcProvider: Provider;
-    }
-  }
-}
-
 const addOIDCProvider = async (
   req: Request,
   res: Response,
