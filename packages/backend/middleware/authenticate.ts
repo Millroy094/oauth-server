@@ -16,7 +16,11 @@ const authenicate = (req: Request, res: Response, next: NextFunction) => {
   const refreshToken = req?.cookies[REFRESH_TOKEN];
 
   if (!accessToken && !refreshToken) {
-    return res.status(401).json({ error: 'Access denied' });
+    return res
+      .status(401)
+      .json({
+        error: 'Authenication failed, please check if you are still logged in',
+      });
   }
 
   const accessTokenSecret = getEnviromentConfiguration('ACCESS_JWT_SECRET');
@@ -58,7 +62,12 @@ const authenicate = (req: Request, res: Response, next: NextFunction) => {
 
       next();
     } catch (error) {
-      res.status(401).json({ error: 'Invalid token' });
+      res
+        .status(401)
+        .json({
+          error:
+            'Authenication failed, please check if you are still logged in',
+        });
     }
   }
 };

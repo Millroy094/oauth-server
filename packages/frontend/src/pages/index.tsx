@@ -15,12 +15,14 @@ import isAuthenticated from '../api/is-authenicated-user';
 import { PUBLIC_ROUTES } from '../constants';
 import Account from './Account';
 import useFeedback from '../hooks/useFeedback';
+import globalRouter from '../utils/global-router';
 
 function Pages() {
   const { feedbackAxiosError } = useFeedback();
   const { pathname } = useLocation();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  globalRouter.navigate = navigate;
 
   const navigateByInteractionStage = async (
     interactionId: string,

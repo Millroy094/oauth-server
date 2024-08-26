@@ -1,4 +1,5 @@
-import axios, { AxiosResponse } from 'axios';
+import { AxiosResponse } from 'axios';
+import axios from '../utils/axios-instance';
 
 const getClient = async (id: string): Promise<AxiosResponse> => {
   const response = await axios.get(

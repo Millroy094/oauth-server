@@ -1,7 +1,6 @@
 import { BrowserRouter as Router } from 'react-router-dom';
-
-import Pages from './pages';
 import { SnackbarProvider } from 'notistack';
+import Pages from './pages';
 
 function App() {
   return (
