@@ -40,7 +40,6 @@ const defaultValues: IClientPopupInput = {
 const ClientPopup: FC<ClientPopupProps> = (props) => {
   const { clientIdentifier, open, onClose } = props;
   const [client, setClient] = useState<IClientPopupInput>(defaultValues);
-  console.log(clientIdentifier);
   const { feebackAxiosResponse, feedbackAxiosError } = useFeedback();
   const {
     control,
