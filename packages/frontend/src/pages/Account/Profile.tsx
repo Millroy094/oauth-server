@@ -11,11 +11,11 @@ import {
 import { Edit, Save } from '@mui/icons-material';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Controller, useForm } from 'react-hook-form';
-import { useSnackbar } from 'notistack';
-import { AxiosError } from 'axios';
 import schema from './schema';
 import getUserProfileDetails from '../../api/get-user-profile-details';
 import updateUserProfileDetails from '../../api/update-user-profile-details';
+import useFeedback from '../../hooks/useFeedback';
+import { MobileNumberInput } from '../../components/MobileNumberInput';
 
 const defaultValues = {
   firstName: '',
@@ -28,8 +28,7 @@ const defaultValues = {
 const Profile: FC<{}> = () => {
   const [form, setForm] = useState(defaultValues);
   const [disabled, setDisabled] = useState(true);
-  const { enqueueSnackbar } = useSnackbar();
-
+  const { feebackAxiosResponse, feedbackAxiosError } = useFeedback();
   const fetchData = async () => {
     try {
       const response = await getUserProfileDetails();
@@ -42,11 +41,9 @@ const Profile: FC<{}> = () => {
         mobile: user?.mobile ?? defaultValues.mobile,
       });
     } catch (err) {
-      enqueueSnackbar(
-        err instanceof AxiosError && err?.response?.data?.error
-          ? err.response.data.error
-          : 'Failed to retreive user data, please reload the page.',
-        { variant: 'error' },
+      feedbackAxiosError(
+        err,
+        'Failed to retreive user data, please reload the page.',
       );
     }
   };
@@ -71,16 +68,15 @@ const Profile: FC<{}> = () => {
     try {
       const response = await updateUserProfileDetails(data);
       setDisabled(true);
-      enqueueSnackbar(
-        response?.data?.message ?? 'Successfully updated user details',
-        { variant: 'success' },
+      feebackAxiosResponse(
+        response,
+        'Successfully updated user details',
+        'success',
       );
     } catch (err) {
-      enqueueSnackbar(
-        err instanceof AxiosError && err?.response?.data?.error
-          ? err.response.data.error
-          : 'There was an issue updating the user details, please try again',
-        { variant: 'error' },
+      feedbackAxiosError(
+        err,
+        'There was an issue updating the user details, please try again',
       );
     }
   };
@@ -152,14 +148,22 @@ const Profile: FC<{}> = () => {
             />
           </Grid>
           <Grid item>
-            <TextField
-              {...register('mobile')}
-              InputLabelProps={{ shrink: true }}
-              label='Mobile Number'
-              variant='outlined'
-              fullWidth
-              error={!!errors.mobile}
-              helperText={errors.mobile ? errors.mobile.message : ''}
+            <Controller
+              name='mobile'
+              control={control}
+              render={({ field: { onChange, value, disabled } }) => (
+                <MobileNumberInput
+                  InputLabelProps={{ shrink: true }}
+                  label='Mobile Number'
+                  variant='outlined'
+                  fullWidth
+                  onChange={onChange}
+                  value={value ?? ''}
+                  error={!!errors.mobile}
+                  helperText={errors.mobile ? errors.mobile.message : ''}
+                  readOnly={disabled ?? false}
+                />
+              )}
             />
           </Grid>
 

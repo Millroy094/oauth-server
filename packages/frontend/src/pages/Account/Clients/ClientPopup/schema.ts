@@ -2,6 +2,7 @@ import * as yup from 'yup';
 
 const schema = yup
   .object({
+    clientId: yup.string().required(),
     clientName: yup.string().required(),
     grants: yup.array().of(yup.string().required()).min(1).required(),
     scopes: yup.array().of(yup.string().required()).min(1).required(),

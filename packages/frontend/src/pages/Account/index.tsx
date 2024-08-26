@@ -10,8 +10,6 @@ import {
   RecentActors,
   LocalPolice,
 } from '@mui/icons-material';
-import { useSnackbar } from 'notistack';
-import { AxiosError } from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { AppBar, Button, Container, Toolbar } from '@mui/material';
 import Profile from './Profile';
@@ -19,6 +17,7 @@ import logoutUser from '../../api/logout-user';
 import Sessions from './Sessions';
 import Clients from './Clients';
 import Users from './Users';
+import useFeedback from '../../hooks/useFeedback';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -41,8 +40,9 @@ function TabPanel(props: TabPanelProps) {
 
 export default function Account() {
   const [value, setValue] = React.useState(0);
-  const { enqueueSnackbar } = useSnackbar();
+  const { feedbackAxiosError } = useFeedback();
   const navigate = useNavigate();
+
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
@@ -52,12 +52,7 @@ export default function Account() {
       await logoutUser();
       navigate('/login');
     } catch (err) {
-      enqueueSnackbar(
-        err instanceof AxiosError && err?.response?.data?.error
-          ? err.response.data.error
-          : 'Failed to logout user, please try again.',
-        { variant: 'error' },
-      );
+      feedbackAxiosError(err, 'Failed to logout user, please try again.');
     }
   };
 

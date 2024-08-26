@@ -11,25 +11,26 @@ import {
   Typography,
   styled,
 } from '@mui/material';
-import PasswordField from '../../components/PasswordField';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { omit } from 'lodash';
-import { AxiosError } from 'axios';
-import { useSnackbar } from 'notistack';
+import PasswordField from '../../components/PasswordField';
 import schema from './schema';
 import PasswordPopover from './PasswordPopover';
 import registerUser from '../../api/register-user';
 import { useNavigate } from 'react-router-dom';
+import useFeedback from '../../hooks/useFeedback';
+import { MobileNumberInput } from '../../components/MobileNumberInput';
 
 const StyledCard = styled(Card)({
   borderTop: '2px solid red',
 });
 
 const Register: FC<{}> = () => {
-  const { enqueueSnackbar } = useSnackbar();
+  const { feebackAxiosResponse, feedbackAxiosError } = useFeedback();
   const navigate = useNavigate();
   const {
+    control,
     register,
     handleSubmit,
     formState: { errors, dirtyFields },
@@ -62,17 +63,12 @@ const Register: FC<{}> = () => {
   const onSubmit = async (data: IRegisterFormInput): Promise<void> => {
     try {
       const response = await registerUser(omit(data, 'confirmPassword'));
-      enqueueSnackbar(
-        response?.data?.message ?? 'Successfully registered user',
-        { variant: 'success' },
-      );
+      feebackAxiosResponse(response, 'Successfully registered user', 'success');
       reset();
     } catch (err) {
-      enqueueSnackbar(
-        err instanceof AxiosError && err?.response?.data?.error
-          ? err.response.data.error
-          : 'There was an issue registering the user, please try again',
-        { variant: 'error' },
+      feedbackAxiosError(
+        err,
+        'There was an issue registering the user, please try again',
       );
     }
   };
@@ -141,13 +137,22 @@ const Register: FC<{}> = () => {
                 />
               </Grid>
               <Grid item>
-                <TextField
-                  {...register('mobile')}
-                  label='Mobile Number'
-                  variant='outlined'
-                  fullWidth
-                  error={!!errors.mobile}
-                  helperText={errors.mobile ? errors.mobile.message : ''}
+                <Controller
+                  name='mobile'
+                  control={control}
+                  render={({ field: { onChange, value, disabled } }) => (
+                    <MobileNumberInput
+                      InputLabelProps={{ shrink: true }}
+                      label='Mobile Number'
+                      variant='outlined'
+                      fullWidth
+                      onChange={onChange}
+                      value={value ?? ''}
+                      error={!!errors.mobile}
+                      helperText={errors.mobile ? errors.mobile.message : ''}
+                      readOnly={disabled ?? false}
+                    />
+                  )}
                 />
               </Grid>
               <Grid item>

@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useState, startTransition } from 'react';
 import {
   Box,
   Button,
@@ -9,12 +9,11 @@ import {
   Typography,
 } from '@mui/material';
 import { AddBusiness, Delete, ContentCopy } from '@mui/icons-material';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { DataGrid, GridColDef, GridRowParams } from '@mui/x-data-grid';
 import ClientPopup from './ClientPopup';
 import getClients from '../../../api/get-clients';
-import { AxiosError } from 'axios';
-import { useSnackbar } from 'notistack';
 import deleteClient from '../../../api/delete-client';
+import useFeedback from '../../../hooks/useFeedback';
 
 interface Client {
   id: string;
@@ -25,36 +24,38 @@ interface Client {
 const Clients: FC<{}> = () => {
   const [open, setOpen] = useState(false);
   const [clients, setClients] = useState<Client[]>([]);
-  const { enqueueSnackbar } = useSnackbar();
+  const [selectedClientId, setSelectedClientId] = useState<string>('');
+  const { feedbackAxiosError, feebackAxiosResponse } = useFeedback();
 
   const fetchClients = async () => {
     try {
       const response = await getClients();
       setClients(response.data.results);
     } catch (err) {
-      enqueueSnackbar(
-        err instanceof AxiosError && err?.response?.data?.error
-          ? err.response.data.error
-          : 'There was an issue retreiving clients, please try again',
-        { variant: 'error' },
+      feedbackAxiosError(
+        err,
+        'There was an issue retreiving clients, please try again',
       );
     }
+  };
+
+  const handleRowClick = (params: GridRowParams) => {
+    const { id } = params;
+    startTransition(() => {
+      setSelectedClientId(id as string);
+      setOpen(true);
+    });
   };
 
   const handleDelete = async (id: string): Promise<void> => {
     try {
       const response = await deleteClient(id);
-      enqueueSnackbar(
-        response?.data?.message ?? 'Successfully deleted cleint',
-        { variant: 'success' },
-      );
+      feebackAxiosResponse(response, 'Successfully deleted cleint', 'success');
       setClients(clients.filter((client) => client.id !== id));
     } catch (err) {
-      enqueueSnackbar(
-        err instanceof AxiosError && err?.response?.data?.error
-          ? err.response.data.error
-          : 'There was an issue deleting the client, please try again',
-        { variant: 'error' },
+      feedbackAxiosError(
+        err,
+        'There was an issue deleting the client, please try again',
       );
     }
   };
@@ -65,6 +66,7 @@ const Clients: FC<{}> = () => {
 
   const onClose = () => {
     setOpen(false);
+    setSelectedClientId('');
     fetchClients();
   };
 
@@ -106,7 +108,10 @@ const Clients: FC<{}> = () => {
           <IconButton
             size='small'
             color='primary'
-            onClick={() => navigator.clipboard.writeText(params.value)}
+            onClick={(e) => {
+              e.stopPropagation();
+              navigator.clipboard.writeText(params.value);
+            }}
           >
             <ContentCopy fontSize='small' />
           </IconButton>
@@ -120,7 +125,13 @@ const Clients: FC<{}> = () => {
       editable: false,
       sortable: false,
       renderCell: (params) => (
-        <IconButton color='error' onClick={() => handleDelete(params.value)}>
+        <IconButton
+          color='error'
+          onClick={(e) => {
+            e.stopPropagation();
+            handleDelete(params.value);
+          }}
+        >
           <Delete />
         </IconButton>
       ),
@@ -155,8 +166,13 @@ const Clients: FC<{}> = () => {
           }}
           pageSizeOptions={[5]}
           disableRowSelectionOnClick
+          onRowClick={handleRowClick}
         />
-        <ClientPopup open={open} onClose={onClose} />
+        <ClientPopup
+          open={open}
+          clientIdentifier={selectedClientId}
+          onClose={onClose}
+        />
       </CardContent>
     </Card>
   );

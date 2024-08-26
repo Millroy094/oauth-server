@@ -6,19 +6,18 @@ import {
   useNavigate,
   useSearchParams,
 } from 'react-router-dom';
-import { useSnackbar } from 'notistack';
 
 import Login from './Login';
 import Confirm from './Confirm';
 import getInteractionStatus from '../api/get-interaction-status';
 import Register from './Register';
-import { AxiosError } from 'axios';
 import isAuthenticated from '../api/is-authenicated-user';
 import { PUBLIC_ROUTES } from '../constants';
 import Account from './Account';
+import useFeedback from '../hooks/useFeedback';
 
 function Pages() {
-  const { enqueueSnackbar } = useSnackbar();
+  const { feedbackAxiosError } = useFeedback();
   const { pathname } = useLocation();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -34,12 +33,7 @@ function Pages() {
         );
       }
     } catch (err) {
-      enqueueSnackbar(
-        err instanceof AxiosError && err?.response?.data?.error
-          ? err.response.data.error
-          : 'Failed to process authentication',
-        { variant: 'error' },
-      );
+      feedbackAxiosError(err, 'Failed to process authentication');
     }
   };
 

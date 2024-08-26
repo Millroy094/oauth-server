@@ -1,6 +1,4 @@
 import { FC, useEffect, useState } from 'react';
-import { AxiosError } from 'axios';
-import { useSnackbar } from 'notistack';
 import getUserSessions from '../../api/get-user-sessions';
 import {
   Button,
@@ -15,6 +13,7 @@ import { format } from 'date-fns';
 import deleteUserSession from '../../api/delete-user-session';
 import deleteAllUserSession from '../../api/delete-all-user-session';
 import { isEmpty } from 'lodash';
+import useFeedback from '../../hooks/useFeedback';
 
 interface Session {
   id: string;
@@ -26,18 +25,15 @@ interface Session {
 
 const Sessions: FC<{}> = () => {
   const [sessions, setSessions] = useState<Session[]>([]);
-  const { enqueueSnackbar } = useSnackbar();
-
+  const { feebackAxiosResponse, feedbackAxiosError } = useFeedback();
   const fetchSessions = async () => {
     try {
       const response = await getUserSessions();
       setSessions(response.data.sessions);
     } catch (err) {
-      enqueueSnackbar(
-        err instanceof AxiosError && err?.response?.data?.error
-          ? err.response.data.error
-          : 'There was an issue retreiving user sessions, please try again',
-        { variant: 'error' },
+      feedbackAxiosError(
+        err,
+        'There was an issue retreiving user sessions, please try again',
       );
     }
   };
@@ -95,17 +91,12 @@ const Sessions: FC<{}> = () => {
   const handleDelete = async (sessionId: string): Promise<void> => {
     try {
       const response = await deleteUserSession(sessionId);
-      enqueueSnackbar(
-        response?.data?.message ?? 'Successfully deleted session',
-        { variant: 'success' },
-      );
+      feebackAxiosResponse(response, 'Successfully deleted session', 'success');
       setSessions(sessions.filter((session) => session.id !== sessionId));
     } catch (err) {
-      enqueueSnackbar(
-        err instanceof AxiosError && err?.response?.data?.error
-          ? err.response.data.error
-          : 'There was an issue deleting the session, please try again',
-        { variant: 'error' },
+      feedbackAxiosError(
+        err,
+        'There was an issue deleting the session, please try again',
       );
     }
   };
@@ -113,17 +104,17 @@ const Sessions: FC<{}> = () => {
   const handleDeleteAll = async (): Promise<void> => {
     try {
       const response = await deleteAllUserSession();
-      enqueueSnackbar(
-        response?.data?.message ?? 'Successfully deleted all sessions',
-        { variant: 'success' },
+      feebackAxiosResponse(
+        response,
+        'Successfully deleted all sessions',
+        'success',
       );
+
       setSessions([]);
     } catch (err) {
-      enqueueSnackbar(
-        err instanceof AxiosError && err?.response?.data?.error
-          ? err.response.data.error
-          : 'There was an issue deleting all sessions, please try again',
-        { variant: 'error' },
+      feedbackAxiosError(
+        err,
+        'There was an issue deleting all sessions, please try again',
       );
     }
   };

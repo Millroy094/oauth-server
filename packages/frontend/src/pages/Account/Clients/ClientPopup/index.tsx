@@ -1,4 +1,4 @@
-import { FC, useMemo } from 'react';
+import { FC, useEffect, useState } from 'react';
 import {
   Button,
   Card,
@@ -9,53 +9,92 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import {
-  AddLinkRounded,
-  Business,
-  BusinessCenter,
-  Delete,
-} from '@mui/icons-material';
+import { AddLinkRounded, Business, Delete } from '@mui/icons-material';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import schema from './schema';
 import has from 'lodash/has';
 import get from 'lodash/get';
-import { useSnackbar } from 'notistack';
-import { AxiosError } from 'axios';
 import { snakeCase, uniqueId } from 'lodash';
 
 import ControlledSelect from '../../../../components/ControlledSelect';
 import createClient from '../../../../api/create-client';
+import getClient from '../../../../api/get-client';
+import updateClient from '../../../../api/update-client';
+import useFeedback from '../../../../hooks/useFeedback';
 
 interface ClientPopupProps {
   open: boolean;
+  clientIdentifier: string;
   onClose: () => void;
 }
 
+const defaultValues: IClientPopupInput = {
+  clientId: '',
+  clientName: '',
+  grants: [],
+  scopes: [],
+  redirectUris: [{ id: uniqueId(), value: '' }],
+};
+
 const ClientPopup: FC<ClientPopupProps> = (props) => {
-  const { open, onClose } = props;
-  const { enqueueSnackbar } = useSnackbar();
+  const { clientIdentifier, open, onClose } = props;
+  const [client, setClient] = useState<IClientPopupInput>(defaultValues);
+  console.log(clientIdentifier);
+  const { feebackAxiosResponse, feedbackAxiosError } = useFeedback();
   const {
     control,
     register,
     handleSubmit,
     formState: { errors },
     reset,
+    setValue,
     watch,
   } = useForm<IClientPopupInput>({
     resolver: yupResolver(schema),
     criteriaMode: 'all',
     mode: 'onChange',
-    defaultValues: {
-      clientName: '',
-      grants: [],
-      scopes: [],
-      redirectUris: [{ id: uniqueId(), value: '' }],
-    },
+    values: client,
   });
 
+  const handleClose = (): void => {
+    setClient(defaultValues);
+    onClose();
+  };
+
+  const fetchClient = async (id: string): Promise<void> => {
+    try {
+      const response = await getClient(id);
+      setClient({
+        clientId: response.data.client.clientId,
+        clientName: response.data.client.clientName,
+        grants: response.data.client.grants,
+        scopes: response.data.client.scopes,
+        redirectUris: response.data.client.redirectUris.map((uri: string) => ({
+          id: uniqueId(),
+          value: uri,
+        })),
+      });
+    } catch (err) {
+      feedbackAxiosError(
+        err,
+        'There was an issue retrieving the client, please try again',
+      );
+      handleClose();
+    }
+  };
+
+  useEffect(() => {
+    if (open && clientIdentifier) {
+      fetchClient(clientIdentifier);
+    }
+  }, [open, clientIdentifier]);
+
   const clientName = watch('clientName', '');
-  const clientId = useMemo(() => snakeCase(clientName), [clientName]);
+
+  useEffect(() => {
+    setValue('clientId', snakeCase(clientName));
+  }, [clientName, setValue]);
 
   const {
     fields: redirectUriFields,
@@ -73,23 +112,35 @@ const ClientPopup: FC<ClientPopupProps> = (props) => {
 
   const onSubmit = async (data: IClientPopupInput): Promise<void> => {
     try {
-      const response = await createClient({
-        ...data,
-        clientId,
-        redirectUris: data.redirectUris.map((redirectUri) => redirectUri.value),
-      });
-      enqueueSnackbar(
-        response?.data?.message ?? 'Successfully created client',
-        { variant: 'success' },
+      let response;
+      if (!clientIdentifier) {
+        response = await createClient({
+          ...data,
+          redirectUris: data.redirectUris.map(
+            (redirectUri) => redirectUri.value,
+          ),
+        });
+      } else {
+        response = await updateClient(clientIdentifier, {
+          ...data,
+          redirectUris: data.redirectUris.map(
+            (redirectUri) => redirectUri.value,
+          ),
+        });
+      }
+      feebackAxiosResponse(
+        response,
+        `Successfully ${!clientIdentifier ? 'created' : 'updated'} client`,
+        'success',
       );
       reset();
-      onClose();
+      handleClose();
     } catch (err) {
-      enqueueSnackbar(
-        err instanceof AxiosError && err?.response?.data?.error
-          ? err.response.data.error
-          : 'There was an issue creating the client, please try again',
-        { variant: 'error' },
+      feedbackAxiosError(
+        err,
+        `There was an issue ${
+          !clientIdentifier ? 'creating' : 'updating'
+        } the client, please try again`,
       );
     }
   };
@@ -97,7 +148,7 @@ const ClientPopup: FC<ClientPopupProps> = (props) => {
   return (
     <Modal
       open={open}
-      onClose={onClose}
+      onClose={handleClose}
       aria-labelledby='modal-modal-title'
       aria-describedby='modal-modal-description'
     >
@@ -118,7 +169,7 @@ const ClientPopup: FC<ClientPopupProps> = (props) => {
           </Grid>
           <Grid item>
             <Typography variant='h6' color='primary'>
-              Create Client
+              {`${!clientIdentifier ? 'Create' : 'Update'} Client`}
             </Typography>
           </Grid>
         </Grid>
@@ -127,11 +178,12 @@ const ClientPopup: FC<ClientPopupProps> = (props) => {
           <Grid container direction='column' spacing={2} sx={{ p: 2 }}>
             <Grid item>
               <TextField
+                {...register('clientId')}
                 label='Client Id'
                 variant='outlined'
                 fullWidth
+                InputLabelProps={{ shrink: true }}
                 disabled
-                value={clientId}
               />
             </Grid>
             <Grid item>
@@ -140,6 +192,7 @@ const ClientPopup: FC<ClientPopupProps> = (props) => {
                 label='Client Name'
                 variant='outlined'
                 fullWidth
+                disabled={!!clientIdentifier}
                 error={!!errors.clientName}
                 helperText={errors.clientName ? errors.clientName.message : ''}
               />
@@ -240,7 +293,7 @@ const ClientPopup: FC<ClientPopupProps> = (props) => {
             </Grid>
             <Grid item alignSelf='flex-end'>
               <Button variant='contained' color='success' type='submit'>
-                Create Client
+                {`${!clientIdentifier ? 'Create' : 'Update'} Client`}
               </Button>
             </Grid>
           </Grid>

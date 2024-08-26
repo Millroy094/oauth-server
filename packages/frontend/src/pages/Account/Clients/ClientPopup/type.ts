@@ -4,6 +4,7 @@ interface IRedirectUri {
 }
 
 interface IClientPopupInput {
+  clientId: string;
   clientName: string;
   scopes: string[];
   grants: string[];

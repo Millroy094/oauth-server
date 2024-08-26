@@ -26,7 +26,7 @@ class ClientService {
   }
 
   public static async getClientById(id: string): Promise<AnyItem> {
-    const [client] = await Client.scan(id).exec();
+    const client = await Client.get(id);
 
     if (isEmpty(client)) {
       throw new Error('User does not exists');
@@ -45,11 +45,7 @@ class ClientService {
   }
 
   public static async deleteClients(id: string): Promise<boolean> {
-    const [client] = await Client.scan(id).exec();
-
-    if (isEmpty(client)) {
-      throw new Error('Client does not exists');
-    }
+    const client = await this.getClientById(id);
     await client.delete();
 
     return true;

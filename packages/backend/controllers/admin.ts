@@ -45,7 +45,7 @@ class AdminController {
     try {
       const { id } = req.params;
       const clientRecord = await ClientService.getClientById(id);
-      res.status(HTTP_STATUSES.ok).json({ user: clientRecord });
+      res.status(HTTP_STATUSES.ok).json({ client: clientRecord });
     } catch (err) {
       console.log(err);
       res
