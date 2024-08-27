@@ -6,14 +6,14 @@ type updateUserFields = {
   lastName: string;
   emailVerified: boolean;
   mobile?: string;
-  isAdmin: boolean;
+  roles: string[];
 };
 
 const updateUser = async (
   id: string,
   updatedFields: updateUserFields,
 ): Promise<AxiosResponse> => {
-  const { emailVerified, firstName, lastName, mobile, isAdmin } = updatedFields;
+  const { emailVerified, firstName, lastName, mobile, roles } = updatedFields;
   const response = await axios.put(
     `http://localhost:3000/admin/users/${id}`,
     {
@@ -21,7 +21,7 @@ const updateUser = async (
       firstName,
       lastName,
       mobile,
-      isAdmin,
+      roles,
     },
     { withCredentials: true },
   );

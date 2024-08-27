@@ -4,5 +4,5 @@ interface IUserPopupInput {
   email: string;
   emailVerified: boolean;
   mobile?: string;
-  isAdmin: boolean;
+  roles: string[];
 }

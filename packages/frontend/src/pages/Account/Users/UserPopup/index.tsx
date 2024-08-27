@@ -18,6 +18,7 @@ import updateUser from '../../../../api/update-user';
 import useFeedback from '../../../../hooks/useFeedback';
 import getUser from '../../../../api/get-user';
 import { MobileNumberInput } from '../../../../components/MobileNumberInput';
+import ControlledSelect from '../../../../components/ControlledSelect';
 
 interface UserPopupProps {
   open: boolean;
@@ -30,7 +31,7 @@ const defaultValues: IUserPopupInput = {
   lastName: '',
   email: '',
   mobile: '',
-  isAdmin: false,
+  roles: [],
   emailVerified: false,
 };
 
@@ -64,7 +65,7 @@ const UserPopup: FC<UserPopupProps> = (props) => {
         lastName: response.data.user.lastName,
         email: response.data.user.email,
         mobile: response.data.user.mobile,
-        isAdmin: response.data.user.isAdmin,
+        roles: response.data.user.roles,
         emailVerified: response.data.user.emailVerified,
       });
     } catch (err) {
@@ -161,32 +162,34 @@ const UserPopup: FC<UserPopupProps> = (props) => {
                 />
               </Grid>
             </Grid>
-            <Grid container item>
-              <Grid item>
-                <Controller
-                  name='emailVerified'
-                  control={control}
-                  render={({ field: { onChange, value } }) => (
-                    <FormControlLabel
-                      control={<Switch checked={value} onChange={onChange} />}
-                      label='Email verified?'
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item>
-                <Controller
-                  name='isAdmin'
-                  control={control}
-                  render={({ field: { onChange, value } }) => (
-                    <FormControlLabel
-                      control={<Switch checked={value} onChange={onChange} />}
-                      label='Is Admin?'
-                    />
-                  )}
-                />
-              </Grid>
+            <Grid item>
+              <Controller
+                name='emailVerified'
+                control={control}
+                render={({ field: { onChange, value } }) => (
+                  <FormControlLabel
+                    control={<Switch checked={value} onChange={onChange} />}
+                    label='Email verified?'
+                  />
+                )}
+              />
             </Grid>
+            <Grid item>
+              <ControlledSelect
+                control={control}
+                name='roles'
+                label='Roles'
+                multiple
+                options={[
+                  {
+                    label: 'Admin',
+                    value: 'admin',
+                  },
+                ]}
+                errors={errors}
+              />
+            </Grid>
+
             <Grid item>
               <Controller
                 name='mobile'

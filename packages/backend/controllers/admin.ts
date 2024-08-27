@@ -97,8 +97,7 @@ class AdminController {
           lastName: user.lastName,
           email: user.email,
           mobile: user.mobile,
-          isAdmin: false,
-          mfaEnabled: false,
+          roles: [],
         }))
         .filter((user) => user.id !== currentUserId);
 

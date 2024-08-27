@@ -12,7 +12,7 @@ const schema = yup
       .test('is-phone-valid', 'Please enter a valid number', (value) =>
         isPhoneValid(value as string),
       ),
-    isAdmin: yup.boolean().required(),
+    roles: yup.array(yup.string().required()).required(),
   })
   .required();
 

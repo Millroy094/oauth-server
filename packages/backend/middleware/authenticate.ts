@@ -9,7 +9,7 @@ import {
 interface JwtPayload {
   userId: string;
   email: string;
-  isAdmin: boolean;
+  roles: string[];
 }
 
 const authenicate = (req: Request, res: Response, next: NextFunction) => {
@@ -25,18 +25,18 @@ const authenicate = (req: Request, res: Response, next: NextFunction) => {
   const accessTokenSecret = getEnviromentConfiguration('ACCESS_JWT_SECRET');
 
   try {
-    const { userId, email, isAdmin } = jwt.verify(
+    const { userId, email, roles } = jwt.verify(
       accessToken,
       accessTokenSecret,
     ) as JwtPayload;
-    req.user = { userId, email, isAdmin };
+    req.user = { userId, email, roles };
     next();
   } catch (error) {
     try {
       const refreshTokenSecret =
         getEnviromentConfiguration('REFRESH_JWT_SECRET');
 
-      const { userId, email, isAdmin } = jwt.verify(
+      const { userId, email, roles } = jwt.verify(
         refreshToken,
         refreshTokenSecret,
       ) as JwtPayload;
@@ -57,7 +57,7 @@ const authenicate = (req: Request, res: Response, next: NextFunction) => {
           secure: doesEnvironmentVariableValueMatch('NODE_ENV', 'production'),
         });
 
-      req.user = { userId, email, isAdmin };
+      req.user = { userId, email, roles };
 
       next();
     } catch (error) {

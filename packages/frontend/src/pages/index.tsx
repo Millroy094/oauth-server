@@ -16,12 +16,14 @@ import { PUBLIC_ROUTES } from '../constants';
 import Account from './Account';
 import useFeedback from '../hooks/useFeedback';
 import globalRouter from '../utils/global-router';
+import { useAuth } from '../context/AuthProvider';
 
 function Pages() {
   const { feedbackAxiosError } = useFeedback();
   const { pathname } = useLocation();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const Auth = useAuth();
   globalRouter.navigate = navigate;
 
   const navigateByInteractionStage = async (
@@ -39,20 +41,11 @@ function Pages() {
     }
   };
 
-  const secureRoutes = async (): Promise<void> => {
-    try {
-      await isAuthenticated();
-      navigate('/account');
-    } catch (err) {
-      navigate('/login');
-    }
-  };
-
   useEffect(() => {
     if (pathname === '/' && searchParams.has('interactionId')) {
       navigateByInteractionStage(searchParams.get('interactionId') ?? '');
     } else if (!PUBLIC_ROUTES.includes(pathname)) {
-      secureRoutes();
+      Auth?.refreshUser();
     }
   }, []);
 

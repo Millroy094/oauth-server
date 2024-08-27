@@ -18,9 +18,10 @@ const UserSchema = new Schema(
       type: Boolean,
       default: false,
     },
-    isAdmin: {
-      type: Boolean,
-      default: false,
+    roles: {
+      type: Array,
+      schema: [String],
+      default: [],
     },
     firstName: {
       type: String,

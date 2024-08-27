@@ -127,6 +127,7 @@ const Profile: FC<{}> = () => {
               fullWidth
               error={!!errors.email}
               helperText={errors.email ? errors.email.message : ''}
+              disabled
             />
           </Grid>
           <Grid item>

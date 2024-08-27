@@ -31,7 +31,7 @@ class UserController {
       const payload = {
         userId: user.userId,
         email: user.email,
-        isAdmin: user.isAdmin,
+        roles: user.roles,
       };
 
       const accessToken = jwt.sign(
@@ -61,6 +61,7 @@ class UserController {
         })
         .status(200)
         .json({
+          user: payload,
           message: 'Login Successful',
         });
     } catch (err) {

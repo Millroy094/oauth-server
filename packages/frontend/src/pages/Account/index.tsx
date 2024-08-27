@@ -10,14 +10,12 @@ import {
   RecentActors,
   LocalPolice,
 } from '@mui/icons-material';
-import { useNavigate } from 'react-router-dom';
 import { AppBar, Button, Container, Toolbar } from '@mui/material';
 import Profile from './Profile';
-import logoutUser from '../../api/logout-user';
 import Sessions from './Sessions';
 import Clients from './Clients';
 import Users from './Users';
-import useFeedback from '../../hooks/useFeedback';
+import { useAuth } from '../../context/AuthProvider';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -40,20 +38,10 @@ function TabPanel(props: TabPanelProps) {
 
 export default function Account() {
   const [value, setValue] = React.useState(0);
-  const { feedbackAxiosError } = useFeedback();
-  const navigate = useNavigate();
+  const Auth = useAuth();
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
-  };
-
-  const handleLogout = async (): Promise<void> => {
-    try {
-      await logoutUser();
-      navigate('/login');
-    } catch (err) {
-      feedbackAxiosError(err, 'Failed to logout user, please try again.');
-    }
   };
 
   return (
@@ -78,7 +66,7 @@ export default function Account() {
               LOGO
             </Typography>
 
-            <Button variant='contained' color='error' onClick={handleLogout}>
+            <Button variant='contained' color='error' onClick={Auth?.logout}>
               Log out
             </Button>
           </Toolbar>
@@ -102,8 +90,12 @@ export default function Account() {
           <Tab label='Profile' icon={<AccountBox color='error' />} />
           <Tab label='Sessions' icon={<VpnKey color='success' />} />
           <Tab label='Security' icon={<LocalPolice color='warning' />} />
-          <Tab label='Clients' icon={<Business color='info' />} />
-          <Tab label='Users' icon={<RecentActors color='secondary' />} />
+          {Auth?.user?.roles.includes('admin') && (
+            <Tab label='Clients' icon={<Business color='info' />} />
+          )}
+          {Auth?.user?.roles.includes('admin') && (
+            <Tab label='Users' icon={<RecentActors color='secondary' />} />
+          )}
         </Tabs>
         <TabPanel value={value} index={0} size='sm'>
           <Profile />
@@ -111,12 +103,16 @@ export default function Account() {
         <TabPanel value={value} index={1} size='md'>
           <Sessions />
         </TabPanel>
-        <TabPanel value={value} index={3} size='md'>
-          <Clients />
-        </TabPanel>
-        <TabPanel value={value} index={4} size='md'>
-          <Users />
-        </TabPanel>
+        {Auth?.user?.roles.includes('admin') && (
+          <>
+            <TabPanel value={value} index={3} size='md'>
+              <Clients />
+            </TabPanel>
+            <TabPanel value={value} index={4} size='md'>
+              <Users />
+            </TabPanel>
+          </>
+        )}
       </Box>
     </>
   );

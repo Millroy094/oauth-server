@@ -17,8 +17,8 @@ import { useForm } from 'react-hook-form';
 import schema from './schema';
 import { useNavigate, useParams } from 'react-router-dom';
 import authenticateInteraction from '../../api/authenicate-interaction';
-import authenicateUser from '../../api/authenicate-user';
 import useFeedback from '../../hooks/useFeedback';
+import { useAuth } from '../../context/AuthProvider';
 
 const StyledCard = styled(Card)({
   borderTop: '2px solid red',
@@ -27,7 +27,8 @@ const StyledCard = styled(Card)({
 const Login: FC<{}> = () => {
   const { interactionId } = useParams();
   const navigate = useNavigate();
-  const { feebackAxiosResponse, feedbackAxiosError } = useFeedback();
+  const { feedbackAxiosError } = useFeedback();
+  const Auth = useAuth();
   const {
     register,
     handleSubmit,
@@ -49,11 +50,7 @@ const Login: FC<{}> = () => {
           window.location.href = response.data.redirect;
         }
       } else {
-        await authenicateUser({
-          ...data,
-        });
-
-        navigate('/account');
+        await Auth?.login(data);
       }
     } catch (err) {
       feedbackAxiosError(

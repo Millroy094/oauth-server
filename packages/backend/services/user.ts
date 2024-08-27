@@ -50,7 +50,17 @@ class UserService {
   }
 
   public static async getUserById(id: string): Promise<AnyItem> {
-    const userAccount = await User.get(id);
+    const userAccount = await User.get(id, {
+      attributes: [
+        'userId',
+        'firstName',
+        'lastName',
+        'email',
+        'emailVerified',
+        'mobile',
+        'roles',
+      ],
+    });
 
     if (isEmpty(userAccount)) {
       throw new Error('User does not exists');
