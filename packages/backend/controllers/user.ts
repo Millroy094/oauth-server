@@ -31,6 +31,7 @@ class UserController {
       const payload = {
         userId: user.userId,
         email: user.email,
+        isAdmin: user.isAdmin,
       };
 
       const accessToken = jwt.sign(

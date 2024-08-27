@@ -9,6 +9,7 @@ import {
 interface JwtPayload {
   userId: string;
   email: string;
+  isAdmin: boolean;
 }
 
 const authenicate = (req: Request, res: Response, next: NextFunction) => {
@@ -16,28 +17,26 @@ const authenicate = (req: Request, res: Response, next: NextFunction) => {
   const refreshToken = req?.cookies[REFRESH_TOKEN];
 
   if (!accessToken && !refreshToken) {
-    return res
-      .status(401)
-      .json({
-        error: 'Authenication failed, please check if you are still logged in',
-      });
+    return res.status(401).json({
+      error: 'Authenication failed, please check if you are still logged in',
+    });
   }
 
   const accessTokenSecret = getEnviromentConfiguration('ACCESS_JWT_SECRET');
 
   try {
-    const { userId, email } = jwt.verify(
+    const { userId, email, isAdmin } = jwt.verify(
       accessToken,
       accessTokenSecret,
     ) as JwtPayload;
-    req.user = { userId, email };
+    req.user = { userId, email, isAdmin };
     next();
   } catch (error) {
     try {
       const refreshTokenSecret =
         getEnviromentConfiguration('REFRESH_JWT_SECRET');
 
-      const { userId, email } = jwt.verify(
+      const { userId, email, isAdmin } = jwt.verify(
         refreshToken,
         refreshTokenSecret,
       ) as JwtPayload;
@@ -58,16 +57,13 @@ const authenicate = (req: Request, res: Response, next: NextFunction) => {
           secure: doesEnvironmentVariableValueMatch('NODE_ENV', 'production'),
         });
 
-      req.user = { userId, email };
+      req.user = { userId, email, isAdmin };
 
       next();
     } catch (error) {
-      res
-        .status(401)
-        .json({
-          error:
-            'Authenication failed, please check if you are still logged in',
-        });
+      res.status(401).json({
+        error: 'Authenication failed, please check if you are still logged in',
+      });
     }
   }
 };

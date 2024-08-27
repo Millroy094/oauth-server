@@ -4,7 +4,7 @@ declare global {
   namespace Express {
     interface Request {
       oidcProvider: Provider;
-      user?: { userId: string; email: string };
+      user?: { userId: string; email: string; isAdmin: boolean };
     }
   }
 }
