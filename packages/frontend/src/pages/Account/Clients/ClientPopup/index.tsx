@@ -145,12 +145,7 @@ const ClientPopup: FC<ClientPopupProps> = (props) => {
   };
 
   return (
-    <Modal
-      open={open}
-      onClose={handleClose}
-      aria-labelledby='modal-modal-title'
-      aria-describedby='modal-modal-description'
-    >
+    <Modal open={open} onClose={handleClose}>
       <Card
         sx={{
           position: 'absolute',
@@ -162,7 +157,7 @@ const ClientPopup: FC<ClientPopupProps> = (props) => {
           p: 2,
         }}
       >
-        <Grid container spacing={1} sx={{ p: '10px 0' }}>
+        <Grid container spacing={1} sx={{ p: '10px 0' }} alignItems='center'>
           <Grid item>
             <Business color='primary' />
           </Grid>

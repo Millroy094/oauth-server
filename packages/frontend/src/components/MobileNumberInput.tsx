@@ -19,7 +19,7 @@ import {
 
 export interface MUIPhoneProps extends BaseTextFieldProps {
   value: string;
-  readOnly: boolean;
+  readOnly?: boolean;
   onChange: (phone: string) => void;
 }
 

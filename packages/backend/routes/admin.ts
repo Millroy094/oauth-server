@@ -10,4 +10,14 @@ router.get('/clients/:id', authenicate, AdminController.getClient);
 router.put('/clients/:id', authenicate, AdminController.updateClient);
 router.delete('/clients/:id', authenicate, AdminController.deleteClient);
 
+router.get('/users', authenicate, AdminController.getUsers);
+router.get('/users/:id', authenicate, AdminController.getUser);
+router.put('/users/:id', authenicate, AdminController.updateUser);
+router.delete('/users/:id', authenicate, AdminController.deleteUser);
+router.delete(
+  '/users/:id/sessions',
+  authenicate,
+  AdminController.deleteUserSessions,
+);
+
 export default router;

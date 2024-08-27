@@ -6,6 +6,7 @@ import {
   CardContent,
   CardHeader,
   IconButton,
+  Tooltip,
   Typography,
 } from '@mui/material';
 import { AddBusiness, Delete, ContentCopy } from '@mui/icons-material';
@@ -105,16 +106,18 @@ const Clients: FC<{}> = () => {
           >
             ************************
           </Typography>
-          <IconButton
-            size='small'
-            color='primary'
-            onClick={(e) => {
-              e.stopPropagation();
-              navigator.clipboard.writeText(params.value);
-            }}
-          >
-            <ContentCopy fontSize='small' />
-          </IconButton>
+          <Tooltip title='Copy Secret'>
+            <IconButton
+              size='small'
+              color='primary'
+              onClick={(e) => {
+                e.stopPropagation();
+                navigator.clipboard.writeText(params.value);
+              }}
+            >
+              <ContentCopy fontSize='small' />
+            </IconButton>
+          </Tooltip>
         </Box>
       ),
     },
@@ -125,15 +128,17 @@ const Clients: FC<{}> = () => {
       editable: false,
       sortable: false,
       renderCell: (params) => (
-        <IconButton
-          color='error'
-          onClick={(e) => {
-            e.stopPropagation();
-            handleDelete(params.value);
-          }}
-        >
-          <Delete />
-        </IconButton>
+        <Tooltip title='Delete Client'>
+          <IconButton
+            color='error'
+            onClick={(e) => {
+              e.stopPropagation();
+              handleDelete(params.value);
+            }}
+          >
+            <Delete />
+          </IconButton>
+        </Tooltip>
       ),
     },
   ];

@@ -1,8 +1,8 @@
 import { AnyItem } from 'dynamoose/dist/Item';
 import isEmpty from 'lodash/isEmpty';
 import bcrypt from 'bcryptjs';
-import { OIDCStore, User } from '../models';
-import { ObjectType } from 'dynamoose/dist/General';
+import { User } from '../models';
+import OIDCService from './oidc';
 
 class UserService {
   public static async validateUserCredentials(
@@ -44,6 +44,11 @@ class UserService {
     await User.create(fields);
   }
 
+  public static async getUsers(): Promise<AnyItem[]> {
+    const userAccounts = await User.scan().exec();
+    return userAccounts;
+  }
+
   public static async getUserById(id: string): Promise<AnyItem> {
     const userAccount = await User.get(id);
 
@@ -60,6 +65,13 @@ class UserService {
   ): Promise<boolean> {
     await User.update(userId, updatedFields);
 
+    return true;
+  }
+
+  public static async deleteUser(userId: string): Promise<boolean> {
+    await OIDCService.deleteAllSessions(userId);
+    const user = await this.getUserById(userId);
+    await user.delete();
     return true;
   }
 }

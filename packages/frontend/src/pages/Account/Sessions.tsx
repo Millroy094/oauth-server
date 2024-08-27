@@ -6,6 +6,7 @@ import {
   CardContent,
   CardHeader,
   IconButton,
+  Tooltip,
 } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { Delete } from '@mui/icons-material';
@@ -81,9 +82,11 @@ const Sessions: FC<{}> = () => {
       width: 10,
       editable: false,
       renderCell: (params) => (
-        <IconButton color='error' onClick={() => handleDelete(params.value)}>
-          <Delete />
-        </IconButton>
+        <Tooltip title='Delete session'>
+          <IconButton color='error' onClick={() => handleDelete(params.value)}>
+            <Delete />
+          </IconButton>
+        </Tooltip>
       ),
     },
   ];

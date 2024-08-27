@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { ClientService } from '../services';
+import { ClientService, OIDCService, UserService } from '../services';
 
 import { HTTP_STATUSES } from '../constants';
 import { AnyItem } from 'dynamoose/dist/Item';
@@ -81,6 +81,93 @@ class AdminController {
       res
         .status(HTTP_STATUSES.notFound)
         .json({ error: 'There was an issue deleting client' });
+    }
+  }
+
+  public static async getUsers(req: Request, res: Response) {
+    try {
+      const currentUserId = req.user?.userId;
+
+      const users = await UserService.getUsers();
+
+      const results = users
+        .map((user: AnyItem) => ({
+          id: user.userId,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          email: user.email,
+          mobile: user.mobile,
+          isAdmin: false,
+          mfaEnabled: false,
+        }))
+        .filter((user) => user.id !== currentUserId);
+
+      res
+        .json({ results, message: 'Successfully retrieved users!' })
+        .status(HTTP_STATUSES.ok);
+    } catch (err) {
+      console.log(err);
+      res
+        .status(HTTP_STATUSES.serverError)
+        .json({ error: 'Failed retrieve users' });
+    }
+  }
+
+  public static async deleteUser(req: Request, res: Response) {
+    try {
+      const { id } = req.params;
+      await UserService.deleteUser(id);
+      res
+        .status(HTTP_STATUSES.ok)
+        .json({ message: 'Successfully deleted user record!' });
+    } catch (err) {
+      console.log(err);
+      res
+        .status(HTTP_STATUSES.notFound)
+        .json({ error: 'There was an issue deleting user' });
+    }
+  }
+
+  public static async getUser(req: Request, res: Response) {
+    try {
+      const { id } = req.params;
+      const userRecord = await UserService.getUserById(id);
+      res.status(HTTP_STATUSES.ok).json({ user: userRecord });
+    } catch (err) {
+      console.log(err);
+      res
+        .status(HTTP_STATUSES.notFound)
+        .json({ error: 'There was an issue fetching user info' });
+    }
+  }
+
+  public static async updateUser(req: Request, res: Response) {
+    try {
+      const { id } = req.params;
+      await UserService.updateUser(id, req.body);
+      res
+        .status(HTTP_STATUSES.ok)
+        .json({ message: 'Successfully updated user record!' });
+    } catch (err) {
+      console.log(err);
+      res
+        .status(HTTP_STATUSES.notFound)
+        .json({ error: 'There was an issue updating user info' });
+    }
+  }
+
+  public static async deleteUserSessions(req: Request, res: Response) {
+    try {
+      const { id } = req.params;
+      await OIDCService.deleteAllSessions(id);
+      res
+        .status(HTTP_STATUSES.ok)
+        .json({ message: 'Successfully deleted all user sessions!' });
+    } catch (err) {
+      console.log(err);
+      res
+        .status(HTTP_STATUSES.notFound)
+        .json({ error: 'There was an issue deleting user session' });
     }
   }
 }
