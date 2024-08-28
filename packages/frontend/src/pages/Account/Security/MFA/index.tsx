@@ -16,9 +16,9 @@ const MFA: FC<{}> = () => {
       <CardHeader title='Mulit-Factor Authentication' />
       <CardContent>
         <Typography>
-          Multi-factor Authentication (MFA) is an authentication method that
-          requires the user to provide two or more verification factors to gain
-          access. To get started click on setup MFA
+          You can make your login more secure by enabling 2FA for your account.
+          Once enabled you will be required to through an additional step of
+          verification whilst logging in.
         </Typography>
       </CardContent>
       <CardActions
