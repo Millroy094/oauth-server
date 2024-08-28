@@ -16,6 +16,7 @@ import Sessions from './Sessions';
 import Clients from './Clients';
 import Users from './Users';
 import { useAuth } from '../../context/AuthProvider';
+import Security from './Security';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -102,6 +103,9 @@ export default function Account() {
         </TabPanel>
         <TabPanel value={value} index={1} size='md'>
           <Sessions />
+        </TabPanel>
+        <TabPanel value={value} index={2} size='md'>
+          <Security />
         </TabPanel>
         {Auth?.user?.roles.includes('admin') && (
           <>
