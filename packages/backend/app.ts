@@ -4,7 +4,7 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import { adminRoutes, oidcRoutes, userRoutes } from './routes';
-import { getEnviromentConfiguration } from './support/get-environment-configuration';
+import getEnv from './support/env-config';
 import { addOIDCProvider } from './middleware';
 
 class Application {
@@ -15,14 +15,11 @@ class Application {
   }
 
   private setupDependencies(): void {
-    const NODE_ENV = getEnviromentConfiguration('NODE_ENV', 'development');
+    const NODE_ENV = getEnv('environment');
 
     if (NODE_ENV === 'development') {
       const ddb = new dynamoose.aws.ddb.DynamoDB({
-        endpoint: getEnviromentConfiguration(
-          'DYNAMO_DB_ENDPOINT',
-          'http://localhost:8000',
-        ),
+        endpoint: getEnv('db.endpoint'),
         credentials: {
           accessKeyId: 'LOCAL',
           secretAccessKey: 'LOCAL',

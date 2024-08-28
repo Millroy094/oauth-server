@@ -1,10 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { ACCESS_TOKEN, REFRESH_TOKEN } from '../constants';
-import {
-  doesEnvironmentVariableValueMatch,
-  getEnviromentConfiguration,
-} from '../support/get-environment-configuration';
+import getEnv from '../support/env-config';
 
 interface JwtPayload {
   userId: string;
@@ -22,7 +19,7 @@ const authenicate = (req: Request, res: Response, next: NextFunction) => {
     });
   }
 
-  const accessTokenSecret = getEnviromentConfiguration('ACCESS_JWT_SECRET');
+  const accessTokenSecret = getEnv('authentication.accessTokenSecret');
 
   try {
     const { userId, email, roles } = jwt.verify(
@@ -33,28 +30,27 @@ const authenicate = (req: Request, res: Response, next: NextFunction) => {
     next();
   } catch (error) {
     try {
-      const refreshTokenSecret =
-        getEnviromentConfiguration('REFRESH_JWT_SECRET');
+      const refreshTokenSecret = getEnv('authentication.refreshTokenSecret');
 
       const { userId, email, roles } = jwt.verify(
         refreshToken,
         refreshTokenSecret,
       ) as JwtPayload;
       const newAccessToken = jwt.sign({ userId, email }, accessTokenSecret, {
-        expiresIn: getEnviromentConfiguration('ACCESS_JWT_EXPIRY', '1h'),
+        expiresIn: getEnv('authentication.accessTokenExpiry'),
       });
       const newRefreshToken = jwt.sign({ userId, email }, accessTokenSecret, {
-        expiresIn: getEnviromentConfiguration('REFRESH_JWT_EXPIRY', '1d'),
+        expiresIn: getEnv('authentication.refreshTokenExpiry'),
       });
 
       res
         .cookie(ACCESS_TOKEN, newAccessToken, {
           httpOnly: true,
-          secure: doesEnvironmentVariableValueMatch('NODE_ENV', 'production'),
+          secure: getEnv('environment') === 'production',
         })
         .cookie(REFRESH_TOKEN, newRefreshToken, {
           httpOnly: true,
-          secure: doesEnvironmentVariableValueMatch('NODE_ENV', 'production'),
+          secure: getEnv('environment') === 'production',
         });
 
       req.user = { userId, email, roles };

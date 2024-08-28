@@ -1,10 +1,7 @@
 import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import { OIDCService, UserService } from '../services';
-import {
-  doesEnvironmentVariableValueMatch,
-  getEnviromentConfiguration,
-} from '../support/get-environment-configuration';
+import getEnv from '../support/env-config';
 import { ACCESS_TOKEN, HTTP_STATUSES, REFRESH_TOKEN } from '../constants';
 
 class UserController {
@@ -36,28 +33,28 @@ class UserController {
 
       const accessToken = jwt.sign(
         payload,
-        getEnviromentConfiguration('ACCESS_JWT_SECRET'),
+        getEnv('authentication.accessTokenSecret'),
         {
-          expiresIn: getEnviromentConfiguration('ACCESS_JWT_EXPIRY', '1h'),
+          expiresIn: getEnv('authentication.accessTokenExpiry'),
         },
       );
 
       const refreshToken = jwt.sign(
         payload,
-        getEnviromentConfiguration('REFRESH_JWT_SECRET'),
+        getEnv('authentication.refreshTokenSecret'),
         {
-          expiresIn: getEnviromentConfiguration('REFRESH_JWT_EXPIRY', '1d'),
+          expiresIn: getEnv('authentication.refreshTokenExpiry'),
         },
       );
 
       res
         .cookie(ACCESS_TOKEN, accessToken, {
           httpOnly: true,
-          secure: doesEnvironmentVariableValueMatch('NODE_ENV', 'production'),
+          secure: getEnv('environment') === 'production',
         })
         .cookie(REFRESH_TOKEN, refreshToken, {
           httpOnly: true,
-          secure: doesEnvironmentVariableValueMatch('NODE_ENV', 'production'),
+          secure: getEnv('environment') === 'production',
         })
         .status(200)
         .json({

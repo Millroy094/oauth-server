@@ -2,7 +2,7 @@ import { Configuration } from 'oidc-provider';
 import DynamoDBAdapter from '../adapter/DynamoDbAdapter';
 import jwks from '../keys.json' assert { type: 'json' };
 import { User } from '../models';
-import { getEnviromentConfiguration } from './get-environment-configuration';
+import getEnv from './env-config';
 import { ClientService } from '../services';
 
 const getConfiguration = async (): Promise<Configuration> => {
@@ -12,7 +12,7 @@ const getConfiguration = async (): Promise<Configuration> => {
     adapter: DynamoDBAdapter,
     jwks,
     cookies: {
-      keys: [...JSON.parse(getEnviromentConfiguration('COOKIE_SECRETS', '[]'))],
+      keys: [...JSON.parse(getEnv('oidc.cookieSecrets'))],
       long: { httpOnly: true, sameSite: 'strict' },
       short: { httpOnly: true, sameSite: 'strict' },
     },

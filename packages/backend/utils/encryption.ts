@@ -1,9 +1,9 @@
 import crypto from 'crypto';
-import { getEnviromentConfiguration } from '../support/get-environment-configuration';
+import getEnv from '../support/env-config';
 
-const encryptionSecretKey = getEnviromentConfiguration('ENCRYPTION_SECRET_KEY');
-const encryptionSecretIV = getEnviromentConfiguration('ENCRYPTION_SECRET_IV');
-const encryptionMethod = getEnviromentConfiguration('ECNRYPTION_METHOD');
+const encryptionSecretKey = getEnv('encryption.secret');
+const encryptionSecretIV = getEnv('encryption.secretiv');
+const encryptionMethod = getEnv('encryption.method');
 
 if (!encryptionSecretKey || !encryptionSecretIV || !encryptionMethod) {
   throw new Error('secret prerequisites missing');
