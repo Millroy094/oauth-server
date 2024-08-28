@@ -6,13 +6,11 @@ import Box from '@mui/material/Box';
 import {
   AccountBox,
   Business,
-  VpnKey,
   RecentActors,
   LocalPolice,
 } from '@mui/icons-material';
 import { AppBar, Button, Container, Toolbar } from '@mui/material';
 import Profile from './Profile';
-import Sessions from './Sessions';
 import Clients from './Clients';
 import Users from './Users';
 import { useAuth } from '../../context/AuthProvider';
@@ -89,7 +87,6 @@ export default function Account() {
           sx={{ borderRight: 1, borderColor: 'divider', width: 100 }}
         >
           <Tab label='Profile' icon={<AccountBox color='error' />} />
-          <Tab label='Sessions' icon={<VpnKey color='success' />} />
           <Tab label='Security' icon={<LocalPolice color='warning' />} />
           {Auth?.user?.roles.includes('admin') && (
             <Tab label='Clients' icon={<Business color='info' />} />
@@ -101,18 +98,16 @@ export default function Account() {
         <TabPanel value={value} index={0} size='sm'>
           <Profile />
         </TabPanel>
+
         <TabPanel value={value} index={1} size='md'>
-          <Sessions />
-        </TabPanel>
-        <TabPanel value={value} index={2} size='md'>
           <Security />
         </TabPanel>
         {Auth?.user?.roles.includes('admin') && (
           <>
-            <TabPanel value={value} index={3} size='md'>
+            <TabPanel value={value} index={2} size='md'>
               <Clients />
             </TabPanel>
-            <TabPanel value={value} index={4} size='md'>
+            <TabPanel value={value} index={3} size='md'>
               <Users />
             </TabPanel>
           </>

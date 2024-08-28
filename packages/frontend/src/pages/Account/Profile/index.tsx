@@ -12,10 +12,10 @@ import { Edit, Save } from '@mui/icons-material';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Controller, useForm } from 'react-hook-form';
 import schema from './schema';
-import getUserProfileDetails from '../../api/get-user-profile-details';
-import updateUserProfileDetails from '../../api/update-user-profile-details';
-import useFeedback from '../../hooks/useFeedback';
-import { MobileNumberInput } from '../../components/MobileNumberInput';
+import getUserProfileDetails from '../../../api/get-user-profile-details';
+import updateUserProfileDetails from '../../../api/update-user-profile-details';
+import useFeedback from '../../../hooks/useFeedback';
+import { MobileNumberInput } from '../../../components/MobileNumberInput';
 
 const defaultValues = {
   firstName: '',

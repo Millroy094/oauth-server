@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from 'react';
-import getUserSessions from '../../api/get-user-sessions';
+import getUserSessions from '../../../../api/get-user-sessions';
 import {
   Button,
   Card,
@@ -11,10 +11,10 @@ import {
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { Delete } from '@mui/icons-material';
 import { format } from 'date-fns';
-import deleteUserSession from '../../api/delete-user-session';
-import deleteAllUserSession from '../../api/delete-all-user-session';
+import deleteUserSession from '../../../../api/delete-user-session';
+import deleteAllUserSession from '../../../../api/delete-all-user-session';
 import { isEmpty } from 'lodash';
-import useFeedback from '../../hooks/useFeedback';
+import useFeedback from '../../../../hooks/useFeedback';
 
 interface Session {
   id: string;
@@ -125,7 +125,7 @@ const Sessions: FC<{}> = () => {
   return (
     <Card elevation={0}>
       <CardHeader
-        title='User sessions'
+        title='Manage user sessions'
         action={
           <Button
             variant='outlined'

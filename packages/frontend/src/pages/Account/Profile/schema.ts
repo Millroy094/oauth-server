@@ -1,5 +1,5 @@
 import * as yup from 'yup';
-import isPhoneValid from '../../utils/is-phone-valid';
+import isPhoneValid from '../../../utils/is-phone-valid';
 
 const schema = yup
   .object({
