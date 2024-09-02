@@ -1,4 +1,4 @@
-import dynamoose from 'dynamoose';
+import dynamoose from "dynamoose";
 
 const { Schema, model } = dynamoose;
 
@@ -26,9 +26,17 @@ const OIDCStoreSchema = new Schema(
   },
   {
     timestamps: true,
-    saveUnknown: ['payload.**'],
-  },
+    saveUnknown: ["payload.**"],
+  }
 );
-const OIDCStore = model('OIDCStore', OIDCStoreSchema);
+const OIDCStore = model("OIDCStore", OIDCStoreSchema, {
+  expires: {
+    ttl: 7 * 24 * 60 * 60,
+    attribute: "expiresAt",
+    items: {
+      returnExpired: false,
+    },
+  },
+});
 
 export default OIDCStore;

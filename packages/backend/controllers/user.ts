@@ -1,21 +1,21 @@
-import { Request, Response } from 'express';
-import jwt from 'jsonwebtoken';
-import { OIDCService, UserService } from '../services';
-import getEnv from '../support/env-config';
-import { ACCESS_TOKEN, HTTP_STATUSES, REFRESH_TOKEN } from '../constants';
+import { Request, Response } from "express";
+import jwt from "jsonwebtoken";
+import { OIDCService, UserService } from "../services";
+import getEnv from "../support/env-config";
+import { ACCESS_TOKEN, HTTP_STATUSES, REFRESH_TOKEN } from "../constants";
 
 class UserController {
   public static async register(req: Request, res: Response) {
     try {
       await UserService.createUser(req.body);
       res
-        .json({ message: 'Successfully registered user!' })
+        .json({ message: "Successfully registered user!" })
         .status(HTTP_STATUSES.ok);
     } catch (err) {
       console.log(err);
       res
         .status(HTTP_STATUSES.serverError)
-        .json({ error: 'Failed registering user' });
+        .json({ error: "Failed registering user" });
     }
   }
 
@@ -23,7 +23,7 @@ class UserController {
     try {
       const user = await UserService.validateUserCredentials(
         req.body.email,
-        req.body.password,
+        req.body.password
       );
       const payload = {
         userId: user.userId,
@@ -33,39 +33,39 @@ class UserController {
 
       const accessToken = jwt.sign(
         payload,
-        getEnv('authentication.accessTokenSecret'),
+        getEnv("authentication.accessTokenSecret"),
         {
-          expiresIn: getEnv('authentication.accessTokenExpiry'),
-        },
+          expiresIn: getEnv("authentication.accessTokenExpiry"),
+        }
       );
 
       const refreshToken = jwt.sign(
         payload,
-        getEnv('authentication.refreshTokenSecret'),
+        getEnv("authentication.refreshTokenSecret"),
         {
-          expiresIn: getEnv('authentication.refreshTokenExpiry'),
-        },
+          expiresIn: getEnv("authentication.refreshTokenExpiry"),
+        }
       );
 
       res
         .cookie(ACCESS_TOKEN, accessToken, {
           httpOnly: true,
-          secure: getEnv('environment') === 'production',
+          secure: getEnv("environment") === "production",
         })
         .cookie(REFRESH_TOKEN, refreshToken, {
           httpOnly: true,
-          secure: getEnv('environment') === 'production',
+          secure: getEnv("environment") === "production",
         })
         .status(200)
         .json({
           user: payload,
-          message: 'Login Successful',
+          message: "Login Successful",
         });
     } catch (err) {
       console.log(err);
       res
         .status(HTTP_STATUSES.unauthorised)
-        .json({ error: 'Invalid username or password' });
+        .json({ error: "Invalid username or password" });
     }
   }
 
@@ -75,7 +75,7 @@ class UserController {
       .clearCookie(REFRESH_TOKEN)
       .status(HTTP_STATUSES.ok)
       .json({
-        message: 'Successfully logged out',
+        message: "Successfully logged out",
       });
   }
 
@@ -96,7 +96,7 @@ class UserController {
       console.log(err);
       res
         .status(HTTP_STATUSES.notFound)
-        .json({ error: 'There was an issue fetching user info' });
+        .json({ error: "There was an issue fetching user info" });
     }
   }
 
@@ -107,12 +107,12 @@ class UserController {
       await UserService.updateUser(userId, req.body);
       res
         .status(HTTP_STATUSES.ok)
-        .json({ message: 'Successfully updated user record!' });
+        .json({ message: "Successfully updated user record!" });
     } catch (err) {
       console.log(err);
       res
         .status(HTTP_STATUSES.notFound)
-        .json({ error: 'There was an issue updating user info' });
+        .json({ error: "There was an issue updating user info" });
     }
   }
 
@@ -126,7 +126,7 @@ class UserController {
       console.log(err);
       res
         .status(HTTP_STATUSES.notFound)
-        .json({ error: 'Unable to retreive user sessions' });
+        .json({ error: "Unable to retreive user sessions" });
     }
   }
 
@@ -137,12 +137,12 @@ class UserController {
       await OIDCService.deleteAllSessions(userId);
       res
         .status(HTTP_STATUSES.ok)
-        .json({ message: 'Successfully deleted all user sessions' });
+        .json({ message: "Successfully deleted all user sessions" });
     } catch (err) {
       console.log(err);
       res
         .status(HTTP_STATUSES.notFound)
-        .json({ error: 'Unable to delete user sessions' });
+        .json({ error: "Unable to delete user sessions" });
     }
   }
 
@@ -152,12 +152,26 @@ class UserController {
       await OIDCService.deleteSession(sessionId);
       res
         .status(HTTP_STATUSES.ok)
-        .json({ message: 'Successfully deleted all user sessions' });
+        .json({ message: "Successfully deleted all user sessions" });
     } catch (err) {
       console.log(err);
       res
         .status(HTTP_STATUSES.notFound)
-        .json({ error: 'Unable to delete user sessions' });
+        .json({ error: "Unable to delete user sessions" });
+    }
+  }
+
+  public static async getMFASettings(req: Request, res: Response) {
+    try {
+      const { user } = req;
+      const { userId } = user as any;
+      const settings = await UserService.getMFASetting(userId);
+      res.status(HTTP_STATUSES.ok).json({ settings });
+    } catch (err) {
+      console.log(err);
+      res
+        .status(HTTP_STATUSES.notFound)
+        .json({ error: "Unable to retrieve user MFA settings" });
     }
   }
 }

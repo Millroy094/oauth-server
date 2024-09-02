@@ -1,6 +1,8 @@
-import dynamoose from 'dynamoose';
-import bcrypt from 'bcryptjs';
-import { v4 as uuid } from 'uuid';
+import dynamoose from "dynamoose";
+import bcrypt from "bcryptjs";
+import { v4 as uuid } from "uuid";
+import { decryptData, encryptData } from "../utils/encryption";
+import { ValueType } from "dynamoose/dist/Schema";
 const { Schema, model } = dynamoose;
 
 const UserSchema = new Schema(
@@ -25,11 +27,11 @@ const UserSchema = new Schema(
     },
     firstName: {
       type: String,
-      default: '',
+      default: "",
     },
     lastName: {
       type: String,
-      default: '',
+      default: "",
     },
     mobile: {
       type: String,
@@ -42,11 +44,75 @@ const UserSchema = new Schema(
         return encryptedPassword;
       },
     },
+    mfa: {
+      type: Object,
+      schema: {
+        preference: {
+          type: String,
+        },
+        app: {
+          type: Object,
+          schema: {
+            secret: {
+              type: String,
+              set: (value: ValueType) =>
+                value ? encryptData(value as string) : "",
+              get: (value: ValueType) =>
+                value ? decryptData(value as string) : "",
+            },
+            subscriber: {
+              type: String,
+            },
+            verified: {
+              type: Boolean,
+            },
+          },
+        },
+        sms: {
+          type: Object,
+          schema: {
+            subscriber: {
+              type: String,
+            },
+            verified: {
+              type: Boolean,
+            },
+          },
+        },
+        email: {
+          type: Object,
+          schema: {
+            subscriber: {
+              type: String,
+            },
+            verified: {
+              type: Boolean,
+            },
+          },
+        },
+      },
+      default: {
+        preference: "",
+        app: {
+          secret: "",
+          subscriber: "",
+          verified: false,
+        },
+        sms: {
+          subscriber: "",
+          verified: false,
+        },
+        email: {
+          subscriber: "",
+          verified: false,
+        },
+      },
+    },
   },
   {
     timestamps: true,
-  },
+  }
 );
-const User = model('User', UserSchema);
+const User = model("User", UserSchema);
 
 export default User;

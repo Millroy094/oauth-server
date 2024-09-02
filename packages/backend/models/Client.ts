@@ -1,8 +1,9 @@
-import dynamoose from 'dynamoose';
-import crypto from 'crypto';
-import { v4 as uuid } from 'uuid';
-import { decryptData, encryptData } from '../utils/encryption';
-import { ValueType } from 'dynamoose/dist/Schema';
+import dynamoose from "dynamoose";
+import crypto from "crypto";
+import { v4 as uuid } from "uuid";
+import { decryptData, encryptData } from "../utils/encryption";
+import { ValueType } from "dynamoose/dist/Schema";
+
 const { Schema, model } = dynamoose;
 
 const ClientSchema = new Schema(
@@ -22,7 +23,7 @@ const ClientSchema = new Schema(
     },
     secret: {
       type: String,
-      default: crypto.randomBytes(32).toString('base64'),
+      default: crypto.randomBytes(32).toString("base64"),
       set: (value: ValueType) => encryptData(value as string),
       get: (value: ValueType) => decryptData(value as string),
     },
@@ -44,8 +45,8 @@ const ClientSchema = new Schema(
   },
   {
     timestamps: true,
-  },
+  }
 );
-const Client = model('Client', ClientSchema);
+const Client = model("Client", ClientSchema);
 
 export default Client;
