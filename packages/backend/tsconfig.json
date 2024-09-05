@@ -2,7 +2,7 @@
   "compilerOptions": {
     "module": "ESNext",
     "moduleResolution": "node",
-    "lib": ["es2022"],
+    "lib": ["ESNext"],
     "allowJs": true,
     "outDir": "build",
     "rootDir": ".",

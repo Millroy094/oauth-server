@@ -1,16 +1,17 @@
 import { Configuration } from 'oidc-provider';
+import fs from 'fs';
 import DynamoDBAdapter from '../adapter/DynamoDbAdapter';
-import jwks from '../keys.json' assert { type: 'json' };
 import { User } from '../models';
 import getEnv from './env-config';
 import { ClientService } from '../services';
 
 const getConfiguration = async (): Promise<Configuration> => {
   const clients = await ClientService.getClients();
+  const keys = fs.readFileSync(`${__dirname}/../keys.json`);
 
   return {
     adapter: DynamoDBAdapter,
-    jwks,
+    jwks: JSON.parse(keys.toString('utf-8') ?? ''),
     cookies: {
       keys: [...JSON.parse(getEnv('oidc.cookieSecrets'))],
       long: { httpOnly: true, sameSite: 'strict' },

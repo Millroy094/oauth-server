@@ -17,7 +17,7 @@
     "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
     "@types/jsonwebtoken": "^9.0.6",
-    "@types/lodash": "^4.17.7",
+    "@types/lodash": "^4.14.186",
     "@types/node": "^20.11.27",
     "@types/node-jose": "^1.1.13",
     "@types/oidc-provider": "^8.5.1",
