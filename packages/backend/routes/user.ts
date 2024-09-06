@@ -26,8 +26,14 @@ router.delete(
   UserController.deleteSession,
 );
 
-router.get('/mfa', authenicate, UserController.getMFASettings);
-router.post('/mfa/setup', authenicate, UserController.setupMFA);
-router.post('/mfa/verify', authenicate, UserController.verifyMFA);
+router.get('/mfa-settings', authenicate, UserController.getMFASettings);
+router.post('/mfa-setup', authenicate, UserController.setupMFA);
+router.post('/mfa-verify', authenicate, UserController.verifyMFA);
+router.post('/mfa-reset', authenicate, UserController.resetMFA);
+router.post(
+  '/mfa-change-preference',
+  authenicate,
+  UserController.changeMFAPreference,
+);
 
 export default router;

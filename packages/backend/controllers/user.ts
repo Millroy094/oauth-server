@@ -203,6 +203,36 @@ class UserController {
       res.status(HTTP_STATUSES.notFound).json({ error: 'Invalid OTP' });
     }
   }
+
+  public static async resetMFA(req: Request, res: Response) {
+    try {
+      const { user } = req;
+      const { userId } = user as any;
+      const { type } = req.body;
+      await MFAService.resetMFA(userId, type);
+      res.status(HTTP_STATUSES.ok).json({ message: 'Successfully reset MFA' });
+    } catch (err) {
+      console.log(err);
+      res.status(HTTP_STATUSES.notFound).json({ error: 'Failed to reset MFA' });
+    }
+  }
+
+  public static async changeMFAPreference(req: Request, res: Response) {
+    try {
+      const { user } = req;
+      const { userId } = user as any;
+      const { preference } = req.body;
+      await MFAService.changePreference(userId, preference);
+      res
+        .status(HTTP_STATUSES.ok)
+        .json({ message: 'Successfully changed MFA preference' });
+    } catch (err) {
+      console.log(err);
+      res
+        .status(HTTP_STATUSES.notFound)
+        .json({ error: 'Failed to change MFA preference' });
+    }
+  }
 }
 
 export default UserController;
