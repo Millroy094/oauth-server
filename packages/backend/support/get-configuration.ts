@@ -1,5 +1,6 @@
 import { Configuration } from 'oidc-provider';
 import fs from 'fs';
+import path from 'path';
 import DynamoDBAdapter from '../adapter/DynamoDbAdapter';
 import { User } from '../models';
 import getEnv from './env-config';
@@ -7,7 +8,7 @@ import { ClientService } from '../services';
 
 const getConfiguration = async (): Promise<Configuration> => {
   const clients = await ClientService.getClients();
-  const keys = fs.readFileSync(`${__dirname}/../keys.json`);
+  const keys = fs.readFileSync(`${path.resolve()}/keys.json`);
 
   return {
     adapter: DynamoDBAdapter,
