@@ -4,6 +4,7 @@ import { TOTP } from 'otpauth';
 import generateOtp from '../../utils/generate-otp';
 import OTPService from '../otp';
 import { sendEmail, sendSMS } from '../../utils/notification';
+import { sendEmailOtp, sendSMSOtp } from './send';
 
 export const setupAppMFA = async (
   userId: string,
@@ -45,9 +46,7 @@ export const setupSMSMFA = async (
     throw new Error('User does not exist');
   }
 
-  const otp = generateOtp();
-  await OTPService.storeOtp(userId, 'SMS', otp);
-  await sendSMS(subscriber, `Here's your OTP ${otp} to login`);
+  await sendSMSOtp(userId, subscriber);
 
   user.mfa.sms.subscriber = subscriber;
   await user.save();
@@ -62,10 +61,7 @@ export const setupEmailMFA = async (
   if (!user) {
     throw new Error('User does not exist');
   }
-
-  const otp = generateOtp();
-  await OTPService.storeOtp(userId, 'EMAIL', otp);
-  await sendEmail(subscriber, 'Login OTP', `Here's your OTP ${otp} to login`);
+  await sendEmailOtp(userId, subscriber);
 
   user.mfa.email.subscriber = subscriber;
   await user.save();

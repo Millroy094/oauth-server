@@ -4,6 +4,7 @@ import isEmpty from 'lodash/isEmpty';
 import { User } from '../../models';
 import { setupAppMFA, setupEmailMFA, setupSMSMFA } from './setup';
 import { verifyAppMFA, verifyEmailMFA, verifySMSMFA } from './verify';
+import { sendEmailOtp, sendSMSOtp } from './send';
 
 class MFAService {
   public static async getMFASetting(userId: string): Promise<{
@@ -85,6 +86,19 @@ class MFAService {
     user.mfa.preference = preference;
 
     await user.save();
+  }
+
+  public static async sendOtp(
+    userId: string,
+    type: 'SMS' | 'EMAIL',
+    subscriber: string,
+  ): Promise<void> {
+    const sendOtp = {
+      SMS: sendSMSOtp,
+      EMAIL: sendEmailOtp,
+    };
+
+    await sendOtp[type](userId, subscriber);
   }
 }
 

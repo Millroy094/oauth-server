@@ -233,6 +233,17 @@ class UserController {
         .json({ error: 'Failed to change MFA preference' });
     }
   }
+
+  public static async sendOtp(req: Request, res: Response) {
+    try {
+      const { type, subscriber, userId } = req.body;
+      await MFAService.sendOtp(userId, type, subscriber);
+      res.status(HTTP_STATUSES.ok).json({ message: 'Successfully sent OTP' });
+    } catch (err) {
+      console.log(err);
+      res.status(HTTP_STATUSES.notFound).json({ error: 'Failed to send OTP' });
+    }
+  }
 }
 
 export default UserController;
