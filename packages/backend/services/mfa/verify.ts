@@ -1,4 +1,4 @@
-import { TOTP } from 'otpauth';
+import { Secret, TOTP } from 'otpauth';
 import { User } from '../../models';
 import OTPService from '../otp';
 
@@ -18,7 +18,7 @@ export const verifyAppMFA = async (
     algorithm: 'SHA1',
     digits: 6,
     period: 30,
-    secret: user.mfa.app.secret,
+    secret: Secret.fromUTF8(user.mfa.app.secret),
   });
 
   if (!totp.validate({ token: otp, window: 1 })) {

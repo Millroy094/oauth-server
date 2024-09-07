@@ -1,9 +1,6 @@
-import crypto from 'crypto';
+import uniqueId from 'lodash/uniqueId';
 import { User } from '../../models';
-import { TOTP } from 'otpauth';
-import generateOtp from '../../utils/generate-otp';
-import OTPService from '../otp';
-import { sendEmail, sendSMS } from '../../utils/notification';
+import { Secret, TOTP } from 'otpauth';
 import { sendEmailOtp, sendSMSOtp } from './send';
 
 export const setupAppMFA = async (
@@ -16,7 +13,7 @@ export const setupAppMFA = async (
     throw new Error('User does not exist');
   }
 
-  const secret = crypto.randomBytes(32).toString('base64');
+  const secret = uniqueId();
 
   const totp = new TOTP({
     issuer: 'MTech',
@@ -24,7 +21,7 @@ export const setupAppMFA = async (
     algorithm: 'SHA1',
     digits: 6,
     period: 30,
-    secret,
+    secret: Secret.fromUTF8(secret),
   });
 
   user.mfa.app.secret = secret;
