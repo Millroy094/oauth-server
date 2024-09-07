@@ -33,7 +33,7 @@ const MFA: FC<{}> = () => {
   const [mfaPreference, setMfaPreference] = useState<string>('');
   const [mfaTypes, setMfaTypes] = useState<IMFAType[]>([]);
   const [setupModal, setSetupModal] = useState<ISetupModal>(setupModalDefault);
-  const { feedbackAxiosError } = useFeedback();
+  const { feedbackAxiosError, feedback } = useFeedback();
 
   const fetchMFASettings = async (): Promise<void> => {
     try {
@@ -50,11 +50,16 @@ const MFA: FC<{}> = () => {
   };
 
   const onChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const checked = e.target.checked;
-    const name = e.target.value;
-    if (checked) {
-      await changeMFAPreference(name);
-      await fetchMFASettings();
+    try {
+      const checked = e.target.checked;
+      const name = e.target.value;
+      if (checked) {
+        await changeMFAPreference(name);
+        await fetchMFASettings();
+        feedback('Successfully updated MFA preference', 'success');
+      }
+    } catch (err) {
+      feedbackAxiosError(err, 'There was an issue changing MFA preference');
     }
   };
 
@@ -64,8 +69,13 @@ const MFA: FC<{}> = () => {
   };
 
   const onReset = async (type: string) => {
-    await resetMfa(type);
-    await fetchMFASettings();
+    try {
+      await resetMfa(type);
+      await fetchMFASettings();
+      feedback('Successfully resetted MFA', 'success');
+    } catch (err) {
+      feedbackAxiosError(err, 'Failed to reset MFA');
+    }
   };
 
   useEffect(() => {

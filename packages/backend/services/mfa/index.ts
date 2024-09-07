@@ -30,32 +30,32 @@ class MFAService {
 
   public static async setupMFA(
     userId: string,
-    type: 'APP' | 'SMS' | 'EMAIL',
+    type: 'app' | 'sms' | 'email',
     subscriber: string,
   ): Promise<void | {
     uri: string;
   }> {
-    const setup = { APP: setupAppMFA, SMS: setupSMSMFA, EMAIL: setupEmailMFA };
+    const setup = { app: setupAppMFA, sms: setupSMSMFA, email: setupEmailMFA };
     const response = await setup[type](userId, subscriber);
     return response;
   }
 
   public static async verifyMFA(
     userId: string,
-    type: 'APP' | 'SMS' | 'EMAIL',
+    type: 'app' | 'sms' | 'email',
     otp: string,
   ): Promise<void> {
     const verify = {
-      APP: verifyAppMFA,
-      SMS: verifySMSMFA,
-      EMAIL: verifyEmailMFA,
+      app: verifyAppMFA,
+      sms: verifySMSMFA,
+      email: verifyEmailMFA,
     };
     await verify[type](userId, otp);
   }
 
   public static async resetMFA(
     userId: string,
-    type: 'APP' | 'SMS' | 'EMAIL',
+    type: 'app' | 'sms' | 'email',
   ): Promise<void> {
     const user = await User.get(userId);
 
@@ -66,7 +66,11 @@ class MFAService {
     user.mfa[type].subscriber = '';
     user.mfa[type].verified = false;
 
-    if (type === 'APP') {
+    if (user.mfa.preference === type) {
+      user.mfa.preference = '';
+    }
+
+    if (type === 'app') {
       user.mfa[type].secret = '';
     }
 
@@ -75,7 +79,7 @@ class MFAService {
 
   public static async changePreference(
     userId: string,
-    preference: 'APP' | 'SMS' | 'EMAIL',
+    preference: 'app' | 'sms' | 'email',
   ): Promise<void> {
     const user = await User.get(userId);
 
@@ -90,12 +94,12 @@ class MFAService {
 
   public static async sendOtp(
     userId: string,
-    type: 'SMS' | 'EMAIL',
+    type: 'sms' | 'email',
     subscriber: string,
   ): Promise<void> {
     const sendOtp = {
-      SMS: sendSMSOtp,
-      EMAIL: sendEmailOtp,
+      sms: sendSMSOtp,
+      email: sendEmailOtp,
     };
 
     await sendOtp[type](userId, subscriber);

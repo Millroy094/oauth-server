@@ -4,7 +4,7 @@ import { OTP } from '../models';
 class OTPService {
   public static async storeOtp(
     userId: string,
-    type: 'APP' | 'SMS' | 'EMAIL',
+    type: 'app' | 'sms' | 'email',
     otp: string,
   ): Promise<void> {
     await OTP.create({
@@ -17,7 +17,7 @@ class OTPService {
 
   public static async validateOtp(
     userId: string,
-    type: 'SMS' | 'EMAIL',
+    type: 'sms' | 'email',
     otp: string,
   ): Promise<boolean> {
     let isValid = false;

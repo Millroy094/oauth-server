@@ -15,7 +15,7 @@ export const sendEmailOtp = async (
   }
 
   const otp = generateOtp();
-  await OTPService.storeOtp(userId, 'EMAIL', otp);
+  await OTPService.storeOtp(userId, 'email', otp);
   await sendEmail(subscriber, 'Login OTP', `Here's your OTP ${otp} to login`);
 };
 
@@ -30,6 +30,6 @@ export const sendSMSOtp = async (
   }
 
   const otp = generateOtp();
-  await OTPService.storeOtp(userId, 'SMS', otp);
+  await OTPService.storeOtp(userId, 'sms', otp);
   await sendSMS(subscriber, `Here's your OTP ${otp} to login`);
 };

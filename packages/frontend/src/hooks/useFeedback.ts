@@ -8,6 +8,7 @@ const useFeedback = (): {
     defaultMessage: string,
     type: VariantType,
   ) => void;
+  feedback: (message: string, type: VariantType) => void;
 } => {
   const { enqueueSnackbar } = useSnackbar();
 
@@ -30,7 +31,13 @@ const useFeedback = (): {
     });
   };
 
-  return { feebackAxiosResponse, feedbackAxiosError };
+  const feedback = (message: string, type: VariantType) => {
+    enqueueSnackbar(message, {
+      variant: type,
+    });
+  };
+
+  return { feebackAxiosResponse, feedbackAxiosError, feedback };
 };
 
 export default useFeedback;

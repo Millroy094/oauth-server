@@ -43,7 +43,7 @@ export const verifySMSMFA = async (
     throw new Error('User does not exist');
   }
 
-  if (!OTPService.validateOtp(userId, 'SMS', otp)) {
+  if (!OTPService.validateOtp(userId, 'sms', otp)) {
     throw new Error('Invalid OTP');
   }
 
@@ -64,7 +64,7 @@ export const verifyEmailMFA = async (
     throw new Error('User does not exist');
   }
 
-  if (!OTPService.validateOtp(userId, 'EMAIL', otp)) {
+  if (!OTPService.validateOtp(userId, 'email', otp)) {
     throw new Error('Invalid OTP');
   }
 
