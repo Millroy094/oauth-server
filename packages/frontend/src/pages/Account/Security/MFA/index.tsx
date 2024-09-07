@@ -13,6 +13,8 @@ import {
 import getMFASettings from '../../../../api/get-mfa-settings';
 import useFeedback from '../../../../hooks/useFeedback';
 import SetupModal from './SetupModal';
+import changeMFAPreference from '../../../../api/change-mfa-preference';
+import resetMfa from '../../../../api/reset-mfa';
 
 interface IMFAType {
   type: string;
@@ -47,16 +49,22 @@ const MFA: FC<{}> = () => {
     }
   };
 
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const checked = e.target.checked;
     const name = e.target.value;
     if (checked) {
-      setMfaPreference(name);
+      await changeMFAPreference(name);
+      await fetchMFASettings();
     }
   };
 
   const onCloseSetupModal = async () => {
     setSetupModal({ open: false, type: '' });
+    await fetchMFASettings();
+  };
+
+  const onReset = async (type: string) => {
+    await resetMfa(type);
     await fetchMFASettings();
   };
 
@@ -111,19 +119,30 @@ const MFA: FC<{}> = () => {
                     </Grid>
                   </Grid>
                   <Grid container item justifyContent='flex-end'>
-                    <Button
-                      variant='outlined'
-                      color='success'
-                      size='small'
-                      onClick={() =>
-                        setSetupModal({
-                          open: true,
-                          type: mfaType.type.toUpperCase(),
-                        })
-                      }
-                    >
-                      {`${mfaType.verified ? 'Reset' : 'Setup'} MFA`}
-                    </Button>
+                    {!mfaType.verified ? (
+                      <Button
+                        variant='outlined'
+                        color='success'
+                        size='small'
+                        onClick={() =>
+                          setSetupModal({
+                            open: true,
+                            type: mfaType.type.toUpperCase(),
+                          })
+                        }
+                      >
+                        Setup MFA
+                      </Button>
+                    ) : (
+                      <Button
+                        variant='outlined'
+                        color='success'
+                        size='small'
+                        onClick={() => onReset(mfaType.type.toLowerCase())}
+                      >
+                        Reset MFA
+                      </Button>
+                    )}
                   </Grid>
                 </Grid>
               </Paper>
