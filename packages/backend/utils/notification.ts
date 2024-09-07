@@ -26,6 +26,12 @@ export const sendSMS = async (
     const params = {
       Message: message,
       PhoneNumber: number,
+      MessageAttributes: {
+        'AWS.SNS.SMS.SMSType': {
+          DataType: 'String',
+          StringValue: 'Transactional',
+        },
+      },
     };
     await client.send(new PublishCommand(params));
   } catch (err) {
