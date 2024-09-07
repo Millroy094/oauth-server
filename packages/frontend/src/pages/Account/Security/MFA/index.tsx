@@ -36,6 +36,7 @@ const MFA: FC<{}> = () => {
   const fetchMFASettings = async (): Promise<void> => {
     try {
       const response = await getMFASettings();
+      console.log(response);
       setMfaTypes(response.data.settings.types);
       setMfaPreference(response.data.settings.preference);
     } catch (err) {
@@ -54,8 +55,9 @@ const MFA: FC<{}> = () => {
     }
   };
 
-  const onCloseSetupModal = () => {
+  const onCloseSetupModal = async () => {
     setSetupModal({ open: false, type: '' });
+    await fetchMFASettings();
   };
 
   useEffect(() => {
@@ -103,7 +105,7 @@ const MFA: FC<{}> = () => {
                         disabled={!mfaType.verified}
                         color='error'
                         value={mfaType.type}
-                        checked={mfaPreference === mfaType.type}
+                        checked={mfaPreference.toLowerCase() === mfaType.type}
                         onChange={onChange}
                       />
                     </Grid>

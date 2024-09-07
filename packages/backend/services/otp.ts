@@ -7,7 +7,12 @@ class OTPService {
     type: 'APP' | 'SMS' | 'EMAIL',
     otp: string,
   ): Promise<void> {
-    await OTP.create({ userId, type, otp });
+    await OTP.create({
+      userId,
+      type,
+      otp,
+      expiresAt: Math.floor(Date.now() / 1000) + 300,
+    });
   }
 
   public static async validateOtp(
@@ -16,7 +21,7 @@ class OTPService {
     otp: string,
   ): Promise<boolean> {
     let isValid = false;
-
+    console.log(otp);
     const [otpResult] = await OTP.scan('userId')
       .eq(userId)
       .and()

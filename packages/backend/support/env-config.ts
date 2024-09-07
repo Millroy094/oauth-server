@@ -27,6 +27,19 @@ const config = {
     secretiv: envs?.ENCRYPTION_SECRET_IV ?? 'EvenMoreVeryBigSecret',
     method: envs?.ECNRYPTION_METHOD ?? 'aes-256-cbc',
   },
+  issuer: {
+    url: envs?.ISSUER_URL ?? '',
+    name: envs?.ISSUER_NAME ?? '',
+  },
+  email: {
+    service: envs?.EMAIL_SERVICE ?? '',
+    address: envs?.EMAIL_ADDRESS ?? '',
+    password: envs?.EMAIL_PASSWORD ?? '',
+  },
+  aws: {
+    accessKey: envs?.AWS_ACCESS_KEY ?? '',
+    secretKey: envs?.AWS_SECRET_KEY ?? '',
+  },
 };
 
 const getEnv = (key: string): string => get(config, key, '');

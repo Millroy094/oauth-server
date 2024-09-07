@@ -20,6 +20,7 @@
     "@types/lodash": "^4.14.186",
     "@types/node": "^20.11.27",
     "@types/node-jose": "^1.1.13",
+    "@types/nodemailer": "^6.4.15",
     "@types/oidc-provider": "^8.5.1",
     "@types/uuid": "^10.0.0",
     "node-jose": "^2.2.0",
@@ -28,7 +29,6 @@
     "typescript": "^5.5.4"
   },
   "dependencies": {
-    "@aws-sdk/client-ses": "^3.645.0",
     "@aws-sdk/client-sns": "^3.645.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.2",
@@ -39,6 +39,7 @@
     "express": "^4.19.2",
     "jsonwebtoken": "^9.0.2",
     "lodash": "^4.17.21",
+    "nodemailer": "^6.9.15",
     "npm": "^10.8.2",
     "oidc-provider": "^8.5.1",
     "otpauth": "^9.3.2",

@@ -1,7 +1,8 @@
-import uniqueId from 'lodash/uniqueId';
+import { v4 as uuid } from 'uuid';
 import { User } from '../../models';
 import { Secret, TOTP } from 'otpauth';
 import { sendEmailOtp, sendSMSOtp } from './send';
+import getEnv from '../../support/env-config';
 
 export const setupAppMFA = async (
   userId: string,
@@ -13,11 +14,11 @@ export const setupAppMFA = async (
     throw new Error('User does not exist');
   }
 
-  const secret = uniqueId();
+  const secret = uuid();
 
   const totp = new TOTP({
-    issuer: 'MTech',
-    label: 'MTech',
+    issuer: getEnv('issuer.url'),
+    label: getEnv('issuer.name'),
     algorithm: 'SHA1',
     digits: 6,
     period: 30,

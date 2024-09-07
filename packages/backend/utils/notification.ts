@@ -1,7 +1,22 @@
+import nodemailer from 'nodemailer';
 import { SNSClient, PublishCommand } from '@aws-sdk/client-sns';
-import { SESClient, SendEmailCommand } from '@aws-sdk/client-ses';
+import getEnv from '../support/env-config';
 
-const client = new SNSClient({ region: 'eu-west' });
+const transporter = nodemailer.createTransport({
+  service: getEnv('email.service'),
+  auth: {
+    user: getEnv('email.address'),
+    pass: getEnv('email.password'),
+  },
+});
+
+const client = new SNSClient({
+  region: 'us-west-2',
+  credentials: {
+    accessKeyId: getEnv('aws.accessKey'),
+    secretAccessKey: getEnv('aws.secretKey'),
+  },
+});
 
 export const sendSMS = async (
   number: string,
@@ -24,28 +39,17 @@ export const sendEmail = async (
   subject: string,
   message: string,
 ) => {
-  try {
-    const params = {
-      Source: 'millroytech94@gmail.com',
-      Destination: {
-        ToAddresses: [email],
-      },
-      Message: {
-        Subject: {
-          Data: subject,
-        },
-        Body: {
-          Text: {
-            Data: message,
-          },
-        },
-      },
-    };
-    const ses = new SESClient({ region: 'eu-west' });
-    const command = new SendEmailCommand(params);
-    await ses.send(command);
-  } catch (err) {
-    console.log(err);
-    throw new Error('Unable to send Email');
-  }
+  const mailOptions = {
+    from: getEnv('email.address'),
+    to: email,
+    subject,
+    text: message,
+  };
+
+  transporter.sendMail(mailOptions, function (error, info) {
+    if (error) {
+      console.log(error);
+      throw new Error('Unable to send Email');
+    }
+  });
 };

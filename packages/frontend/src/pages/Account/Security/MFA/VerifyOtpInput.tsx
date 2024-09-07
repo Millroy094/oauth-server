@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
-import { APP_MFA } from '../../../../constants';
+import { APP_MFA, EMAIL_MFA, SMS_MFA } from '../../../../constants';
 import { FormHelperText, Grid, Typography } from '@mui/material';
 import OTPInput from 'react-otp-input';
 
@@ -31,13 +31,31 @@ const VerifyOtpInput: FC<IVerifyOtpInput> = (props) => {
           </Grid>
         </Grid>
       )}
+      {type === EMAIL_MFA && (
+        <Grid direction='column' container item spacing={2}>
+          <Grid container item direction='column'>
+            <Typography>
+              Please enter the 6 digit OTP sent to your selected email
+            </Typography>
+          </Grid>
+        </Grid>
+      )}
+      {type === SMS_MFA && (
+        <Grid direction='column' container item spacing={2}>
+          <Grid container item direction='column'>
+            <Typography>
+              Please enter the 6 digit OTP sent to your selected phone number
+            </Typography>
+          </Grid>
+        </Grid>
+      )}
       <Grid item container direction='column' justifyContent='center'>
         <OTPInput
           value={value}
           onChange={onChange}
           numInputs={6}
-          renderSeparator={<span> </span>}
-          renderInput={(props) => <input {...props} type='number' />}
+          renderInput={(props) => <input {...props} />}
+          inputType='tel'
           containerStyle={{
             display: 'flex',
             gap: '10px',
