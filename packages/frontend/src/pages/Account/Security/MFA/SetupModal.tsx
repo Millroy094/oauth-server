@@ -8,7 +8,7 @@ import {
   Grid,
   Modal,
 } from '@mui/material';
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useState } from 'react';
 import setupMFA from '../../../../api/setup-mfa';
 import SubscriberInput from './SubscriberInput';
 import {
@@ -33,7 +33,7 @@ interface SetupModalProps {
 
 const SetupModal: FC<SetupModalProps> = (props) => {
   const { open, type, defaultValue, onClose } = props;
-  const [subscriber, setSubscriber] = useState('');
+  const [subscriber, setSubscriber] = useState(defaultValue);
   const [subscriberError, setSubscriberError] = useState(false);
   const [stage, setStage] = useState(MFA_SETUP);
   const [otp, setOtp] = useState('');
@@ -41,12 +41,6 @@ const SetupModal: FC<SetupModalProps> = (props) => {
   const [uri, setUri] = useState('');
 
   const { feedbackAxiosError } = useFeedback();
-
-  useEffect(() => {
-    if (open) {
-      setSubscriber(defaultValue);
-    }
-  }, [open, defaultValue]);
 
   const validateSubscriber = () => {
     let isValid = true;
@@ -136,7 +130,6 @@ const SetupModal: FC<SetupModalProps> = (props) => {
                 <Divider sx={{ margin: '10px 0 10px' }} />
 
                 <VerifyOtpInput
-                  subscriber={subscriber}
                   value={otp}
                   onChange={setOtp}
                   uri={uri}

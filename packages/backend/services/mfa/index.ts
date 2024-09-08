@@ -95,14 +95,23 @@ class MFAService {
   public static async sendOtp(
     userId: string,
     type: 'sms' | 'email',
-    subscriber: string,
   ): Promise<void> {
     const sendOtp = {
       sms: sendSMSOtp,
       email: sendEmailOtp,
     };
 
-    await sendOtp[type](userId, subscriber);
+    const user = await User.get(userId);
+
+    if (!user) {
+      throw new Error('User does not exist');
+    }
+
+    if (!user.mfa[type].subscriber) {
+      throw new Error('User MFA method does not have a subscriber set');
+    }
+
+    await sendOtp[type](userId, user.mfa[type].subscriber);
   }
 }
 

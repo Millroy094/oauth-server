@@ -12,7 +12,6 @@ interface ISubscriberInput {
 
 const SubscriberInput: FC<ISubscriberInput> = (props) => {
   const { value, onChange, type, error, disabled } = props;
-
   const onChangeTextField = (e: React.ChangeEvent<HTMLInputElement>) => {
     onChange(e.target.value);
   };

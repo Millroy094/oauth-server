@@ -57,16 +57,18 @@ const MFA: FC<{}> = () => {
       const name = e.target.value;
       if (checked) {
         await changeMFAPreference(name);
-        await fetchMFASettings();
-        feedback('Successfully updated MFA preference', 'success');
+      } else {
+        await changeMFAPreference('');
       }
+      await fetchMFASettings();
+      feedback('Successfully updated MFA preference', 'success');
     } catch (err) {
       feedbackAxiosError(err, 'There was an issue changing MFA preference');
     }
   };
 
   const onCloseSetupModal = async () => {
-    setSetupModal({ open: false, type: '' });
+    setSetupModal(setupModalDefault);
     await fetchMFASettings();
   };
 
@@ -186,12 +188,14 @@ const MFA: FC<{}> = () => {
             </Grid>
           ))}
         </Grid>
-        <SetupModal
-          open={setupModal.open}
-          type={setupModal.type}
-          defaultValue={setupModal.defaultValue}
-          onClose={onCloseSetupModal}
-        />
+        {setupModal.open && (
+          <SetupModal
+            open={setupModal.open}
+            type={setupModal.type}
+            defaultValue={setupModal.defaultValue}
+            onClose={onCloseSetupModal}
+          />
+        )}
       </CardActions>
     </Card>
   );

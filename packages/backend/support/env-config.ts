@@ -28,7 +28,6 @@ const config = {
     method: envs?.ECNRYPTION_METHOD ?? 'aes-256-cbc',
   },
   issuer: {
-    url: envs?.ISSUER_URL ?? '',
     name: envs?.ISSUER_NAME ?? '',
   },
   email: {

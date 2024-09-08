@@ -17,7 +17,7 @@ export const setupAppMFA = async (
   const secret = uuid();
 
   const totp = new TOTP({
-    issuer: getEnv('issuer.url'),
+    issuer: getEnv('issuer.name'),
     label: getEnv('issuer.name'),
     algorithm: 'SHA1',
     digits: 6,

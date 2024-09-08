@@ -10,7 +10,6 @@ import useFeedback from '../../../../hooks/useFeedback';
 
 interface IVerifyOtpInput {
   value: string;
-  subscriber: string;
   onChange: React.Dispatch<React.SetStateAction<string>>;
   type: string;
   uri?: string;
@@ -18,7 +17,7 @@ interface IVerifyOtpInput {
 }
 
 const VerifyOtpInput: FC<IVerifyOtpInput> = (props) => {
-  const { type, onChange, value, uri, error, subscriber } = props;
+  const { type, onChange, value, uri, error } = props;
 
   const { timer, resetTimer } = useTimer();
   const auth = useAuth();
@@ -26,7 +25,7 @@ const VerifyOtpInput: FC<IVerifyOtpInput> = (props) => {
 
   const handleResendOtp = async (): Promise<void> => {
     try {
-      await sendMFAOtp({ type, subscriber, userId: auth!.user!.userId });
+      await sendMFAOtp({ type, userId: auth!.user!.userId });
       resetTimer();
     } catch (err) {
       feedbackAxiosError(err, 'Failed to resend OTP');
