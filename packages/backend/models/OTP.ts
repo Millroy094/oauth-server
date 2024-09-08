@@ -11,7 +11,7 @@ const OTPSchema = new Schema(
     id: {
       type: String,
       hashKey: true,
-      default: uuid(),
+      default: () => uuid(),
     },
     otp: {
       type: String,

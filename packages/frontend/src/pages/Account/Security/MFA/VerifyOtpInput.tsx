@@ -1,11 +1,16 @@
 import React, { FC } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
 import { APP_MFA, EMAIL_MFA, SMS_MFA } from '../../../../constants';
-import { FormHelperText, Grid, Typography } from '@mui/material';
+import { Button, FormHelperText, Grid, Typography } from '@mui/material';
 import OTPInput from 'react-otp-input';
+import useTimer from '../../../../hooks/useTimer';
+import sendMFAOtp from '../../../../api/send-mfa-otp';
+import { useAuth } from '../../../../context/AuthProvider';
+import useFeedback from '../../../../hooks/useFeedback';
 
 interface IVerifyOtpInput {
   value: string;
+  subscriber: string;
   onChange: React.Dispatch<React.SetStateAction<string>>;
   type: string;
   uri?: string;
@@ -13,7 +18,20 @@ interface IVerifyOtpInput {
 }
 
 const VerifyOtpInput: FC<IVerifyOtpInput> = (props) => {
-  const { type, onChange, value, uri, error } = props;
+  const { type, onChange, value, uri, error, subscriber } = props;
+
+  const { timer, resetTimer } = useTimer();
+  const auth = useAuth();
+  const { feedbackAxiosError } = useFeedback();
+
+  const handleResendOtp = async (): Promise<void> => {
+    try {
+      await sendMFAOtp({ type, subscriber, userId: auth!.user!.userId });
+      resetTimer();
+    } catch (err) {
+      feedbackAxiosError(err, 'Failed to resend OTP');
+    }
+  };
 
   return (
     <Grid container direction='column' alignItems='center' spacing={4}>
@@ -32,20 +50,36 @@ const VerifyOtpInput: FC<IVerifyOtpInput> = (props) => {
         </Grid>
       )}
       {type === EMAIL_MFA && (
-        <Grid direction='column' container item spacing={2}>
-          <Grid container item direction='column'>
-            <Typography>
-              Please enter the 6 digit OTP sent to your selected email
-            </Typography>
+        <Grid direction='column' container item>
+          <Grid container item direction='column' alignItems='center'>
+            <Grid item>
+              <Typography>
+                Please enter the 6 digit OTP sent to your selected email
+              </Typography>
+            </Grid>
+            <Grid item container alignItems='center' justifyContent='center'>
+              <Typography>Haven't received OTP?</Typography>
+              <Button onClick={handleResendOtp}>
+                {timer ? `Click here in ${timer} seconds` : 'Click here'}
+              </Button>
+            </Grid>
           </Grid>
         </Grid>
       )}
       {type === SMS_MFA && (
-        <Grid direction='column' container item spacing={2}>
-          <Grid container item direction='column'>
-            <Typography>
-              Please enter the 6 digit OTP sent to your selected phone number
-            </Typography>
+        <Grid direction='column' container item>
+          <Grid container item direction='column' alignItems='center'>
+            <Grid item>
+              <Typography>
+                Please enter the 6 digit OTP sent to your selected phone number
+              </Typography>
+            </Grid>
+            <Grid item container alignItems='center' justifyContent='center'>
+              <Typography>Haven't received OTP?</Typography>
+              <Button onClick={handleResendOtp}>
+                {timer ? `Click here in ${timer} seconds` : 'Click here'}
+              </Button>
+            </Grid>
           </Grid>
         </Grid>
       )}

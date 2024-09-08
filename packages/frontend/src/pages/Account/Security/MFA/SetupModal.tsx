@@ -8,7 +8,7 @@ import {
   Grid,
   Modal,
 } from '@mui/material';
-import React, { FC, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import setupMFA from '../../../../api/setup-mfa';
 import SubscriberInput from './SubscriberInput';
 import {
@@ -27,11 +27,12 @@ import useFeedback from '../../../../hooks/useFeedback';
 interface SetupModalProps {
   open: boolean;
   type: string;
+  defaultValue: string;
   onClose: () => void;
 }
 
 const SetupModal: FC<SetupModalProps> = (props) => {
-  const { open, type, onClose } = props;
+  const { open, type, defaultValue, onClose } = props;
   const [subscriber, setSubscriber] = useState('');
   const [subscriberError, setSubscriberError] = useState(false);
   const [stage, setStage] = useState(MFA_SETUP);
@@ -40,6 +41,12 @@ const SetupModal: FC<SetupModalProps> = (props) => {
   const [uri, setUri] = useState('');
 
   const { feedbackAxiosError } = useFeedback();
+
+  useEffect(() => {
+    if (open) {
+      setSubscriber(defaultValue);
+    }
+  }, [open, defaultValue]);
 
   const validateSubscriber = () => {
     let isValid = true;
@@ -111,7 +118,7 @@ const SetupModal: FC<SetupModalProps> = (props) => {
           p: 2,
         }}
       >
-        <CardHeader title={`${type} MFA Setup`} />
+        <CardHeader title={`${type.toUpperCase()} MFA Setup`} />
         <Divider />
         <CardContent>
           <Grid container justifyItems='center' direction='column' spacing={2}>
@@ -129,6 +136,7 @@ const SetupModal: FC<SetupModalProps> = (props) => {
                 <Divider sx={{ margin: '10px 0 10px' }} />
 
                 <VerifyOtpInput
+                  subscriber={subscriber}
                   value={otp}
                   onChange={setOtp}
                   uri={uri}

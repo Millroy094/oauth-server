@@ -8,6 +8,7 @@ import {
   Grid,
   Paper,
   Switch,
+  Tooltip,
   Typography,
 } from '@mui/material';
 import getMFASettings from '../../../../api/get-mfa-settings';
@@ -15,6 +16,7 @@ import useFeedback from '../../../../hooks/useFeedback';
 import SetupModal from './SetupModal';
 import changeMFAPreference from '../../../../api/change-mfa-preference';
 import resetMfa from '../../../../api/reset-mfa';
+import { NewReleases, Verified } from '@mui/icons-material';
 
 interface IMFAType {
   type: string;
@@ -25,9 +27,10 @@ interface IMFAType {
 interface ISetupModal {
   open: boolean;
   type: string;
+  defaultValue: string;
 }
 
-const setupModalDefault = { open: false, type: '' };
+const setupModalDefault = { open: false, type: '', defaultValue: '' };
 
 const MFA: FC<{}> = () => {
   const [mfaPreference, setMfaPreference] = useState<string>('');
@@ -38,7 +41,6 @@ const MFA: FC<{}> = () => {
   const fetchMFASettings = async (): Promise<void> => {
     try {
       const response = await getMFASettings();
-      console.log(response);
       setMfaTypes(response.data.settings.types);
       setMfaPreference(response.data.settings.preference);
     } catch (err) {
@@ -100,7 +102,7 @@ const MFA: FC<{}> = () => {
             <Grid item key={mfaType.type}>
               <Paper
                 elevation={2}
-                sx={{ p: '10px', width: '230px', height: '80px' }}
+                sx={{ p: '10px', width: '240px', height: '120px' }}
               >
                 <Grid
                   container
@@ -123,10 +125,34 @@ const MFA: FC<{}> = () => {
                         disabled={!mfaType.verified}
                         color='error'
                         value={mfaType.type}
-                        checked={mfaPreference.toLowerCase() === mfaType.type}
+                        checked={mfaPreference === mfaType.type}
                         onChange={onChange}
                       />
                     </Grid>
+                  </Grid>
+                  <Grid item sx={{ p: '10px 0' }}>
+                    <Grid container item alignContent='center' spacing={1}>
+                      <Grid item>
+                        <Typography variant='subtitle2'>Subscriber</Typography>
+                      </Grid>
+                      {mfaType.subscriber && mfaType.verified && (
+                        <Grid item>
+                          <Tooltip title='Verified'>
+                            <Verified fontSize='small' color='success' />
+                          </Tooltip>
+                        </Grid>
+                      )}
+                      {mfaType.subscriber && !mfaType.verified && (
+                        <Grid item>
+                          <Tooltip title='Not Verified'>
+                            <NewReleases fontSize='small' color='error' />
+                          </Tooltip>
+                        </Grid>
+                      )}
+                    </Grid>
+                    <Typography variant='caption'>
+                      {mfaType.subscriber || 'None'}
+                    </Typography>
                   </Grid>
                   <Grid container item justifyContent='flex-end'>
                     {!mfaType.verified ? (
@@ -137,7 +163,8 @@ const MFA: FC<{}> = () => {
                         onClick={() =>
                           setSetupModal({
                             open: true,
-                            type: mfaType.type.toUpperCase(),
+                            type: mfaType.type,
+                            defaultValue: mfaType.subscriber || '',
                           })
                         }
                       >
@@ -148,7 +175,7 @@ const MFA: FC<{}> = () => {
                         variant='outlined'
                         color='success'
                         size='small'
-                        onClick={() => onReset(mfaType.type.toLowerCase())}
+                        onClick={() => onReset(mfaType.type)}
                       >
                         Reset MFA
                       </Button>
@@ -162,6 +189,7 @@ const MFA: FC<{}> = () => {
         <SetupModal
           open={setupModal.open}
           type={setupModal.type}
+          defaultValue={setupModal.defaultValue}
           onClose={onCloseSetupModal}
         />
       </CardActions>

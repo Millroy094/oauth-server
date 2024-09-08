@@ -49,6 +49,7 @@ const SubscriberInput: FC<ISubscriberInput> = (props) => {
   } else if (type === EMAIL_MFA) {
     return (
       <TextField
+        label='Email'
         name='subscriber'
         onChange={onChangeTextField}
         value={value}
