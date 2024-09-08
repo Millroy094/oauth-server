@@ -21,7 +21,7 @@ interface User {
   lastName: string;
 }
 
-const Users: FC<{}> = () => {
+const Users: FC = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [open, setOpen] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState<string>('');

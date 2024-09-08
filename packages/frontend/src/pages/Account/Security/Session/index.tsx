@@ -24,7 +24,7 @@ interface Session {
   exp: number;
 }
 
-const Sessions: FC<{}> = () => {
+const Sessions: FC = () => {
   const [sessions, setSessions] = useState<Session[]>([]);
   const { feebackAxiosResponse, feedbackAxiosError } = useFeedback();
   const fetchSessions = async () => {

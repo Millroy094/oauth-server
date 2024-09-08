@@ -22,7 +22,7 @@ interface Client {
   secret: string;
 }
 
-const Clients: FC<{}> = () => {
+const Clients: FC = () => {
   const [open, setOpen] = useState(false);
   const [clients, setClients] = useState<Client[]>([]);
   const [selectedClientId, setSelectedClientId] = useState<string>('');

@@ -4,7 +4,7 @@ import Sessions from './Session';
 import MFA from './MFA';
 import { Divider } from '@mui/material';
 
-const Security: FC<{}> = () => {
+const Security: FC = () => {
   return (
     <>
       <MFA />

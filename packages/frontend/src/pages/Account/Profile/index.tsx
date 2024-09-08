@@ -25,7 +25,7 @@ const defaultValues = {
   mobile: '',
 };
 
-const Profile: FC<{}> = () => {
+const Profile: FC = () => {
   const [form, setForm] = useState(defaultValues);
   const [disabled, setDisabled] = useState(true);
   const { feebackAxiosResponse, feedbackAxiosError } = useFeedback();

@@ -26,7 +26,7 @@ const StyledCard = styled(Card)({
   borderTop: '2px solid red',
 });
 
-const Register: FC<{}> = () => {
+const Register: FC = () => {
   const { feebackAxiosResponse, feedbackAxiosError } = useFeedback();
   const navigate = useNavigate();
   const {

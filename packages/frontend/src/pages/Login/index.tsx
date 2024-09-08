@@ -24,7 +24,7 @@ const StyledCard = styled(Card)({
   borderTop: '2px solid red',
 });
 
-const Login: FC<{}> = () => {
+const Login: FC = () => {
   const { interactionId } = useParams();
   const navigate = useNavigate();
   const { feedbackAxiosError } = useFeedback();

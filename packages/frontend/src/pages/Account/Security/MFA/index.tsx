@@ -32,7 +32,7 @@ interface ISetupModal {
 
 const setupModalDefault = { open: false, type: '', defaultValue: '' };
 
-const MFA: FC<{}> = () => {
+const MFA: FC = () => {
   const [mfaPreference, setMfaPreference] = useState<string>('');
   const [mfaTypes, setMfaTypes] = useState<IMFAType[]>([]);
   const [setupModal, setSetupModal] = useState<ISetupModal>(setupModalDefault);

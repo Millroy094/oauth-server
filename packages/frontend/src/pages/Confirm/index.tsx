@@ -19,7 +19,7 @@ const StyledCard = styled(Card)({
   borderTop: '2px solid red',
 });
 
-const Confirm: FC<{}> = () => {
+const Confirm: FC = () => {
   const { interactionId } = useParams();
   const { feedbackAxiosError } = useFeedback();
   const onAuthorize = async (authorize: boolean): Promise<void> => {
