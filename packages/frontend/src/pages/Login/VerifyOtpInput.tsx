@@ -1,31 +1,33 @@
-import React, { FC } from 'react';
-import { QRCodeSVG } from 'qrcode.react';
-import { APP_MFA, EMAIL_MFA, SMS_MFA } from '../../../../constants';
+import React, { FC, useEffect } from 'react';
+import { APP_MFA, EMAIL_MFA, SMS_MFA } from '../../constants';
 import { Button, FormHelperText, Grid, Typography } from '@mui/material';
 import OTPInput from 'react-otp-input';
-import useTimer from '../../../../hooks/useTimer';
-import sendMFAOtp from '../../../../api/send-mfa-otp';
-import { useAuth } from '../../../../context/AuthProvider';
-import useFeedback from '../../../../hooks/useFeedback';
+import useTimer from '../../hooks/useTimer';
+import sendMFAOtp from '../../api/send-mfa-otp';
+import useFeedback from '../../hooks/useFeedback';
+import { Control, Controller } from 'react-hook-form';
 
 interface IVerifyOtpInput {
-  value: string;
-  onChange: React.Dispatch<React.SetStateAction<string>>;
+  email: string;
   type: string;
-  uri?: string;
-  error: boolean;
+  control: Control<ILoginFormInput>;
 }
 
 const VerifyOtpInput: FC<IVerifyOtpInput> = (props) => {
-  const { type, onChange, value, uri, error } = props;
+  const { email, type, control } = props;
 
   const { timer, resetTimer } = useTimer();
-  const auth = useAuth();
   const { feedbackAxiosError } = useFeedback();
+
+  useEffect(() => {
+    if ([SMS_MFA, EMAIL_MFA].includes(type)) {
+      handleResendOtp();
+    }
+  }, []);
 
   const handleResendOtp = async (): Promise<void> => {
     try {
-      await sendMFAOtp({ type, email: auth!.user!.email });
+      await sendMFAOtp({ type, email });
       resetTimer();
     } catch (err) {
       feedbackAxiosError(err, 'Failed to resend OTP');
@@ -35,17 +37,11 @@ const VerifyOtpInput: FC<IVerifyOtpInput> = (props) => {
   return (
     <Grid container direction='column' alignItems='center' spacing={4}>
       {type === APP_MFA && (
-        <Grid direction='column' container item spacing={2}>
-          <Grid container item direction='column'>
-            <Typography variant='h6'>Scan the QR Code</Typography>
-            <Typography>
-              Scan the QR Code into your preferred authenticator app and then
-              enter one-time code provided below
-            </Typography>
-          </Grid>
-          <Grid container item justifyContent='center'>
-            <QRCodeSVG value={uri ?? ''} />
-          </Grid>
+        <Grid container item>
+          <Typography>
+            Please enter the 6 digit one time passcode shown on your chosen
+            authenicator app
+          </Typography>
         </Grid>
       )}
       {type === EMAIL_MFA && (
@@ -82,25 +78,39 @@ const VerifyOtpInput: FC<IVerifyOtpInput> = (props) => {
           </Grid>
         </Grid>
       )}
-      <Grid item container direction='column' justifyContent='center'>
-        <OTPInput
-          value={value}
-          onChange={onChange}
-          numInputs={6}
-          renderInput={(props) => <input {...props} />}
-          inputType='tel'
-          containerStyle={{
-            display: 'flex',
-            gap: '10px',
-            justifyContent: 'center',
-          }}
-          inputStyle={{ width: '50px', height: '50px', fontSize: '20px' }}
+      <Grid item container>
+        <Controller
+          name='otp'
+          control={control}
+          render={({ field: { onChange, value }, fieldState: { error } }) => (
+            <Grid container spacing={1} justifyContent='center'>
+              <Grid item>
+                <OTPInput
+                  value={value}
+                  onChange={onChange}
+                  numInputs={6}
+                  renderInput={(props) => <input {...props} />}
+                  inputType='tel'
+                  containerStyle={{
+                    display: 'flex',
+                    gap: '10px',
+                    justifyContent: 'center',
+                  }}
+                  inputStyle={{
+                    width: '50px',
+                    height: '50px',
+                    fontSize: '20px',
+                  }}
+                />
+              </Grid>
+              {error && (
+                <Grid item container justifyContent='center'>
+                  <FormHelperText error>OTP must be 6 digits</FormHelperText>
+                </Grid>
+              )}
+            </Grid>
+          )}
         />
-        {error && (
-          <Grid container justifyContent='center'>
-            <FormHelperText error>OTP must be 6 digits</FormHelperText>
-          </Grid>
-        )}
       </Grid>
     </Grid>
   );

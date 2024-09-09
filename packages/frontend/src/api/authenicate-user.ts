@@ -4,17 +4,19 @@ import axios from '../utils/axios-instance';
 type AuthenticateUserArgs = {
   email: string;
   password: string;
+  otp?: string;
 };
 
 const authenicateUser = async (
   args: AuthenticateUserArgs,
 ): Promise<AxiosResponse> => {
-  const { email, password } = args;
+  const { email, password, otp } = args;
   const response = await axios.post(
     'http://localhost:3000/user/login',
     {
       email,
       password,
+      otp,
     },
     { withCredentials: true },
   );

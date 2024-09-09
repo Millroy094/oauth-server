@@ -5,7 +5,6 @@ import {
   MenuItem,
   Select,
 } from '@mui/material';
-import { error } from 'console';
 import { FC } from 'react';
 import { Control, Controller, FieldErrors } from 'react-hook-form';
 

@@ -6,15 +6,15 @@ import AuthProvider from './context/AuthProvider';
 function App() {
   return (
     <Router>
-      <AuthProvider>
-        <SnackbarProvider
-          maxSnack={3}
-          anchorOrigin={{ horizontal: 'center', vertical: 'bottom' }}
-          preventDuplicate
-        >
+      <SnackbarProvider
+        maxSnack={3}
+        anchorOrigin={{ horizontal: 'center', vertical: 'bottom' }}
+        preventDuplicate
+      >
+        <AuthProvider>
           <Pages />
-        </SnackbarProvider>
-      </AuthProvider>
+        </AuthProvider>
+      </SnackbarProvider>
     </Router>
   );
 }

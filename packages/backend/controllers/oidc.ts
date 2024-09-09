@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { UserService } from '../services';
+import { MFAService, UserService } from '../services';
 import { HTTP_STATUSES } from '../constants';
 
 class OIDCController {
@@ -36,6 +36,14 @@ class OIDCController {
         req.body.email,
         req.body.password,
       );
+
+      if (userAccount.mfa.preference && req.body.otp) {
+        await MFAService.verifyMFA(
+          userAccount.userId,
+          userAccount.mfa.preference,
+          req.body.otp,
+        );
+      }
 
       result = {
         login: {

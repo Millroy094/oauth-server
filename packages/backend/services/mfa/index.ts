@@ -93,7 +93,7 @@ class MFAService {
   }
 
   public static async sendOtp(
-    userId: string,
+    email: string,
     type: 'sms' | 'email',
   ): Promise<void> {
     const sendOtp = {
@@ -101,7 +101,7 @@ class MFAService {
       email: sendEmailOtp,
     };
 
-    const user = await User.get(userId);
+    const [user] = await User.scan('email').eq(email).exec();
 
     if (!user) {
       throw new Error('User does not exist');
@@ -111,7 +111,19 @@ class MFAService {
       throw new Error('User MFA method does not have a subscriber set');
     }
 
-    await sendOtp[type](userId, user.mfa[type].subscriber);
+    await sendOtp[type](user.userId, user.mfa[type].subscriber);
+  }
+
+  public static async getSelectedMFAConfigurationByEmail(
+    email: string,
+  ): Promise<{ enabled: boolean; type: string }> {
+    const [user] = await User.scan('email').eq(email).exec();
+
+    if (!user) {
+      return { enabled: false, type: '' };
+    }
+
+    return { enabled: !!user.mfa.preference, type: user.mfa.preference };
   }
 }
 

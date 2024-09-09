@@ -1,7 +1,8 @@
-import React, { FC, ReactElement } from 'react';
+import React, { FC, ReactElement, useState } from 'react';
 import {
   Button,
   Card,
+  CardActions,
   CardContent,
   CardHeader,
   Container,
@@ -19,24 +20,72 @@ import { useNavigate, useParams } from 'react-router-dom';
 import authenticateInteraction from '../../api/authenicate-interaction';
 import useFeedback from '../../hooks/useFeedback';
 import { useAuth } from '../../context/AuthProvider';
+import OTPInput from 'react-otp-input';
+import getMFALoginConfiguration from '../../api/get-mfa-login-configuration';
+import VerifyOtpInput from './VerifyOtpInput';
 
 const StyledCard = styled(Card)({
   borderTop: '2px solid red',
 });
 
+type ILoginStage = 'USERNAME' | 'PASSWORD' | 'MFA';
+
 const Login: FC = () => {
+  const [loginStage, setLoginStage] = useState<ILoginStage>('USERNAME');
   const { interactionId } = useParams();
   const navigate = useNavigate();
   const { feedbackAxiosError } = useFeedback();
   const Auth = useAuth();
+
   const {
+    control,
+    reset,
+    setValue,
+    getValues,
+    trigger,
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<ILoginFormInput>({
     resolver: yupResolver(schema),
-    defaultValues: { email: '', password: '' },
+    defaultValues: { email: '', password: '', mfaType: '', otp: '' },
   });
+
+  const email = getValues('email');
+  const mfaType = getValues('mfaType');
+
+  const onReset = () => {
+    setLoginStage('USERNAME');
+    reset();
+  };
+
+  const onNextStep = async () => {
+    if (loginStage === 'USERNAME') {
+      const isEmailValid = await trigger('email');
+
+      if (isEmailValid) {
+        try {
+          const email = getValues('email');
+          const response = await getMFALoginConfiguration(email);
+          if (response.data.enabled) {
+            setValue('mfaType', response.data.type);
+          }
+        } catch (err) {
+          feedbackAxiosError(err, 'Failed to retreive login configuration');
+        }
+        setLoginStage('PASSWORD');
+      }
+    } else if (loginStage === 'PASSWORD') {
+      const isPasswordValid = await trigger('password');
+      if (isPasswordValid && !mfaType) {
+        handleSubmit(onSubmit)();
+      } else if (isPasswordValid && mfaType) {
+        setLoginStage('MFA');
+      }
+    } else {
+      handleSubmit(onSubmit)();
+    }
+  };
 
   const onSubmit = async (data: ILoginFormInput): Promise<void> => {
     try {
@@ -58,6 +107,8 @@ const Login: FC = () => {
         'Failed to authenticate credentials, please try again.',
       );
     }
+    setLoginStage('USERNAME');
+    reset();
   };
 
   const extraProps: {
@@ -97,35 +148,70 @@ const Login: FC = () => {
           {...extraProps}
         />
         <CardContent>
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <Grid container direction='column' spacing={2} sx={{ p: 2 }}>
-              <Grid item>
-                <TextField
-                  {...register('email')}
-                  label='Email Address'
-                  variant='outlined'
-                  fullWidth
-                  error={!!errors.email}
-                  helperText={errors.email ? errors.email.message : ''}
-                />
-              </Grid>
-              <Grid item>
-                <PasswordField
-                  name='password'
-                  label='Password'
-                  register={register}
-                  error={!!errors.password}
-                  helperText={errors.password ? errors.password.message : ''}
-                />
-              </Grid>
-              <Grid item alignSelf='flex-end'>
-                <Button variant='contained' color='error' type='submit'>
-                  Sign In
-                </Button>
-              </Grid>
-            </Grid>
-          </form>
+          <Grid container direction='column' spacing={2} sx={{ p: 2 }}>
+            {loginStage !== 'MFA' && (
+              <>
+                <Grid item>
+                  {loginStage === 'USERNAME' ? (
+                    <TextField
+                      {...register('email')}
+                      label='Email Address'
+                      variant='outlined'
+                      fullWidth
+                      error={!!errors.email}
+                      helperText={errors.email ? errors.email.message : ''}
+                    />
+                  ) : (
+                    <Typography variant='body2'>{email}</Typography>
+                  )}
+                </Grid>
+                {loginStage !== 'USERNAME' && (
+                  <Grid item>
+                    <PasswordField
+                      name='password'
+                      label='Password'
+                      register={register}
+                      error={!!errors.password}
+                      helperText={
+                        errors.password ? errors.password.message : ''
+                      }
+                    />
+                  </Grid>
+                )}
+              </>
+            )}
+
+            {loginStage === 'MFA' && (
+              <VerifyOtpInput
+                email={email}
+                control={control}
+                type={mfaType ?? ''}
+              />
+            )}
+          </Grid>
         </CardContent>
+        <CardActions
+          sx={{
+            display: 'flex',
+            padding: '20px 20px',
+            justifyContent: 'space-between',
+          }}
+        >
+          <Button color='error' onClick={onReset}>
+            Sign in with a different user
+          </Button>
+
+          <Button
+            variant='contained'
+            color='error'
+            sx={{ display: 'flex', justifySelf: 'flex-start' }}
+            onClick={onNextStep}
+          >
+            {(!mfaType || loginStage === 'MFA') && loginStage !== 'USERNAME'
+              ? 'Sign in'
+              : 'Next'}
+          </Button>
+        </CardActions>
       </StyledCard>
     </Container>
   );

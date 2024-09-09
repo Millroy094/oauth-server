@@ -3,16 +3,16 @@ import axios from '../utils/axios-instance';
 
 interface ISendMFAOtpArgs {
   type: string;
-  userId: string;
+  email: string;
 }
 
 const sendMFAOtp = async (args: ISendMFAOtpArgs): Promise<AxiosResponse> => {
-  const { type, userId } = args;
+  const { type, email } = args;
   const response = await axios.post(
     'http://localhost:3000/user/mfa-send-otp',
     {
       type,
-      userId,
+      email,
     },
     { withCredentials: true },
   );

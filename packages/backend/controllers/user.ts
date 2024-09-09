@@ -25,6 +25,15 @@ class UserController {
         req.body.email,
         req.body.password,
       );
+
+      if (user.mfa.preference && req.body.otp) {
+        await MFAService.verifyMFA(
+          user.userId,
+          user.mfa.preference,
+          req.body.otp,
+        );
+      }
+
       const payload = {
         userId: user.userId,
         email: user.email,
@@ -236,12 +245,26 @@ class UserController {
 
   public static async sendOtp(req: Request, res: Response) {
     try {
-      const { type, userId } = req.body;
-      await MFAService.sendOtp(userId, type);
+      const { type, email } = req.body;
+      await MFAService.sendOtp(email, type);
       res.status(HTTP_STATUSES.ok).json({ message: 'Successfully sent OTP' });
     } catch (err) {
       console.log(err);
       res.status(HTTP_STATUSES.notFound).json({ error: 'Failed to send OTP' });
+    }
+  }
+
+  public static async getMFALoginConfiguration(req: Request, res: Response) {
+    try {
+      const { email } = req.query;
+      const mfaConfiguration =
+        await MFAService.getSelectedMFAConfigurationByEmail(email as string);
+      res.status(HTTP_STATUSES.ok).json(mfaConfiguration);
+    } catch (err) {
+      console.log(err);
+      res
+        .status(HTTP_STATUSES.notFound)
+        .json({ error: 'Failed to retreive users login cofiguration' });
     }
   }
 }
