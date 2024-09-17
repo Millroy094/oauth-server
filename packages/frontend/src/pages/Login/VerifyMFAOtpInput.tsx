@@ -1,19 +1,19 @@
-import React, { FC, useEffect } from 'react';
-import { APP_MFA, EMAIL_MFA, SMS_MFA } from '../../constants';
-import { Button, FormHelperText, Grid, Typography } from '@mui/material';
-import OTPInput from 'react-otp-input';
-import useTimer from '../../hooks/useTimer';
-import sendMFAOtp from '../../api/send-mfa-otp';
-import useFeedback from '../../hooks/useFeedback';
-import { Control, Controller } from 'react-hook-form';
+import React, { FC, useEffect } from "react";
+import { APP_MFA, EMAIL_MFA, SMS_MFA } from "../../constants";
+import { Button, FormHelperText, Grid, Typography } from "@mui/material";
+import OTPInput from "react-otp-input";
+import useTimer from "../../hooks/useTimer";
+import sendMFAOtp from "../../api/send-mfa-otp";
+import useFeedback from "../../hooks/useFeedback";
+import { Control, Controller } from "react-hook-form";
 
-interface IVerifyOtpInput {
+interface IVerifyMFAOtpInput {
   email: string;
   type: string;
   control: Control<ILoginFormInput>;
 }
 
-const VerifyOtpInput: FC<IVerifyOtpInput> = (props) => {
+const VerifyMFAOtpInput: FC<IVerifyMFAOtpInput> = (props) => {
   const { email, type, control } = props;
 
   const { timer, resetTimer } = useTimer();
@@ -30,12 +30,12 @@ const VerifyOtpInput: FC<IVerifyOtpInput> = (props) => {
       await sendMFAOtp({ type, email });
       resetTimer();
     } catch (err) {
-      feedbackAxiosError(err, 'Failed to resend OTP');
+      feedbackAxiosError(err, "Failed to resend OTP");
     }
   };
 
   return (
-    <Grid container direction='column' alignItems='center' spacing={4}>
+    <Grid container direction="column" alignItems="center" spacing={4}>
       {type === APP_MFA && (
         <Grid container item>
           <Typography>
@@ -45,34 +45,34 @@ const VerifyOtpInput: FC<IVerifyOtpInput> = (props) => {
         </Grid>
       )}
       {type === EMAIL_MFA && (
-        <Grid direction='column' container item>
-          <Grid container item direction='column' alignItems='center'>
+        <Grid direction="column" container item>
+          <Grid container item direction="column" alignItems="center">
             <Grid item>
               <Typography>
                 Please enter the 6 digit OTP sent to your selected email
               </Typography>
             </Grid>
-            <Grid item container alignItems='center' justifyContent='center'>
+            <Grid item container alignItems="center" justifyContent="center">
               <Typography>Haven't received OTP?</Typography>
               <Button onClick={handleResendOtp}>
-                {timer ? `Click here in ${timer} seconds` : 'Click here'}
+                {timer ? `Click here in ${timer} seconds` : "Click here"}
               </Button>
             </Grid>
           </Grid>
         </Grid>
       )}
       {type === SMS_MFA && (
-        <Grid direction='column' container item>
-          <Grid container item direction='column' alignItems='center'>
+        <Grid direction="column" container item>
+          <Grid container item direction="column" alignItems="center">
             <Grid item>
               <Typography>
                 Please enter the 6 digit OTP sent to your selected phone number
               </Typography>
             </Grid>
-            <Grid item container alignItems='center' justifyContent='center'>
+            <Grid item container alignItems="center" justifyContent="center">
               <Typography>Haven't received OTP?</Typography>
               <Button onClick={handleResendOtp}>
-                {timer ? `Click here in ${timer} seconds` : 'Click here'}
+                {timer ? `Click here in ${timer} seconds` : "Click here"}
               </Button>
             </Grid>
           </Grid>
@@ -80,31 +80,31 @@ const VerifyOtpInput: FC<IVerifyOtpInput> = (props) => {
       )}
       <Grid item container>
         <Controller
-          name='otp'
+          name="otp"
           control={control}
           render={({ field: { onChange, value }, fieldState: { error } }) => (
-            <Grid container spacing={1} justifyContent='center'>
+            <Grid container spacing={1} justifyContent="center">
               <Grid item>
                 <OTPInput
                   value={value}
                   onChange={onChange}
                   numInputs={6}
                   renderInput={(props) => <input {...props} />}
-                  inputType='tel'
+                  inputType="tel"
                   containerStyle={{
-                    display: 'flex',
-                    gap: '10px',
-                    justifyContent: 'center',
+                    display: "flex",
+                    gap: "10px",
+                    justifyContent: "center",
                   }}
                   inputStyle={{
-                    width: '50px',
-                    height: '50px',
-                    fontSize: '20px',
+                    width: "50px",
+                    height: "50px",
+                    fontSize: "20px",
                   }}
                 />
               </Grid>
               {error && (
-                <Grid item container justifyContent='center'>
+                <Grid item container justifyContent="center">
                   <FormHelperText error>OTP must be 6 digits</FormHelperText>
                 </Grid>
               )}
@@ -116,4 +116,4 @@ const VerifyOtpInput: FC<IVerifyOtpInput> = (props) => {
   );
 };
 
-export default VerifyOtpInput;
+export default VerifyMFAOtpInput;

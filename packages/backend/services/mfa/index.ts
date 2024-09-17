@@ -1,10 +1,10 @@
-import omit from 'lodash/omit';
-import map from 'lodash/map';
-import isEmpty from 'lodash/isEmpty';
-import { User } from '../../models';
-import { setupAppMFA, setupEmailMFA, setupSMSMFA } from './setup';
-import { verifyAppMFA, verifyEmailMFA, verifySMSMFA } from './verify';
-import { sendEmailOtp, sendSMSOtp } from './send';
+import omit from "lodash/omit";
+import map from "lodash/map";
+import isEmpty from "lodash/isEmpty";
+import { User } from "../../models";
+import { setupAppMFA, setupEmailMFA, setupSMSMFA } from "./setup";
+import { verifyAppMFA, verifyEmailMFA, verifySMSMFA } from "./verify";
+import { sendEmailOtp, sendSMSOtp } from "./send";
 
 class MFAService {
   public static async getMFASetting(userId: string): Promise<{
@@ -12,17 +12,17 @@ class MFAService {
     preference: string;
   }> {
     const userAccountMfaSetting = await User.get(userId, {
-      attributes: ['mfa'],
+      attributes: ["mfa"],
     });
 
     if (isEmpty(userAccountMfaSetting)) {
-      throw new Error('User does not exists');
+      throw new Error("User does not exists");
     }
 
     return {
       types: map(
-        omit(userAccountMfaSetting.mfa, 'preference'),
-        ({ subscriber, verified }, type) => ({ type, subscriber, verified }),
+        omit(userAccountMfaSetting.mfa, "preference"),
+        ({ subscriber, verified }, type) => ({ type, subscriber, verified })
       ),
       preference: userAccountMfaSetting.mfa.preference,
     };
@@ -30,8 +30,8 @@ class MFAService {
 
   public static async setupMFA(
     userId: string,
-    type: 'app' | 'sms' | 'email',
-    subscriber: string,
+    type: "app" | "sms" | "email",
+    subscriber: string
   ): Promise<void | {
     uri: string;
   }> {
@@ -42,8 +42,8 @@ class MFAService {
 
   public static async verifyMFA(
     userId: string,
-    type: 'app' | 'sms' | 'email',
-    otp: string,
+    type: "app" | "sms" | "email",
+    otp: string
   ): Promise<void> {
     const verify = {
       app: verifyAppMFA,
@@ -55,23 +55,23 @@ class MFAService {
 
   public static async resetMFA(
     userId: string,
-    type: 'app' | 'sms' | 'email',
+    type: "app" | "sms" | "email"
   ): Promise<void> {
     const user = await User.get(userId);
 
     if (!user) {
-      throw new Error('User does not exist');
+      throw new Error("User does not exist");
     }
 
-    user.mfa[type].subscriber = '';
+    user.mfa[type].subscriber = "";
     user.mfa[type].verified = false;
 
     if (user.mfa.preference === type) {
-      user.mfa.preference = '';
+      user.mfa.preference = "";
     }
 
-    if (type === 'app') {
-      user.mfa[type].secret = '';
+    if (type === "app") {
+      user.mfa[type].secret = "";
     }
 
     await user.save();
@@ -79,12 +79,12 @@ class MFAService {
 
   public static async changePreference(
     userId: string,
-    preference: 'app' | 'sms' | 'email',
+    preference: "app" | "sms" | "email"
   ): Promise<void> {
     const user = await User.get(userId);
 
     if (!user) {
-      throw new Error('User does not exist');
+      throw new Error("User does not exist");
     }
 
     user.mfa.preference = preference;
@@ -94,36 +94,24 @@ class MFAService {
 
   public static async sendOtp(
     email: string,
-    type: 'sms' | 'email',
+    type: "sms" | "email"
   ): Promise<void> {
     const sendOtp = {
       sms: sendSMSOtp,
       email: sendEmailOtp,
     };
 
-    const [user] = await User.scan('email').eq(email).exec();
+    const [user] = await User.scan("email").eq(email).exec();
 
     if (!user) {
-      throw new Error('User does not exist');
+      throw new Error("User does not exist");
     }
 
     if (!user.mfa[type].subscriber) {
-      throw new Error('User MFA method does not have a subscriber set');
+      throw new Error("User MFA method does not have a subscriber set");
     }
 
     await sendOtp[type](user.userId, user.mfa[type].subscriber);
-  }
-
-  public static async getSelectedMFAConfigurationByEmail(
-    email: string,
-  ): Promise<{ enabled: boolean; type: string }> {
-    const [user] = await User.scan('email').eq(email).exec();
-
-    if (!user) {
-      return { enabled: false, type: '' };
-    }
-
-    return { enabled: !!user.mfa.preference, type: user.mfa.preference };
   }
 }
 

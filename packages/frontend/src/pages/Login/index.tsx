@@ -20,8 +20,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import authenticateInteraction from "../../api/authenicate-interaction";
 import useFeedback from "../../hooks/useFeedback";
 import { useAuth } from "../../context/AuthProvider";
-import getMFALoginConfiguration from "../../api/get-mfa-login-configuration";
-import VerifyOtpInput from "./VerifyOtpInput";
+import getLoginConfiguration from "../../api/get-login-configuration";
+import VerifyMFAOtpInput from "./VerifyMFAOtpInput";
 
 const StyledCard = styled(Card)({
   borderTop: "2px solid red",
@@ -65,12 +65,12 @@ const Login: FC = () => {
       if (isEmailValid) {
         try {
           const email = getValues("email");
-          const response = await getMFALoginConfiguration(email);
-          if (response.data.enabled) {
-            setValue("mfaType", response.data.type);
+          const response = await getLoginConfiguration(email);
+          if (response.data.mfa.enabled) {
+            setValue("mfaType", response.data.mfa.type);
           }
         } catch (err) {
-          feedbackAxiosError(err, "Failed to retreive login configuration");
+          feedbackAxiosError(err, "Failed to retrieve login configuration");
         }
         setLoginStage("PASSWORD");
       }
@@ -181,7 +181,7 @@ const Login: FC = () => {
             )}
 
             {loginStage === "MFA" && (
-              <VerifyOtpInput
+              <VerifyMFAOtpInput
                 email={email}
                 control={control}
                 type={mfaType ?? ""}
