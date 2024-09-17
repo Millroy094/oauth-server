@@ -26,7 +26,9 @@ class UserController {
         req.body.password
       );
 
-      if (user.mfa.preference && req.body.otp) {
+      if (!user.emailVerified && req.body.otp) {
+        await UserService.verifyEmail(user.userId, req.body.otp);
+      } else if (user.mfa.preference && req.body.otp) {
         await MFAService.verifyMFA(
           user.userId,
           user.mfa.preference,
@@ -250,7 +252,12 @@ class UserController {
   public static async sendOtp(req: Request, res: Response) {
     try {
       const { type, email } = req.body;
-      await MFAService.sendOtp(email, type);
+
+      if (type === "email_verification") {
+        await UserService.sendEmailVerificationOtp(email);
+      } else {
+        await MFAService.sendOtp(email, type);
+      }
       res.status(HTTP_STATUSES.ok).json({ message: "Successfully sent OTP" });
     } catch (err) {
       console.log(err);

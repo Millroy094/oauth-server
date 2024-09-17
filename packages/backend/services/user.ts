@@ -3,6 +3,9 @@ import isEmpty from "lodash/isEmpty";
 import bcrypt from "bcryptjs";
 import { User } from "../models";
 import OIDCService from "./oidc";
+import generateOtp from "../utils/generate-otp";
+import OTPService from "./otp";
+import { sendEmail } from "../utils/notification";
 
 class UserService {
   public static async validateUserCredentials(
@@ -111,9 +114,37 @@ class UserService {
     }
 
     return {
-      emailVerified: true,
+      emailVerified: user.emailVerified,
       mfa: { enabled: !!user.mfa.preference, type: user.mfa.preference },
     };
+  }
+
+  public static async sendEmailVerificationOtp(email: string): Promise<void> {
+    const user = await UserService.getUserByEmail(email);
+
+    const otp = generateOtp();
+    await OTPService.storeOtp(user.userId, "email", otp);
+    await sendEmail(
+      email,
+      "Email verification",
+      `Please use ${otp} to verify your email`
+    );
+  }
+
+  public static async verifyEmail(userId: string, otp: string): Promise<void> {
+    const user = await User.get(userId);
+
+    if (!user) {
+      throw new Error("User does not exist");
+    }
+
+    if (!(await OTPService.validateOtp(userId, "email", otp))) {
+      throw new Error("Invalid OTP");
+    }
+
+    user.emailVerified = true;
+
+    await user.save();
   }
 }
 

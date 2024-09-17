@@ -1,5 +1,10 @@
 import React, { FC, useEffect } from "react";
-import { APP_MFA, EMAIL_MFA, SMS_MFA } from "../../constants";
+import {
+  APP_MFA,
+  EMAIL_MFA,
+  EMAIL_VERIFICATION,
+  SMS_MFA,
+} from "../../constants";
 import { Button, FormHelperText, Grid, Typography } from "@mui/material";
 import OTPInput from "react-otp-input";
 import useTimer from "../../hooks/useTimer";
@@ -7,20 +12,20 @@ import sendMFAOtp from "../../api/send-mfa-otp";
 import useFeedback from "../../hooks/useFeedback";
 import { Control, Controller } from "react-hook-form";
 
-interface IVerifyMFAOtpInput {
+interface IVerifyOtpInput {
   email: string;
   type: string;
   control: Control<ILoginFormInput>;
 }
 
-const VerifyMFAOtpInput: FC<IVerifyMFAOtpInput> = (props) => {
+const VerifyOtpInput: FC<IVerifyOtpInput> = React.memo((props) => {
   const { email, type, control } = props;
 
   const { timer, resetTimer } = useTimer();
   const { feedbackAxiosError } = useFeedback();
 
   useEffect(() => {
-    if ([SMS_MFA, EMAIL_MFA].includes(type)) {
+    if ([SMS_MFA, EMAIL_MFA, EMAIL_VERIFICATION].includes(type)) {
       handleResendOtp();
     }
   }, []);
@@ -54,7 +59,7 @@ const VerifyMFAOtpInput: FC<IVerifyMFAOtpInput> = (props) => {
             </Grid>
             <Grid item container alignItems="center" justifyContent="center">
               <Typography>Haven't received OTP?</Typography>
-              <Button onClick={handleResendOtp}>
+              <Button onClick={handleResendOtp} disabled={timer !== 0}>
                 {timer ? `Click here in ${timer} seconds` : "Click here"}
               </Button>
             </Grid>
@@ -71,7 +76,25 @@ const VerifyMFAOtpInput: FC<IVerifyMFAOtpInput> = (props) => {
             </Grid>
             <Grid item container alignItems="center" justifyContent="center">
               <Typography>Haven't received OTP?</Typography>
-              <Button onClick={handleResendOtp}>
+              <Button onClick={handleResendOtp} disabled={timer !== 0}>
+                {timer ? `Click here in ${timer} seconds` : "Click here"}
+              </Button>
+            </Grid>
+          </Grid>
+        </Grid>
+      )}
+      {type === EMAIL_VERIFICATION && (
+        <Grid direction="column" container item>
+          <Grid container item direction="column" alignItems="center">
+            <Grid item>
+              <Typography>
+                Please enter the 6 digit OTP sent to your email to verify your
+                email
+              </Typography>
+            </Grid>
+            <Grid item container alignItems="center" justifyContent="center">
+              <Typography>Haven't received OTP?</Typography>
+              <Button onClick={handleResendOtp} disabled={timer !== 0}>
                 {timer ? `Click here in ${timer} seconds` : "Click here"}
               </Button>
             </Grid>
@@ -114,6 +137,6 @@ const VerifyMFAOtpInput: FC<IVerifyMFAOtpInput> = (props) => {
       </Grid>
     </Grid>
   );
-};
+});
 
-export default VerifyMFAOtpInput;
+export default VerifyOtpInput;

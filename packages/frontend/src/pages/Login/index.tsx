@@ -21,7 +21,8 @@ import authenticateInteraction from "../../api/authenicate-interaction";
 import useFeedback from "../../hooks/useFeedback";
 import { useAuth } from "../../context/AuthProvider";
 import getLoginConfiguration from "../../api/get-login-configuration";
-import VerifyMFAOtpInput from "./VerifyMFAOtpInput";
+import VerifyMFAOtpInput from "./VerifyOtpInput";
+import { EMAIL_VERIFICATION } from "../../constants";
 
 const StyledCard = styled(Card)({
   borderTop: "2px solid red",
@@ -66,7 +67,9 @@ const Login: FC = () => {
         try {
           const email = getValues("email");
           const response = await getLoginConfiguration(email);
-          if (response.data.mfa.enabled) {
+          if (!response.data.emailVerified) {
+            setValue("mfaType", EMAIL_VERIFICATION);
+          } else if (response.data.mfa.enabled) {
             setValue("mfaType", response.data.mfa.type);
           }
         } catch (err) {
