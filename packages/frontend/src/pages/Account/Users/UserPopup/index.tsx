@@ -2,13 +2,12 @@ import { FC, useEffect, useState } from 'react';
 import {
   Button,
   Card,
-  Divider,
+  CardHeader,
   FormControlLabel,
   Grid,
   Modal,
   Switch,
   TextField,
-  Typography,
 } from '@mui/material';
 import { AccountCircle } from '@mui/icons-material';
 import { Controller, useForm } from 'react-hook-form';
@@ -85,9 +84,7 @@ const UserPopup: FC<UserPopupProps> = (props) => {
 
   const onSubmit = async (data: IUserPopupInput): Promise<void> => {
     try {
-      let response;
-
-      response = await updateUser(userIdentifier, data);
+      const response = await updateUser(userIdentifier, data);
 
       feebackAxiosResponse(response, 'Successfully updated user', 'success');
       reset();
@@ -113,17 +110,16 @@ const UserPopup: FC<UserPopupProps> = (props) => {
           p: 2,
         }}
       >
-        <Grid container spacing={1} sx={{ p: '10px 0' }} alignItems='center'>
-          <Grid item>
-            <AccountCircle color='primary' />
-          </Grid>
-          <Grid item>
-            <Typography variant='h6' color='primary'>
-              Update user
-            </Typography>
-          </Grid>
-        </Grid>
-        <Divider />
+        <CardHeader
+          title={
+            <Grid container spacing={1} alignItems='center'>
+              <Grid item>
+                <AccountCircle color='primary' fontSize='large' />
+              </Grid>
+              <Grid item>Update user</Grid>
+            </Grid>
+          }
+        />
         <form onSubmit={handleSubmit(onSubmit)}>
           <Grid container direction='column' spacing={2} sx={{ p: 2 }}>
             <Grid item>

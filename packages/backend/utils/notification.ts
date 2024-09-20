@@ -11,7 +11,7 @@ const transporter = nodemailer.createTransport({
 });
 
 const client = new SNSClient({
-  region: 'us-west-2',
+  region: 'eu-west-2',
   credentials: {
     accessKeyId: getEnv('aws.accessKey'),
     secretAccessKey: getEnv('aws.secretKey'),
@@ -33,7 +33,8 @@ export const sendSMS = async (
         },
       },
     };
-    await client.send(new PublishCommand(params));
+    const response = await client.send(new PublishCommand(params));
+    console.log(response);
   } catch (err) {
     console.log(err);
     throw new Error('Unable to send SMS');

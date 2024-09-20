@@ -1,14 +1,13 @@
+import React, { FC, useState } from 'react';
 import {
   Button,
   Card,
   CardActions,
   CardContent,
   CardHeader,
-  Divider,
   Grid,
   Modal,
 } from '@mui/material';
-import React, { FC, useState } from 'react';
 import setupMFA from '../../../../api/setup-mfa';
 import SubscriberInput from './SubscriberInput';
 import {
@@ -23,6 +22,7 @@ import isPhoneValid from '../../../../utils/is-phone-valid';
 import VerifyOtpInput from './VerifyOtpInput';
 import verifyMFA from '../../../../api/verify-mfa';
 import useFeedback from '../../../../hooks/useFeedback';
+import { KeyboardDoubleArrowDown } from '@mui/icons-material';
 
 interface SetupModalProps {
   open: boolean;
@@ -113,7 +113,6 @@ const SetupModal: FC<SetupModalProps> = (props) => {
         }}
       >
         <CardHeader title={`${type.toUpperCase()} MFA Setup`} />
-        <Divider />
         <CardContent>
           <Grid container justifyItems='center' direction='column' spacing={2}>
             <Grid item>
@@ -126,17 +125,20 @@ const SetupModal: FC<SetupModalProps> = (props) => {
               />
             </Grid>
             {stage === MFA_VERIFY && (
-              <Grid item>
-                <Divider sx={{ margin: '10px 0 10px' }} />
-
-                <VerifyOtpInput
-                  value={otp}
-                  onChange={setOtp}
-                  uri={uri}
-                  type={type}
-                  error={otpError}
-                />
-              </Grid>
+              <>
+                <Grid container item justifyContent='center'>
+                  <KeyboardDoubleArrowDown fontSize='large' color='primary' />
+                </Grid>
+                <Grid item>
+                  <VerifyOtpInput
+                    value={otp}
+                    onChange={setOtp}
+                    uri={uri}
+                    type={type}
+                    error={otpError}
+                  />
+                </Grid>
+              </>
             )}
           </Grid>
         </CardContent>

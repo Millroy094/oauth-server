@@ -2,12 +2,12 @@ import { FC, useEffect, useState } from 'react';
 import {
   Button,
   Card,
+  CardHeader,
   Divider,
   Grid,
   IconButton,
   Modal,
   TextField,
-  Typography,
 } from '@mui/material';
 import { AddLinkRounded, Business, Delete } from '@mui/icons-material';
 import { useFieldArray, useForm } from 'react-hook-form';
@@ -157,17 +157,18 @@ const ClientPopup: FC<ClientPopupProps> = (props) => {
           p: 2,
         }}
       >
-        <Grid container spacing={1} sx={{ p: '10px 0' }} alignItems='center'>
-          <Grid item>
-            <Business color='primary' />
-          </Grid>
-          <Grid item>
-            <Typography variant='h6' color='primary'>
-              {`${!clientIdentifier ? 'Create' : 'Update'} Client`}
-            </Typography>
-          </Grid>
-        </Grid>
-        <Divider />
+        <CardHeader
+          title={
+            <Grid container spacing={1} alignItems='center'>
+              <Grid item>
+                <Business color='primary' fontSize='large' />
+              </Grid>
+              <Grid item>
+                {`${!clientIdentifier ? 'Create' : 'Update'} Client`}
+              </Grid>
+            </Grid>
+          }
+        />
         <form onSubmit={handleSubmit(onSubmit)}>
           <Grid container direction='column' spacing={2} sx={{ p: 2 }}>
             <Grid item>
