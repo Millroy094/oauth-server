@@ -113,6 +113,10 @@ const Login: FC = () => {
     reset();
   };
 
+  const navigateToForgotPassword = () => {
+    navigate('/forgot-password');
+  };
+
   const extraProps: {
     subheader?: ReactElement;
     subheaderTypographyProps?: Record<string, string | number>;
@@ -181,7 +185,7 @@ const Login: FC = () => {
                       />
                     </Grid>
                     <Grid item alignSelf='flex-end'>
-                      <Button color='error' onClick={() => {}}>
+                      <Button color='error' onClick={navigateToForgotPassword}>
                         <Typography variant='caption'>
                           Forgot Password?
                         </Typography>
