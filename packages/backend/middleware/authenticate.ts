@@ -83,7 +83,7 @@ const authenicate = async (req: Request, res: Response, next: NextFunction) => {
 
     const userAccount = await UserService.getUserById(req.user?.userId ?? '');
 
-    if (userAccount.suspened) {
+    if (userAccount.suspended) {
       throw new Error('Authenication failed! User is suspened');
     }
     next();
