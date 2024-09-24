@@ -7,7 +7,6 @@ import { UserService } from '../services';
 interface JwtPayload {
   userId: string;
   email: string;
-  roles: string[];
 }
 
 const accessTokenSecret = getEnv('authentication.accessTokenSecret');
@@ -21,7 +20,7 @@ const generateNewTokensFromRefreshToken = (
   res: Response,
 ) => {
   try {
-    const { userId, email, roles } = jwt.verify(
+    const { userId, email } = jwt.verify(
       refreshToken,
       refreshTokenSecret,
     ) as JwtPayload;
@@ -42,7 +41,7 @@ const generateNewTokensFromRefreshToken = (
         secure: getEnv('environment') === 'production',
       });
 
-    req.user = { userId, email, roles };
+    req.user = { userId, email };
   } catch (error) {
     throw new Error(
       'Authentication failed, authentication tokens have expired',
@@ -61,12 +60,12 @@ const validateTokensFromCookies = (req: Request, res: Response) => {
   }
 
   try {
-    const { userId, email, roles } = jwt.verify(
+    const { userId, email } = jwt.verify(
       accessToken,
       accessTokenSecret,
     ) as JwtPayload;
 
-    req.user = { userId, email, roles };
+    req.user = { userId, email };
   } catch (error) {
     if ((error as Error).name === 'TokenExpiredError') {
       generateNewTokensFromRefreshToken(refreshToken, req, res);
@@ -86,7 +85,7 @@ const authenicate = async (req: Request, res: Response, next: NextFunction) => {
     if (userAccount.suspended) {
       throw new Error('Authenication failed! User is suspened');
     }
-    next();
+    return next();
   } catch (err) {
     console.error(err);
     return res.status(401).json({
