@@ -19,13 +19,14 @@ import sendOtp from "../../api/send-otp";
 import { FORGOT_PASSWORD } from "../../constants";
 import useFeedback from "../../hooks/useFeedback";
 import changePassword from "../../api/change-password";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 const StyledCard = styled(Card)({
   borderTop: "2px solid red",
 });
 
 const ForgotPassword = () => {
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { feedback, feedbackAxiosError, feebackAxiosResponse } = useFeedback();
   const {
@@ -61,6 +62,14 @@ const ForgotPassword = () => {
     setAnchorEl(null);
   };
 
+  const navigateToLogin = () => {
+    if (searchParams.has("interactionId")) {
+      navigate(`/oauth/login/${searchParams.get("interactionId")}`);
+    } else {
+      navigate("/login");
+    }
+  };
+
   const sendForgotPasswordCode = async (email: string) => {
     await sendOtp({ email, type: FORGOT_PASSWORD });
     feedback(
@@ -87,7 +96,7 @@ const ForgotPassword = () => {
           "success"
         );
         reset();
-        navigate("/login");
+        navigateToLogin();
       } catch (err) {
         feedbackAxiosError(err, "Failed to reset password");
       }
@@ -159,10 +168,13 @@ const ForgotPassword = () => {
             />
           </CardContent>
           <CardActions
-            sx={{ justifyContent: "flex-end", padding: "20px 20px" }}
+            sx={{ justifyContent: "space-between", padding: "20px 20px" }}
           >
+            <Button type="submit" color="error" onClick={navigateToLogin}>
+              Return to login
+            </Button>
             <Button variant="contained" type="submit" color="error">
-              Reset Password
+              {`${emailSent ? "Change" : "Reset"} Password`}
             </Button>
           </CardActions>
         </StyledCard>
