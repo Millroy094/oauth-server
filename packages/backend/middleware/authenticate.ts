@@ -1,7 +1,8 @@
-import { Request, Response, NextFunction } from "express";
-import jwt from "jsonwebtoken";
-import { ACCESS_TOKEN, REFRESH_TOKEN } from "../constants";
-import getEnv from "../support/env-config";
+import { Request, Response, NextFunction } from 'express';
+import jwt from 'jsonwebtoken';
+import { ACCESS_TOKEN, REFRESH_TOKEN } from '../constants';
+import getEnv from '../support/env-config';
+import { UserService } from '../services';
 
 interface JwtPayload {
   userId: string;
@@ -9,60 +10,90 @@ interface JwtPayload {
   roles: string[];
 }
 
-const authenicate = (req: Request, res: Response, next: NextFunction) => {
+const accessTokenSecret = getEnv('authentication.accessTokenSecret');
+const accessTokenExpiry = getEnv('authentication.accessTokenExpiry');
+const refreshTokenSecret = getEnv('authentication.refreshTokenSecret');
+const refreshTokenExpiry = getEnv('authentication.accessTokenExpiry');
+
+const generateNewTokensFromRefreshToken = (
+  refreshToken: any,
+  req: Request,
+  res: Response,
+) => {
+  try {
+    const { userId, email, roles } = jwt.verify(
+      refreshToken,
+      refreshTokenSecret,
+    ) as JwtPayload;
+    const newAccessToken = jwt.sign({ userId, email }, accessTokenSecret, {
+      expiresIn: accessTokenExpiry,
+    });
+    const newRefreshToken = jwt.sign({ userId, email }, accessTokenSecret, {
+      expiresIn: refreshTokenExpiry,
+    });
+
+    res
+      .cookie(ACCESS_TOKEN, newAccessToken, {
+        httpOnly: true,
+        secure: getEnv('environment') === 'production',
+      })
+      .cookie(REFRESH_TOKEN, newRefreshToken, {
+        httpOnly: true,
+        secure: getEnv('environment') === 'production',
+      });
+
+    req.user = { userId, email, roles };
+  } catch (error) {
+    throw new Error(
+      'Authentication failed, authentication tokens have expired',
+    );
+  }
+};
+
+const validateTokensFromCookies = (req: Request, res: Response) => {
   const accessToken = req?.cookies[ACCESS_TOKEN];
   const refreshToken = req?.cookies[REFRESH_TOKEN];
 
-  if (!accessToken && !refreshToken) {
-    return res.status(401).json({
-      error: "Authenication failed, please check if you are still logged in",
-    });
+  if (!accessToken || !refreshToken) {
+    throw new Error(
+      'Authentication failed, authentication tokens missing from header cookies',
+    );
   }
-
-  const accessTokenSecret = getEnv("authentication.accessTokenSecret");
 
   try {
     const { userId, email, roles } = jwt.verify(
       accessToken,
-      accessTokenSecret
+      accessTokenSecret,
     ) as JwtPayload;
 
     req.user = { userId, email, roles };
-    next();
   } catch (error) {
-    try {
-      const refreshTokenSecret = getEnv("authentication.refreshTokenSecret");
-
-      const { userId, email, roles } = jwt.verify(
-        refreshToken,
-        refreshTokenSecret
-      ) as JwtPayload;
-      const newAccessToken = jwt.sign({ userId, email }, accessTokenSecret, {
-        expiresIn: getEnv("authentication.accessTokenExpiry"),
-      });
-      const newRefreshToken = jwt.sign({ userId, email }, accessTokenSecret, {
-        expiresIn: getEnv("authentication.refreshTokenExpiry"),
-      });
-
-      res
-        .cookie(ACCESS_TOKEN, newAccessToken, {
-          httpOnly: true,
-          secure: getEnv("environment") === "production",
-        })
-        .cookie(REFRESH_TOKEN, newRefreshToken, {
-          httpOnly: true,
-          secure: getEnv("environment") === "production",
-        });
-
-      req.user = { userId, email, roles };
-
-      next();
-    } catch (error) {
-      res.status(401).json({
-        error: "Authenication failed, please check if you are still logged in",
-      });
+    if ((error as Error).name === 'TokenExpiredError') {
+      generateNewTokensFromRefreshToken(refreshToken, req, res);
+    } else {
+      console.error(error);
+      throw new Error('Authentication failed, for an unexpected reason');
     }
   }
+};
+
+const authenicate = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    validateTokensFromCookies(req, res);
+
+    const userAccount = await UserService.getUserById(req.user?.userId ?? '');
+
+    if (userAccount.suspened) {
+      throw new Error('Authenication failed! User is suspened');
+    }
+  } catch (err) {
+    console.error(err);
+    return res.status(401).json({
+      error: 'Authenication failed, please check if you are still logged in',
+    });
+  }
+
+  next();
 };
 
 export default authenicate;
