@@ -44,7 +44,7 @@ function Pages() {
   useEffect(() => {
     if (pathname === '/' && searchParams.has('interactionId')) {
       navigateByInteractionStage(searchParams.get('interactionId') ?? '');
-    } else if (!PUBLIC_ROUTES.includes(pathname)) {
+    } else if (!PUBLIC_ROUTES.includes(pathname) && pathname !== '/login') {
       Auth?.refreshUser();
     }
   }, []);
