@@ -86,14 +86,13 @@ const authenicate = async (req: Request, res: Response, next: NextFunction) => {
     if (userAccount.suspened) {
       throw new Error('Authenication failed! User is suspened');
     }
+    next();
   } catch (err) {
     console.error(err);
     return res.status(401).json({
       error: 'Authenication failed, please check if you are still logged in',
     });
   }
-
-  next();
 };
 
 export default authenicate;
