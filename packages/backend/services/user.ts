@@ -146,6 +146,34 @@ class UserService {
 
     await user.save();
   }
+
+  public static async sendPasswordResetOtp(email: string): Promise<void> {
+    const user = await UserService.getUserByEmail(email);
+
+    const otp = generateOtp();
+    await OTPService.storeOtp(user.userId, "email", otp);
+    await sendEmail(
+      email,
+      "Password reset OTP",
+      `Please use ${otp} to reset your password`
+    );
+  }
+
+  public static async changePassword(
+    email: string,
+    otp: string,
+    password: string
+  ): Promise<void> {
+    const user = await UserService.getUserByEmail(email);
+
+    if (!(await OTPService.validateOtp(user.userId, "email", otp))) {
+      throw new Error("Invalid OTP");
+    }
+
+    user.password = password;
+
+    await user.save();
+  }
 }
 
 export default UserService;

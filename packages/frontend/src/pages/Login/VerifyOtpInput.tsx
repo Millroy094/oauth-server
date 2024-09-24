@@ -8,7 +8,7 @@ import {
 import { Button, FormHelperText, Grid, Typography } from "@mui/material";
 import OTPInput from "react-otp-input";
 import useTimer from "../../hooks/useTimer";
-import sendMFAOtp from "../../api/send-mfa-otp";
+import sendOtp from "../../api/send-otp";
 import useFeedback from "../../hooks/useFeedback";
 import { Control, Controller } from "react-hook-form";
 
@@ -32,7 +32,7 @@ const VerifyOtpInput: FC<IVerifyOtpInput> = React.memo((props) => {
 
   const handleResendOtp = async (): Promise<void> => {
     try {
-      await sendMFAOtp({ type, email });
+      await sendOtp({ type, email });
       resetTimer();
     } catch (err) {
       feedbackAxiosError(err, "Failed to resend OTP");

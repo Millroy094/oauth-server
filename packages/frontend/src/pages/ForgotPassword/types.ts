@@ -1,7 +1,7 @@
 interface IForgotPasswordFormInput {
   email: string;
-  emailSent: string;
-  otp: string;
-  password: string;
-  confirmPassword: string;
+  emailSent: boolean;
+  otp?: string;
+  password?: string;
+  confirmPassword?: string;
 }

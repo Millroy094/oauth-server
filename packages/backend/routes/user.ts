@@ -35,7 +35,9 @@ router.post(
   authenicate,
   UserController.changeMFAPreference
 );
-router.post("/mfa-send-otp", UserController.sendOtp);
+router.post("/send-otp", UserController.sendOtp);
+router.post("/change-password", UserController.changePassword);
+
 router.get("/get-login-configuration", UserController.getLoginConfiguration);
 
 export default router;

@@ -255,6 +255,8 @@ class UserController {
 
       if (type === "email_verification") {
         await UserService.sendEmailVerificationOtp(email);
+      } else if (type === "forgot_password") {
+        await UserService.sendPasswordResetOtp(email);
       } else {
         await MFAService.sendOtp(email, type);
       }
@@ -279,6 +281,23 @@ class UserController {
       res
         .status(HTTP_STATUSES.notFound)
         .json({ error: "Failed to retrieve users login configuration" });
+    }
+  }
+
+  public static async changePassword(req: Request, res: Response) {
+    try {
+      const { email, otp, password } = req.body;
+      const loginConfiguration = await UserService.changePassword(
+        email,
+        otp,
+        password
+      );
+      res.status(HTTP_STATUSES.ok).json(loginConfiguration);
+    } catch (err) {
+      console.log(err);
+      res
+        .status(HTTP_STATUSES.notFound)
+        .json({ error: "Failed to change password" });
     }
   }
 }

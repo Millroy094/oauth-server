@@ -4,7 +4,7 @@ import { APP_MFA, EMAIL_MFA, SMS_MFA } from "../../../../constants";
 import { Button, FormHelperText, Grid, Typography } from "@mui/material";
 import OTPInput from "react-otp-input";
 import useTimer from "../../../../hooks/useTimer";
-import sendMFAOtp from "../../../../api/send-mfa-otp";
+import sendOtp from "../../../../api/send-otp";
 import { useAuth } from "../../../../context/AuthProvider";
 import useFeedback from "../../../../hooks/useFeedback";
 
@@ -25,7 +25,7 @@ const VerifyOtpInput: FC<IVerifyOtpInput> = (props) => {
 
   const handleResendOtp = async (): Promise<void> => {
     try {
-      await sendMFAOtp({ type, email: auth!.user!.email });
+      await sendOtp({ type, email: auth!.user!.email });
       resetTimer();
     } catch (err) {
       feedbackAxiosError(err, "Failed to resend OTP");
