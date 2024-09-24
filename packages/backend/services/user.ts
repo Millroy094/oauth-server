@@ -18,14 +18,32 @@ class UserService {
       throw new Error("User does not exist");
     }
 
+    if (userAccount.suspended) {
+      throw new Error("User is suspended");
+    }
+
     const passwordCompare = await bcrypt.compare(
       password,
       userAccount.password
     );
 
     if (!passwordCompare) {
+      userAccount.failedLogins += 1;
+
+      if (userAccount.failedLogins >= 3) {
+        userAccount.suspended = true;
+      }
+
+      await userAccount.save();
+
       throw new Error("Invalid password");
     }
+
+    userAccount.failedLogins = 0;
+    console.log(Date.now());
+    userAccount.lastLoggedIn = Date.now();
+
+    await userAccount.save();
 
     return userAccount;
   }
@@ -62,6 +80,8 @@ class UserService {
         "emailVerified",
         "mobile",
         "roles",
+        "suspended",
+        "lastLoggedIn",
       ],
     });
 

@@ -1,5 +1,5 @@
-import { AxiosResponse } from 'axios';
-import axios from '../utils/axios-instance';
+import { AxiosResponse } from "axios";
+import axios from "../utils/axios-instance";
 
 type updateUserFields = {
   firstName: string;
@@ -7,13 +7,15 @@ type updateUserFields = {
   emailVerified: boolean;
   mobile?: string;
   roles: string[];
+  suspended: boolean;
 };
 
 const updateUser = async (
   id: string,
-  updatedFields: updateUserFields,
+  updatedFields: updateUserFields
 ): Promise<AxiosResponse> => {
-  const { emailVerified, firstName, lastName, mobile, roles } = updatedFields;
+  const { emailVerified, firstName, lastName, mobile, roles, suspended } =
+    updatedFields;
   const response = await axios.put(
     `http://localhost:3000/admin/users/${id}`,
     {
@@ -22,8 +24,9 @@ const updateUser = async (
       lastName,
       mobile,
       roles,
+      suspended,
     },
-    { withCredentials: true },
+    { withCredentials: true }
   );
 
   return response;

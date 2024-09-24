@@ -5,4 +5,6 @@ interface IUserPopupInput {
   emailVerified: boolean;
   mobile?: string;
   roles: string[];
+  suspended: boolean;
+  lastLoggedIn?: number;
 }
