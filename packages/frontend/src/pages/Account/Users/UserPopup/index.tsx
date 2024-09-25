@@ -20,6 +20,7 @@ import getUser from '../../../../api/admin/get-user';
 import { MobileNumberInput } from '../../../../components/MobileNumberInput';
 import ControlledSelect from '../../../../components/ControlledSelect';
 import { IUserPopupInput } from './type';
+import resetMfa from '../../../../api/admin/reset-mfa';
 
 interface UserPopupProps {
   open: boolean;
@@ -91,6 +92,15 @@ const UserPopup: FC<UserPopupProps> = (props) => {
         'There was an issue retrieving the user, please try again',
       );
       handleClose();
+    }
+  };
+
+  const onResetMFA = async (): Promise<void> => {
+    try {
+      const response = await resetMfa(userIdentifier);
+      feedbackAxiosResponse(response, 'Successfully reset MFA!', 'success');
+    } catch (err) {
+      feedbackAxiosError(err, 'Failed to reset MFA');
     }
   };
 
@@ -235,10 +245,17 @@ const UserPopup: FC<UserPopupProps> = (props) => {
                 )}
               />
             </Grid>
-            <Grid item alignSelf='flex-end'>
-              <Button variant='contained' color='success' type='submit'>
-                Update User
-              </Button>
+            <Grid item container justifyContent='flex-end' spacing={1}>
+              <Grid item>
+                <Button variant='contained' color='error' onClick={onResetMFA}>
+                  Reset MFA
+                </Button>
+              </Grid>
+              <Grid item>
+                <Button variant='contained' color='success' type='submit'>
+                  Update User
+                </Button>
+              </Grid>
             </Grid>
           </Grid>
         </form>

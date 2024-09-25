@@ -1,21 +1,26 @@
-import { Request, Response } from "express";
-import { ClientService, OIDCService, UserService } from "../services";
+import { Request, Response } from 'express';
+import {
+  ClientService,
+  MFAService,
+  OIDCService,
+  UserService,
+} from '../services';
 
-import { HTTP_STATUSES } from "../constants";
-import { AnyItem } from "dynamoose/dist/Item";
+import { HTTP_STATUSES } from '../constants';
+import { AnyItem } from 'dynamoose/dist/Item';
 
 class AdminController {
   public static async createClient(req: Request, res: Response) {
     try {
       await ClientService.createClient(req.body);
       res
-        .json({ message: "Successfully registered client!" })
+        .json({ message: 'Successfully registered client!' })
         .status(HTTP_STATUSES.ok);
     } catch (err) {
       console.log(err);
       res
         .status(HTTP_STATUSES.serverError)
-        .json({ error: "Failed registering client" });
+        .json({ error: 'Failed registering client' });
     }
   }
 
@@ -31,13 +36,13 @@ class AdminController {
       }));
 
       res
-        .json({ results, message: "Successfully retrieved clients!" })
+        .json({ results, message: 'Successfully retrieved clients!' })
         .status(HTTP_STATUSES.ok);
     } catch (err) {
       console.log(err);
       res
         .status(HTTP_STATUSES.serverError)
-        .json({ error: "Failed retrieve clients" });
+        .json({ error: 'Failed retrieve clients' });
     }
   }
 
@@ -50,7 +55,7 @@ class AdminController {
       console.log(err);
       res
         .status(HTTP_STATUSES.notFound)
-        .json({ error: "There was an issue fetching client info" });
+        .json({ error: 'There was an issue fetching client info' });
     }
   }
 
@@ -60,12 +65,12 @@ class AdminController {
       await ClientService.updateClient(id, req.body);
       res
         .status(HTTP_STATUSES.ok)
-        .json({ message: "Successfully updated client record!" });
+        .json({ message: 'Successfully updated client record!' });
     } catch (err) {
       console.log(err);
       res
         .status(HTTP_STATUSES.notFound)
-        .json({ error: "There was an issue updating client record" });
+        .json({ error: 'There was an issue updating client record' });
     }
   }
 
@@ -75,12 +80,12 @@ class AdminController {
       await ClientService.deleteClients(id);
       res
         .status(HTTP_STATUSES.ok)
-        .json({ message: "Successfully deleted client record!" });
+        .json({ message: 'Successfully deleted client record!' });
     } catch (err) {
       console.log(err);
       res
         .status(HTTP_STATUSES.notFound)
-        .json({ error: "There was an issue deleting client" });
+        .json({ error: 'There was an issue deleting client' });
     }
   }
 
@@ -102,13 +107,13 @@ class AdminController {
         .filter((user) => user.id !== currentUserId);
 
       res
-        .json({ results, message: "Successfully retrieved users!" })
+        .json({ results, message: 'Successfully retrieved users!' })
         .status(HTTP_STATUSES.ok);
     } catch (err) {
       console.log(err);
       res
         .status(HTTP_STATUSES.serverError)
-        .json({ error: "Failed retrieve users" });
+        .json({ error: 'Failed retrieve users' });
     }
   }
 
@@ -118,12 +123,12 @@ class AdminController {
       await UserService.deleteUser(id);
       res
         .status(HTTP_STATUSES.ok)
-        .json({ message: "Successfully deleted user record!" });
+        .json({ message: 'Successfully deleted user record!' });
     } catch (err) {
       console.log(err);
       res
         .status(HTTP_STATUSES.notFound)
-        .json({ error: "There was an issue deleting user" });
+        .json({ error: 'There was an issue deleting user' });
     }
   }
 
@@ -136,7 +141,7 @@ class AdminController {
       console.log(err);
       res
         .status(HTTP_STATUSES.notFound)
-        .json({ error: "There was an issue fetching user info" });
+        .json({ error: 'There was an issue fetching user info' });
     }
   }
 
@@ -151,12 +156,12 @@ class AdminController {
       await UserService.updateUser(id, req.body);
       res
         .status(HTTP_STATUSES.ok)
-        .json({ message: "Successfully updated user record!" });
+        .json({ message: 'Successfully updated user record!' });
     } catch (err) {
       console.log(err);
       res
         .status(HTTP_STATUSES.notFound)
-        .json({ error: "There was an issue updating user info" });
+        .json({ error: 'There was an issue updating user info' });
     }
   }
 
@@ -166,12 +171,25 @@ class AdminController {
       await OIDCService.deleteAllSessions(id);
       res
         .status(HTTP_STATUSES.ok)
-        .json({ message: "Successfully deleted all user sessions!" });
+        .json({ message: 'Successfully deleted all user sessions!' });
     } catch (err) {
       console.log(err);
       res
         .status(HTTP_STATUSES.notFound)
-        .json({ error: "There was an issue deleting user session" });
+        .json({ error: 'There was an issue deleting user session' });
+    }
+  }
+
+  public static async resetMFA(req: Request, res: Response) {
+    try {
+      const { id } = req.params;
+      await MFAService.resetMFA(id);
+      res.status(HTTP_STATUSES.ok).json({ message: 'Successfully reset MFA!' });
+    } catch (err) {
+      console.log(err);
+      res
+        .status(HTTP_STATUSES.serverError)
+        .json({ error: 'Failed to reset MFA' });
     }
   }
 }

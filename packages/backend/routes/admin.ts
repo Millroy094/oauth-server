@@ -66,4 +66,11 @@ router.delete(
   AdminController.deleteUserSessions,
 );
 
+router.post(
+  '/users/:id/mfa-reset',
+  authenicate,
+  authorize(['admin']),
+  AdminController.resetMFA,
+);
+
 export default router;
