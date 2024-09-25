@@ -1,7 +1,7 @@
 import { Secret, TOTP } from "otpauth";
 import { User } from "../../models";
 import OTPService from "../otp";
-import getEnv from "../../support/env-config";
+import config from "../../support/env-config";
 
 export const verifyAppMFA = async (
   userId: string,
@@ -14,8 +14,8 @@ export const verifyAppMFA = async (
   }
 
   const totp = new TOTP({
-    issuer: getEnv("issuer.name"),
-    label: getEnv("issuer.name"),
+    issuer: config.get("authentication.issuer"),
+    label: config.get("authentication.issuer"),
     algorithm: "SHA1",
     digits: 6,
     period: 30,

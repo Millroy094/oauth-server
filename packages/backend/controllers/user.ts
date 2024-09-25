@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import { MFAService, OIDCService, UserService } from "../services";
-import getEnv from "../support/env-config";
+import config from "../support/env-config";
 import { ACCESS_TOKEN, HTTP_STATUSES, REFRESH_TOKEN } from "../constants";
 
 class UserController {
@@ -50,28 +50,28 @@ class UserController {
 
       const accessToken = jwt.sign(
         payload,
-        getEnv("authentication.accessTokenSecret"),
+        config.get("authentication.accessTokenSecret"),
         {
-          expiresIn: getEnv("authentication.accessTokenExpiry"),
+          expiresIn: config.get("authentication.accessTokenExpiry"),
         }
       );
 
       const refreshToken = jwt.sign(
         payload,
-        getEnv("authentication.refreshTokenSecret"),
+        config.get("authentication.refreshTokenSecret"),
         {
-          expiresIn: getEnv("authentication.refreshTokenExpiry"),
+          expiresIn: config.get("authentication.refreshTokenExpiry"),
         }
       );
 
       res
         .cookie(ACCESS_TOKEN, accessToken, {
           httpOnly: true,
-          secure: getEnv("environment") === "production",
+          secure: config.get("env") === "production",
         })
         .cookie(REFRESH_TOKEN, refreshToken, {
           httpOnly: true,
-          secure: getEnv("environment") === "production",
+          secure: config.get("env") === "production",
         })
         .status(200)
         .json({

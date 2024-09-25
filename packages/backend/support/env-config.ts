@@ -1,46 +1,129 @@
-import dotenv from 'dotenv';
-import get from 'lodash/get';
-const result = dotenv.config();
+import dotenv from "dotenv";
+import convict from "convict";
 
-if (result.error) {
-  throw result.error;
-}
+dotenv.config();
 
-const { parsed: envs } = result;
-
-const config = {
-  oidc: {
-    cookieSecrets: envs?.COOKIE_SECRETS ?? '[]',
+const config = convict({
+  env: {
+    doc: "The application environment.",
+    format: ["production", "development"],
+    default: "development",
+    env: "NODE_ENV",
   },
-  environment: envs?.NODE_ENV ?? 'development',
+  oidc: {
+    cookieSecrets: {
+      doc: "Cookie secrets for OIDC configuration.",
+      format: Array,
+      default: [],
+      env: "COOKIE_SECRETS",
+    },
+  },
   db: {
-    endpoint: envs?.DYNAMO_DB_ENDPOINT ?? 'http://localhost:8000',
+    doc: "DynamoDB Database endpoint",
+    format: String,
+    default: "http://localhost:8000",
+    env: "DYNAMO_DB_ENDPOINT",
   },
   authentication: {
-    accessTokenSecret: envs?.ACCESS_JWT_SECRET ?? 'AccessTokenSecret',
-    accessTokenExpiry: envs?.ACCESS_JWT_EXPIRY ?? '2h',
-    refreshTokenSecret: envs!.REFRESH_JWT_SECRET ?? 'RefreshTokenSecret',
-    refreshTokenExpiry: envs?.REFRESH_JWT_EXPIRY ?? '1d',
+    accessTokenSecret: {
+      doc: "Access Token Secret for Login",
+      default: "",
+      nullable: false,
+      format: String,
+      env: "ACCESS_JWT_SECRET",
+    },
+    accessTokenExpiry: {
+      doc: "Access Token Expiry Time for Login",
+      format: String,
+      default: "2h",
+      env: "ACCESS_JWT_EXPIRY",
+    },
+
+    refreshTokenSecret: {
+      doc: "Refresh Token Secret for Login",
+      default: "",
+      nullable: false,
+      format: String,
+      env: "REFRESH_JWT_SECRET",
+    },
+    refreshTokenExpiry: {
+      doc: "Refresh Token Expiry Time for Login",
+      format: String,
+      default: "1d",
+      env: "REFRESH_JWT_EXPIRY",
+    },
+    issuer: {
+      doc: "ISSUER For APP MFA",
+      default: "",
+      nullable: false,
+      format: String,
+      env: "ISSUER_NAME",
+    },
   },
   encryption: {
-    secret: envs?.ENCRYPTION_SECRET_KEY ?? 'VeryBigSecret',
-    secretiv: envs?.ENCRYPTION_SECRET_IV ?? 'EvenMoreVeryBigSecret',
-    method: envs?.ECNRYPTION_METHOD ?? 'aes-256-cbc',
-  },
-  issuer: {
-    name: envs?.ISSUER_NAME ?? '',
+    secret: {
+      doc: "Secret for encryption",
+      default: "",
+      nullable: false,
+      format: String,
+      env: "ENCRYPTION_SECRET_KEY",
+    },
+    secretiv: {
+      doc: "Secret iv for encryption",
+      default: "",
+      nullable: false,
+      format: String,
+      env: "ENCRYPTION_SECRET_IV",
+    },
+    method: {
+      doc: "Secret iv for encryption",
+      nullable: false,
+      format: String,
+      default: "aes-256-cbc",
+      env: "ENCRYPTION_METHOD",
+    },
   },
   email: {
-    service: envs?.EMAIL_SERVICE ?? '',
-    address: envs?.EMAIL_ADDRESS ?? '',
-    password: envs?.EMAIL_PASSWORD ?? '',
+    service: {
+      doc: "Email Service name",
+      default: "",
+      nullable: false,
+      format: String,
+      env: "EMAIL_SERVICE",
+    },
+    address: {
+      doc: "Email Address to send emails from",
+      default: "",
+      nullable: false,
+      format: String,
+      env: "EMAIL_ADDRESS",
+    },
+    password: {
+      doc: "Email Password to send emails",
+      default: "",
+      nullable: false,
+      format: String,
+      env: "EMAIL_PASSWORD",
+    },
   },
   aws: {
-    accessKey: envs?.AWS_ACCESS_KEY ?? '',
-    secretKey: envs?.AWS_SECRET_KEY ?? '',
+    accessKey: {
+      doc: "AWS access key",
+      default: "",
+      nullable: false,
+      format: String,
+      env: "AWS_ACCESS_KEY",
+    },
+    secretKey: {
+      doc: "AWS secret key",
+      default: "",
+      nullable: false,
+      format: String,
+      env: "AWS_SECRET_KEY",
+    },
   },
-};
+});
 
-const getEnv = (key: string): string => get(config, key, '');
+config.validate({ allowed: "strict" });
 
-export default getEnv;
+export default config;

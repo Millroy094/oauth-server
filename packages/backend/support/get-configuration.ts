@@ -1,10 +1,10 @@
-import { Configuration } from 'oidc-provider';
-import fs from 'fs';
-import path from 'path';
-import DynamoDBAdapter from '../adapter/DynamoDbAdapter';
-import { User } from '../models';
-import getEnv from './env-config';
-import { ClientService } from '../services';
+import { Configuration } from "oidc-provider";
+import fs from "fs";
+import path from "path";
+import DynamoDBAdapter from "../adapter/DynamoDbAdapter";
+import { User } from "../models";
+import { ClientService } from "../services";
+import config from "./env-config";
 
 const getConfiguration = async (): Promise<Configuration> => {
   const clients = await ClientService.getClients();
@@ -12,11 +12,11 @@ const getConfiguration = async (): Promise<Configuration> => {
 
   return {
     adapter: DynamoDBAdapter,
-    jwks: JSON.parse(keys.toString('utf-8') ?? ''),
+    jwks: JSON.parse(keys.toString("utf-8") ?? ""),
     cookies: {
-      keys: [...JSON.parse(getEnv('oidc.cookieSecrets'))],
-      long: { httpOnly: true, sameSite: 'strict' },
-      short: { httpOnly: true, sameSite: 'strict' },
+      keys: [...config.get("oidc.cookieSecrets")],
+      long: { httpOnly: true, sameSite: "strict" },
+      short: { httpOnly: true, sameSite: "strict" },
     },
     features: {
       devInteractions: { enabled: false },
@@ -29,14 +29,14 @@ const getConfiguration = async (): Promise<Configuration> => {
           claims: async (_, scope, claims) => {
             return {
               sub: id,
-              ...(scope.includes('email') && {
+              ...(scope.includes("email") && {
                 email: account.email,
                 emailVerified: account.emailVerified,
               }),
-              ...(scope.includes('phone') && {
+              ...(scope.includes("phone") && {
                 mobile: account.mobile,
               }),
-              ...(scope.includes('profile') && {
+              ...(scope.includes("profile") && {
                 firstName: account.firstName,
                 lastName: account.lastName,
               }),
@@ -50,14 +50,14 @@ const getConfiguration = async (): Promise<Configuration> => {
       client_secret: client.secret,
       redirect_uris: client.redirectUris,
       grant_types: client.grants,
-      scope: client.scopes.join(' '),
+      scope: client.scopes.join(" "),
     })),
-    pkce: { required: () => false, methods: ['S256'] },
+    pkce: { required: () => false, methods: ["S256"] },
     claims: {
-      openid: ['sub'],
-      email: ['email', 'emailVerified'],
-      phone: ['mobile'],
-      profile: ['firstName', 'lastName'],
+      openid: ["sub"],
+      email: ["email", "emailVerified"],
+      phone: ["mobile"],
+      profile: ["firstName", "lastName"],
     },
     interactions: {
       url: (ctx, interaction) =>
