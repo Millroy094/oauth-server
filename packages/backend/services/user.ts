@@ -40,7 +40,6 @@ class UserService {
     }
 
     userAccount.failedLogins = 0;
-    console.log(Date.now());
     userAccount.lastLoggedIn = Date.now();
 
     await userAccount.save();

@@ -1,6 +1,6 @@
-import { Request, Response } from 'express';
-import { MFAService, UserService } from '../services';
-import { HTTP_STATUSES } from '../constants';
+import { Request, Response } from "express";
+import { MFAService, UserService } from "../services";
+import { HTTP_STATUSES } from "../constants";
 
 class OIDCController {
   public static async getInteractionStatus(req: Request, res: Response) {
@@ -13,7 +13,7 @@ class OIDCController {
       console.log(err);
       res
         .status(HTTP_STATUSES.badRequest)
-        .json({ error: 'Unable to process authentication' });
+        .json({ error: "Unable to process authentication" });
     }
   }
 
@@ -22,26 +22,33 @@ class OIDCController {
     try {
       const interactionDetails = await req.oidcProvider.interactionDetails(
         req,
-        res,
+        res
       );
       const {
         prompt: { name },
       } = interactionDetails;
 
-      if (name !== 'login') {
-        throw new Error('Interaction is not at login stage');
+      if (name !== "login") {
+        throw new Error("Interaction is not at login stage");
       }
 
       const userAccount = await UserService.validateUserCredentials(
         req.body.email,
-        req.body.password,
+        req.body.password
       );
 
-      if (userAccount.mfa.preference && req.body.otp) {
+      if (!userAccount.emailVerified && req.body.otp) {
+        await UserService.verifyEmail(userAccount.userId, req.body.otp);
+      } else if (userAccount.mfa.preference && req.body.otp) {
         await MFAService.verifyMFA(
           userAccount.userId,
           userAccount.mfa.preference,
-          req.body.otp,
+          req.body.otp
+        );
+      } else if (userAccount.mfa.preference && req.body.recoveryCode) {
+        await MFAService.validateRecoveryCode(
+          userAccount.userId,
+          req.body.recoveryCode
         );
       }
 
@@ -56,17 +63,17 @@ class OIDCController {
         result,
         {
           mergeWithLastSubmission: false,
-        },
+        }
       );
       res
         .status(HTTP_STATUSES.ok)
-        .json({ redirect, message: 'Login successful!' });
+        .json({ redirect, message: "Login successful!" });
     } catch (err) {
       console.log(err);
-      if ((err as Error).message === 'Interaction is not at login stage') {
+      if ((err as Error).message === "Interaction is not at login stage") {
         result = {
-          error: 'access_denied',
-          error_description: 'Username or password is incorrect.',
+          error: "access_denied",
+          error_description: "Username or password is incorrect.",
         };
         const redirect = await req.oidcProvider.interactionResult(
           req,
@@ -74,13 +81,13 @@ class OIDCController {
           result,
           {
             mergeWithLastSubmission: false,
-          },
+          }
         );
         res.status(HTTP_STATUSES.ok).json({ redirect });
       } else {
         res
           .status(HTTP_STATUSES.unauthorised)
-          .json({ error: 'Invalid email or password' });
+          .json({ error: "Invalid email or password" });
       }
     }
   }
@@ -91,7 +98,7 @@ class OIDCController {
       const { authorize } = req.body;
       const interactionDetails = await req.oidcProvider.interactionDetails(
         req,
-        res,
+        res
       );
       const {
         prompt: { name, details },
@@ -99,12 +106,12 @@ class OIDCController {
         session: { accountId },
       } = interactionDetails as any;
 
-      if (name !== 'consent') {
-        throw new Error('Interaction is not at consent stage');
+      if (name !== "consent") {
+        throw new Error("Interaction is not at consent stage");
       }
 
       if (!authorize) {
-        throw new Error('User does not authorize this request');
+        throw new Error("User does not authorize this request");
       }
 
       const grant = interactionDetails.grantId
@@ -116,16 +123,16 @@ class OIDCController {
 
       if (grant) {
         if (details.missingOIDCScope) {
-          grant.addOIDCScope(details.missingOIDCScope.join(' '));
+          grant.addOIDCScope(details.missingOIDCScope.join(" "));
         }
         if (details.missingOIDCClaims) {
           grant.addOIDCClaims(details.missingOIDCClaims);
         }
         if (details.missingResourceScopes) {
           for (const [indicator, scopes] of Object.entries(
-            details.missingResourceScopes,
+            details.missingResourceScopes
           )) {
-            grant.addResourceScope(indicator, (scopes as any).join(' '));
+            grant.addResourceScope(indicator, (scopes as any).join(" "));
           }
         }
 
@@ -138,23 +145,23 @@ class OIDCController {
           result,
           {
             mergeWithLastSubmission: true,
-          },
+          }
         );
         res
-          .json({ redirect, message: 'Authorisation successful!' })
+          .json({ redirect, message: "Authorisation successful!" })
           .status(HTTP_STATUSES.ok);
       }
     } catch (err) {
       console.log(err);
       if (
         [
-          'Interaction is not at consent stage',
-          'User does not authorize this request',
+          "Interaction is not at consent stage",
+          "User does not authorize this request",
         ].includes((err as Error).message)
       ) {
         result = {
-          error: 'access_denied',
-          error_description: 'Authorisation failed.',
+          error: "access_denied",
+          error_description: "Authorisation failed.",
         };
         const redirect = await req.oidcProvider.interactionResult(
           req,
@@ -162,13 +169,13 @@ class OIDCController {
           result,
           {
             mergeWithLastSubmission: false,
-          },
+          }
         );
         res.status(HTTP_STATUSES.ok).json({ redirect });
       } else {
         res
           .status(HTTP_STATUSES.unauthorised)
-          .json({ error: 'Authorisation failed' });
+          .json({ error: "Authorisation failed" });
       }
     }
   }

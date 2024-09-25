@@ -48,7 +48,7 @@ const UserSchema = new Schema(
         }
 
         const salt = await bcrypt.genSalt(10);
-        const encryptedPassword = bcrypt.hash(value as string, salt);
+        const encryptedPassword = await bcrypt.hash(value as string, salt);
         return encryptedPassword;
       },
     },
@@ -57,6 +57,10 @@ const UserSchema = new Schema(
       schema: {
         preference: {
           type: String,
+        },
+        recoveryCodes: {
+          type: Array,
+          schema: [String],
         },
         app: {
           type: Object,
@@ -101,6 +105,7 @@ const UserSchema = new Schema(
       },
       default: {
         preference: "",
+        recoveryCodes: [],
         app: {
           secret: "",
           subscriber: "",

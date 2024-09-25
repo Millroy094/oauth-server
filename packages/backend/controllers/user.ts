@@ -34,6 +34,11 @@ class UserController {
           user.mfa.preference,
           req.body.otp
         );
+      } else if (user.mfa.preference && req.body.recoveryCode) {
+        await MFAService.validateRecoveryCode(
+          user.userId,
+          req.body.recoveryCode
+        );
       }
 
       const payload = {
@@ -255,6 +260,24 @@ class UserController {
       res
         .status(HTTP_STATUSES.serverError)
         .json({ error: "Failed to change MFA preference" });
+    }
+  }
+
+  public static async generateRecoveryCodes(req: Request, res: Response) {
+    try {
+      const { user } = req;
+      const { userId } = user as any;
+
+      const recoveryCodes = await MFAService.generateRecoveryCodes(userId);
+      res.status(HTTP_STATUSES.ok).json({
+        message: "Successfully generated recovery codes",
+        recoveryCodes,
+      });
+    } catch (err) {
+      console.log(err);
+      res
+        .status(HTTP_STATUSES.serverError)
+        .json({ error: "Failed to generate recovery codes" });
     }
   }
 

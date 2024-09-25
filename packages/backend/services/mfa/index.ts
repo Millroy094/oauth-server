@@ -1,5 +1,7 @@
 import omit from "lodash/omit";
 import map from "lodash/map";
+import bcrypt from "bcryptjs";
+import { v4 as uuid } from "uuid";
 import isEmpty from "lodash/isEmpty";
 import { User } from "../../models";
 import { setupAppMFA, setupEmailMFA, setupSMSMFA } from "./setup";
@@ -10,6 +12,7 @@ class MFAService {
   public static async getMFASetting(userId: string): Promise<{
     types: { subscriber: string; verified: boolean }[];
     preference: string;
+    recoveryCodeCount: number;
   }> {
     const userAccountMfaSetting = await User.get(userId, {
       attributes: ["mfa"],
@@ -21,10 +24,11 @@ class MFAService {
 
     return {
       types: map(
-        omit(userAccountMfaSetting.mfa, "preference"),
+        omit(userAccountMfaSetting.mfa, ["preference", "recoveryCodes"]),
         ({ subscriber, verified }, type) => ({ type, subscriber, verified })
       ),
       preference: userAccountMfaSetting.mfa.preference,
+      recoveryCodeCount: userAccountMfaSetting.mfa.recoveryCodes.length,
     };
   }
 
@@ -112,6 +116,65 @@ class MFAService {
     }
 
     await sendOtp[type](user.userId, user.mfa[type].subscriber);
+  }
+
+  public static async generateRecoveryCodes(userId: string): Promise<string[]> {
+    const user = await User.get(userId);
+
+    if (!user) {
+      throw new Error("User does not exist");
+    }
+
+    const recoveryCodes = Array.from({ length: 10 }, (_, i) => i).map(() =>
+      uuid()
+    );
+
+    user.mfa.recoveryCodes = await Promise.all(
+      recoveryCodes.map(async (recoveryCode) => {
+        const salt = await bcrypt.genSalt(10);
+        const encryptedRecoveryCode = await bcrypt.hash(recoveryCode, salt);
+        return encryptedRecoveryCode;
+      })
+    );
+
+    await user.save();
+
+    return recoveryCodes;
+  }
+
+  public static async validateRecoveryCode(
+    email: string,
+    recoveryCode: string
+  ): Promise<void> {
+    const [user] = await User.scan("email").eq(email).exec();
+
+    if (!user) {
+      throw new Error("User does not exist");
+    }
+
+    if (isEmpty(user.mfa.recoveryCodes)) {
+      throw new Error("No Recovery codes found");
+    }
+
+    let matchedRecoveryCode = null;
+
+    for (const hashedRecoveryCode of user.mfa.recoveryCodes) {
+      const match = await bcrypt.compare(recoveryCode, hashedRecoveryCode);
+
+      if (match) {
+        matchedRecoveryCode = hashedRecoveryCode;
+      }
+    }
+
+    if (!matchedRecoveryCode) {
+      throw new Error("Invalid recovery code");
+    }
+
+    user.mfa.recoveryCodes = user.mfa.recoveryCodes.filter(
+      (code: string) => code !== matchedRecoveryCode
+    );
+
+    await user.save();
   }
 }
 

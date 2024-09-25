@@ -35,6 +35,12 @@ router.post(
   authenicate,
   UserController.changeMFAPreference
 );
+router.get(
+  "/generate-recovery-codes",
+  authenicate,
+  UserController.generateRecoveryCodes
+);
+
 router.post("/send-otp", UserController.sendOtp);
 router.post("/change-password", UserController.changePassword);
 
