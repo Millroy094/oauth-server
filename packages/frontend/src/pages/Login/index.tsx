@@ -17,7 +17,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import schema from "./schema";
 import { useNavigate, useParams } from "react-router-dom";
-import authenticateInteraction from "../../api/authenicate-interaction";
+import authenticateInteraction from "../../api/authenticate-interaction";
 import useFeedback from "../../hooks/useFeedback";
 import { useAuth } from "../../context/AuthProvider";
 import getLoginConfiguration from "../../api/get-login-configuration";

@@ -1,5 +1,5 @@
-import { AxiosResponse } from 'axios';
-import axios from '../utils/axios-instance';
+import { AxiosResponse } from "axios";
+import axios from "../utils/axios-instance";
 
 type AuthenticateUserArgs = {
   email: string;
@@ -7,20 +7,20 @@ type AuthenticateUserArgs = {
   otp?: string;
 };
 
-const authenicateUser = async (
-  args: AuthenticateUserArgs,
+const authenticateUser = async (
+  args: AuthenticateUserArgs
 ): Promise<AxiosResponse> => {
   const { email, password, otp } = args;
   const response = await axios.post(
-    'http://localhost:3000/user/login',
+    "http://localhost:3000/user/login",
     {
       email,
       password,
       otp,
     },
-    { withCredentials: true },
+    { withCredentials: true }
   );
   return response;
 };
 
-export default authenicateUser;
+export default authenticateUser;

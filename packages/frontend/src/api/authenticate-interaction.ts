@@ -1,5 +1,5 @@
-import { AxiosResponse } from 'axios';
-import axios from '../utils/axios-instance';
+import { AxiosResponse } from "axios";
+import axios from "../utils/axios-instance";
 
 type validateCredentialsArgs = {
   email: string;
@@ -8,8 +8,8 @@ type validateCredentialsArgs = {
   interactionId: string;
 };
 
-const authenicateInteraction = async (
-  args: validateCredentialsArgs,
+const authenticateInteraction = async (
+  args: validateCredentialsArgs
 ): Promise<AxiosResponse> => {
   const { email, password, otp, interactionId } = args;
   const response = await axios.post(
@@ -19,9 +19,9 @@ const authenicateInteraction = async (
       password,
       otp,
     },
-    { withCredentials: true },
+    { withCredentials: true }
   );
   return response;
 };
 
-export default authenicateInteraction;
+export default authenticateInteraction;

@@ -1,10 +1,10 @@
-import { useContext, createContext, useState, FC, ReactElement } from 'react';
-import authenicateUser from '../api/authenicate-user';
-import { useNavigate } from 'react-router-dom';
-import useFeedback from '../hooks/useFeedback';
-import logoutUser from '../api/logout-user';
-import { useSnackbar } from 'notistack';
-import isAuthenticated from '../api/is-authenicated-user';
+import { useContext, createContext, useState, FC, ReactElement } from "react";
+import authenticateUser from "../api/authenticate-user";
+import { useLocation, useNavigate } from "react-router-dom";
+import useFeedback from "../hooks/useFeedback";
+import logoutUser from "../api/logout-user";
+import { useSnackbar } from "notistack";
+import isAuthenticated from "../api/is-authenicated-user";
 
 interface IUser {
   userId: string;
@@ -23,21 +23,22 @@ const AuthContext = createContext<IAuthContext | null>(null);
 
 const AuthProvider: FC<{ children: ReactElement }> = ({ children }) => {
   const [user, setUser] = useState<IUser | null>(null);
+  const { pathname } = useLocation();
   const navigate = useNavigate();
   const { feedbackAxiosError } = useFeedback();
   const { enqueueSnackbar } = useSnackbar();
 
   const login = async (data: ILoginFormInput): Promise<void> => {
     try {
-      const response = await authenicateUser({
+      const response = await authenticateUser({
         ...data,
       });
       setUser(response.data.user);
-      navigate('/account');
+      navigate("/account");
     } catch (err) {
       feedbackAxiosError(
         err,
-        'Failed to authenticate credentials, please try again.',
+        "Failed to authenticate credentials, please try again."
       );
     }
   };
@@ -46,12 +47,14 @@ const AuthProvider: FC<{ children: ReactElement }> = ({ children }) => {
     try {
       const response = await isAuthenticated();
       setUser(response.data.user);
-      navigate('/account');
+      navigate("/account");
     } catch (err) {
       await logout();
-      enqueueSnackbar('Session expired, please login again', {
-        variant: 'error',
-      });
+      if (pathname !== "/") {
+        enqueueSnackbar("Session expired, please login again", {
+          variant: "error",
+        });
+      }
     }
   };
 
@@ -59,9 +62,9 @@ const AuthProvider: FC<{ children: ReactElement }> = ({ children }) => {
     try {
       await logoutUser();
       setUser(null);
-      navigate('/login');
+      navigate("/login");
     } catch (err) {
-      feedbackAxiosError(err, 'Failed to logout user, please try again.');
+      feedbackAxiosError(err, "Failed to logout user, please try again.");
     }
   };
 
