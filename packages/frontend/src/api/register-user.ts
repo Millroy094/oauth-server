@@ -12,7 +12,7 @@ type registerUserArgs = {
 const registerUser = async (args: registerUserArgs): Promise<AxiosResponse> => {
   const { email, password, firstName, lastName, mobile } = args;
   const response = await axios.post(
-    'http://localhost:3000/user/register',
+    '/api/user/register',
     {
       email,
       password,

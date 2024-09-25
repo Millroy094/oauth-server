@@ -13,7 +13,7 @@ const updateClient = async (
 ): Promise<AxiosResponse> => {
   const { scopes, grants, redirectUris } = args;
   const response = await axios.put(
-    `http://localhost:3000/admin/clients/${id}`,
+    `/api/admin/clients/${id}`,
     {
       scopes,
       grants,

@@ -14,7 +14,7 @@ const updateUserProfileDetails = async (
 ): Promise<AxiosResponse> => {
   const { email, emailVerified, firstName, lastName, mobile } = args;
   const response = await axios.put(
-    'http://localhost:3000/user/profile-details',
+    '/api/user/profile-details',
     {
       email,
       emailVerified,

@@ -1,13 +1,10 @@
-import { AxiosResponse } from "axios";
-import axios from "../utils/axios-instance";
+import { AxiosResponse } from 'axios';
+import axios from '../utils/axios-instance';
 
 const generateRecoveryCodes = async (): Promise<AxiosResponse> => {
-  const response = await axios.get(
-    "http://localhost:3000/user/generate-recovery-codes",
-    {
-      withCredentials: true,
-    }
-  );
+  const response = await axios.get('/api/user/generate-recovery-codes', {
+    withCredentials: true,
+  });
   return response;
 };
 

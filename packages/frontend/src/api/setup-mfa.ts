@@ -9,7 +9,7 @@ type SetupMFAArgs = {
 const setupMFA = async (args: SetupMFAArgs): Promise<AxiosResponse> => {
   const { type, subscriber } = args;
   const response = await axios.post(
-    'http://localhost:3000/user/mfa-setup',
+    '/api/user/mfa-setup',
     {
       type,
       subscriber,

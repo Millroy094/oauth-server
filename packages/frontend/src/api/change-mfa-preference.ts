@@ -5,7 +5,7 @@ const changeMFAPreference = async (
   preference: string,
 ): Promise<AxiosResponse> => {
   const response = await axios.post(
-    'http://localhost:3000/user/mfa-change-preference',
+    '/api/user/mfa-change-preference',
     {
       preference,
     },

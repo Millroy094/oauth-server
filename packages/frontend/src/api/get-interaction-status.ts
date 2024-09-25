@@ -5,7 +5,7 @@ const getInteractionStatus = async (
   interactionId: string,
 ): Promise<AxiosResponse> => {
   const response = await axios.get(
-    `http://localhost:3000/oidc/interaction/${interactionId}/status`,
+    `/api/oidc/interaction/${interactionId}/status`,
     {
       withCredentials: true,
     },

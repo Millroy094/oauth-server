@@ -12,7 +12,7 @@ type CreateClientArgs = {
 const createClient = async (args: CreateClientArgs): Promise<AxiosResponse> => {
   const { clientId, clientName, scopes, grants, redirectUris } = args;
   const response = await axios.post(
-    'http://localhost:3000/admin/clients/new',
+    '/api/admin/clients/new',
     {
       clientId,
       clientName,
