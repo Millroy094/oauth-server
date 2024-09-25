@@ -5,9 +5,9 @@ type AuthenticateUserArgs = {
   email: string;
   password: string;
   otp?: string;
-  loginWithRecoveryCode: boolean;
+  loginWithRecoveryCode?: boolean;
   recoveryCode?: string;
-  resetMfa: boolean;
+  resetMfa?: boolean;
 };
 
 const authenticateUser = async (
