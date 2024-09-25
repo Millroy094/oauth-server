@@ -3,4 +3,7 @@ interface ILoginFormInput {
   password: string;
   mfaType?: string;
   otp?: string;
+  loginWithRecoveryCode: boolean;
+  recoveryCode?: string;
+  resetMfa?: boolean;
 }

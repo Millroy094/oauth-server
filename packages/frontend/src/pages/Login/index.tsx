@@ -23,12 +23,13 @@ import { useAuth } from "../../context/AuthProvider";
 import getLoginConfiguration from "../../api/get-login-configuration";
 import VerifyMFAOtpInput from "./VerifyOtpInput";
 import { EMAIL_VERIFICATION } from "../../constants";
+import RecoveryCodeInput from "./RecoveryCodeInput";
 
 const StyledCard = styled(Card)({
   borderTop: "2px solid red",
 });
 
-type ILoginStage = "USERNAME" | "PASSWORD" | "MFA";
+type ILoginStage = "USERNAME" | "PASSWORD" | "MFA" | "RECOVERY_CODE";
 
 const Login: FC = () => {
   const [loginStage, setLoginStage] = useState<ILoginStage>("USERNAME");
@@ -48,7 +49,15 @@ const Login: FC = () => {
     formState: { errors },
   } = useForm<ILoginFormInput>({
     resolver: yupResolver(schema),
-    defaultValues: { email: "", password: "", mfaType: "", otp: "" },
+    defaultValues: {
+      email: "",
+      password: "",
+      mfaType: "",
+      otp: "",
+      loginWithRecoveryCode: false,
+      recoveryCode: "",
+      resetMfa: false,
+    },
   });
 
   const email = getValues("email");
@@ -121,6 +130,11 @@ const Login: FC = () => {
     );
   };
 
+  const loginViaRecoveryCode = () => {
+    setValue("loginWithRecoveryCode", true);
+    setLoginStage("RECOVERY_CODE");
+  };
+
   const extraProps: {
     subheader?: ReactElement;
     subheaderTypographyProps?: Record<string, string | number>;
@@ -159,7 +173,7 @@ const Login: FC = () => {
         />
         <CardContent>
           <Grid container direction="column" spacing={2} sx={{ p: 2 }}>
-            {loginStage !== "MFA" && (
+            {!["MFA", "RECOVERY_CODE"].includes(loginStage) && (
               <>
                 <Grid item>
                   {loginStage === "USERNAME" ? (
@@ -207,6 +221,13 @@ const Login: FC = () => {
                 type={mfaType ?? ""}
               />
             )}
+            {loginStage === "RECOVERY_CODE" && (
+              <RecoveryCodeInput
+                register={register}
+                control={control}
+                errors={errors}
+              />
+            )}
           </Grid>
         </CardContent>
         <CardActions
@@ -217,9 +238,15 @@ const Login: FC = () => {
               loginStage === "USERNAME" ? "flex-end" : "space-between",
           }}
         >
-          {loginStage !== "USERNAME" && (
+          {!["USERNAME", "MFA"].includes(loginStage) && (
             <Button color="error" onClick={onReset}>
               Sign in with a different user
+            </Button>
+          )}
+
+          {loginStage === "MFA" && (
+            <Button color="error" onClick={loginViaRecoveryCode}>
+              Don't have OTP?
             </Button>
           )}
 

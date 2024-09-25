@@ -5,10 +5,24 @@ const schema = yup
     email: yup.string().email().required(),
     password: yup.string().required(),
     mfaType: yup.string(),
-    otp: yup.string().when("mfaType", (mfaType, schema) => {
-      const [type] = mfaType;
-      return type ? schema.required().min(6) : schema;
-    }),
+    otp: yup
+      .string()
+      .when(["mfaType", "loginWithRecoveryCode"], (fields, schema) => {
+        const [mfaType, loginWithRecoveryCode] = fields;
+        return mfaType && !loginWithRecoveryCode
+          ? schema.required().min(6)
+          : schema;
+      }),
+    loginWithRecoveryCode: yup.boolean().required(),
+    recoveryCode: yup
+      .string()
+      .when("loginWithRecoveryCode", (fields, schema) => {
+        const [loginWithRecoveryCode] = fields;
+        return loginWithRecoveryCode
+          ? schema.required("Recovery code is required")
+          : schema;
+      }),
+    resetMfa: yup.boolean(),
   })
   .required();
 

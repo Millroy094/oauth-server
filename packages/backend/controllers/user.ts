@@ -28,16 +28,17 @@ class UserController {
 
       if (!user.emailVerified && req.body.otp) {
         await UserService.verifyEmail(user.userId, req.body.otp);
+      } else if (req.body.loginWithRecoveryCode && req.body.recoveryCode) {
+        await MFAService.validateRecoveryCode(
+          user.userId,
+          req.body.recoveryCode,
+          req.body.resetMfa
+        );
       } else if (user.mfa.preference && req.body.otp) {
         await MFAService.verifyMFA(
           user.userId,
           user.mfa.preference,
           req.body.otp
-        );
-      } else if (user.mfa.preference && req.body.recoveryCode) {
-        await MFAService.validateRecoveryCode(
-          user.userId,
-          req.body.recoveryCode
         );
       }
 

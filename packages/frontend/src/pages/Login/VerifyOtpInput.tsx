@@ -40,20 +40,22 @@ const VerifyOtpInput: FC<IVerifyOtpInput> = React.memo((props) => {
   };
 
   return (
-    <Grid container direction="column" alignItems="center" spacing={4}>
+    <Grid item container direction="column" alignItems="center" spacing={4}>
       {type === APP_MFA && (
-        <Grid container item>
-          <Typography>
-            Please enter the 6 digit one time passcode shown on your chosen
-            authenicator app
-          </Typography>
+        <Grid container item direction="column" alignItems="center">
+          <Grid item>
+            <Typography align="center">
+              Please enter the 6 digit one time passcode shown on your chosen
+              authenticator app
+            </Typography>
+          </Grid>
         </Grid>
       )}
       {type === EMAIL_MFA && (
         <Grid direction="column" container item>
           <Grid container item direction="column" alignItems="center">
             <Grid item>
-              <Typography>
+              <Typography align="center">
                 Please enter the 6 digit OTP sent to your selected email
               </Typography>
             </Grid>
@@ -70,7 +72,7 @@ const VerifyOtpInput: FC<IVerifyOtpInput> = React.memo((props) => {
         <Grid direction="column" container item>
           <Grid container item direction="column" alignItems="center">
             <Grid item>
-              <Typography>
+              <Typography align="center">
                 Please enter the 6 digit OTP sent to your selected phone number
               </Typography>
             </Grid>
@@ -87,7 +89,7 @@ const VerifyOtpInput: FC<IVerifyOtpInput> = React.memo((props) => {
         <Grid direction="column" container item>
           <Grid container item direction="column" alignItems="center">
             <Grid item>
-              <Typography>
+              <Typography align="center">
                 Please enter the 6 digit OTP sent to your email to verify your
                 email
               </Typography>

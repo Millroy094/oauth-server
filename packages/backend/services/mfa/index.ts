@@ -143,10 +143,11 @@ class MFAService {
   }
 
   public static async validateRecoveryCode(
-    email: string,
-    recoveryCode: string
+    userId: string,
+    recoveryCode: string,
+    resetMFA: boolean
   ): Promise<void> {
-    const [user] = await User.scan("email").eq(email).exec();
+    const user = await User.get(userId);
 
     if (!user) {
       throw new Error("User does not exist");
@@ -173,6 +174,24 @@ class MFAService {
     user.mfa.recoveryCodes = user.mfa.recoveryCodes.filter(
       (code: string) => code !== matchedRecoveryCode
     );
+
+    if (resetMFA) {
+      user.mfa.preference = "";
+      user.mfa.app = {
+        secret: "",
+        subscriber: "",
+        verified: false,
+      };
+      user.mfa.sms = {
+        subscriber: "",
+        verified: false,
+      };
+
+      user.mfa.email = {
+        subscriber: "",
+        verified: false,
+      };
+    }
 
     await user.save();
   }

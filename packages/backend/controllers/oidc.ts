@@ -39,16 +39,17 @@ class OIDCController {
 
       if (!userAccount.emailVerified && req.body.otp) {
         await UserService.verifyEmail(userAccount.userId, req.body.otp);
+      } else if (req.body.loginWithRecoveryCode && req.body.recoveryCode) {
+        await MFAService.validateRecoveryCode(
+          userAccount.userId,
+          req.body.recoveryCode,
+          req.body.resetMfa
+        );
       } else if (userAccount.mfa.preference && req.body.otp) {
         await MFAService.verifyMFA(
           userAccount.userId,
           userAccount.mfa.preference,
           req.body.otp
-        );
-      } else if (userAccount.mfa.preference && req.body.recoveryCode) {
-        await MFAService.validateRecoveryCode(
-          userAccount.userId,
-          req.body.recoveryCode
         );
       }
 
