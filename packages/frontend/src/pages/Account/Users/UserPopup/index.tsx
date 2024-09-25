@@ -2,6 +2,8 @@ import { FC, useEffect, useMemo, useState } from 'react';
 import {
   Button,
   Card,
+  CardActions,
+  CardContent,
   CardHeader,
   FormControlLabel,
   Grid,
@@ -148,103 +150,110 @@ const UserPopup: FC<UserPopupProps> = (props) => {
             </Grid>
           }
         />
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <Grid container direction='column' spacing={2} sx={{ p: 2 }}>
-            <Grid item>
-              <TextField
-                {...register('email')}
-                InputLabelProps={{ shrink: true }}
-                label='Email Address'
-                variant='outlined'
-                fullWidth
-                helperText={`Last login: ${lastLoggedInAsDate}`}
-                disabled
-              />
-            </Grid>
-            <Grid item container spacing={2}>
-              <Grid item xs={6}>
-                <TextField
-                  {...register('firstName')}
-                  InputLabelProps={{ shrink: true }}
-                  label='First Name'
-                  variant='outlined'
-                  fullWidth
-                  error={!!errors.firstName}
-                  helperText={errors.firstName ? errors.firstName.message : ''}
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <TextField
-                  {...register('lastName')}
-                  InputLabelProps={{ shrink: true }}
-                  label='Last Name'
-                  variant='outlined'
-                  fullWidth
-                  error={!!errors.lastName}
-                  helperText={errors.lastName ? errors.lastName.message : ''}
-                />
-              </Grid>
-            </Grid>
-            <Grid container item>
-              <Grid item>
-                <Controller
-                  name='emailVerified'
-                  control={control}
-                  render={({ field: { onChange, value } }) => (
-                    <FormControlLabel
-                      control={<Switch checked={value} onChange={onChange} />}
-                      label='Email verified?'
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item>
-                <Controller
-                  name='suspended'
-                  control={control}
-                  render={({ field: { onChange, value } }) => (
-                    <FormControlLabel
-                      control={<Switch checked={value} onChange={onChange} />}
-                      label='Suspended?'
-                    />
-                  )}
-                />
-              </Grid>
-            </Grid>
-            <Grid item>
-              <ControlledSelect
-                control={control}
-                name='roles'
-                label='Roles'
-                multiple
-                options={[
-                  {
-                    label: 'Admin',
-                    value: 'admin',
-                  },
-                ]}
-                errors={errors}
-              />
-            </Grid>
 
-            <Grid item>
-              <Controller
-                name='mobile'
-                control={control}
-                render={({ field: { onChange, value } }) => (
-                  <MobileNumberInput
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <CardContent>
+            <Grid container direction='column' spacing={2}>
+              <Grid item>
+                <TextField
+                  {...register('email')}
+                  InputLabelProps={{ shrink: true }}
+                  label='Email Address'
+                  variant='outlined'
+                  fullWidth
+                  helperText={`Last login: ${lastLoggedInAsDate}`}
+                  disabled
+                />
+              </Grid>
+              <Grid item container spacing={2}>
+                <Grid item xs={6}>
+                  <TextField
+                    {...register('firstName')}
                     InputLabelProps={{ shrink: true }}
-                    label='Mobile Number'
+                    label='First Name'
                     variant='outlined'
                     fullWidth
-                    onChange={onChange}
-                    value={value ?? ''}
-                    error={!!errors.mobile}
-                    helperText={errors.mobile ? errors.mobile.message : ''}
+                    error={!!errors.firstName}
+                    helperText={
+                      errors.firstName ? errors.firstName.message : ''
+                    }
                   />
-                )}
-              />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    {...register('lastName')}
+                    InputLabelProps={{ shrink: true }}
+                    label='Last Name'
+                    variant='outlined'
+                    fullWidth
+                    error={!!errors.lastName}
+                    helperText={errors.lastName ? errors.lastName.message : ''}
+                  />
+                </Grid>
+              </Grid>
+              <Grid container item>
+                <Grid item>
+                  <Controller
+                    name='emailVerified'
+                    control={control}
+                    render={({ field: { onChange, value } }) => (
+                      <FormControlLabel
+                        control={<Switch checked={value} onChange={onChange} />}
+                        label='Email verified?'
+                      />
+                    )}
+                  />
+                </Grid>
+                <Grid item>
+                  <Controller
+                    name='suspended'
+                    control={control}
+                    render={({ field: { onChange, value } }) => (
+                      <FormControlLabel
+                        control={<Switch checked={value} onChange={onChange} />}
+                        label='Suspended?'
+                      />
+                    )}
+                  />
+                </Grid>
+              </Grid>
+              <Grid item>
+                <ControlledSelect
+                  control={control}
+                  name='roles'
+                  label='Roles'
+                  multiple
+                  options={[
+                    {
+                      label: 'Admin',
+                      value: 'admin',
+                    },
+                  ]}
+                  errors={errors}
+                />
+              </Grid>
+
+              <Grid item>
+                <Controller
+                  name='mobile'
+                  control={control}
+                  render={({ field: { onChange, value } }) => (
+                    <MobileNumberInput
+                      InputLabelProps={{ shrink: true }}
+                      label='Mobile Number'
+                      variant='outlined'
+                      fullWidth
+                      onChange={onChange}
+                      value={value ?? ''}
+                      error={!!errors.mobile}
+                      helperText={errors.mobile ? errors.mobile.message : ''}
+                    />
+                  )}
+                />
+              </Grid>
             </Grid>
+          </CardContent>
+          <CardActions>
             <Grid item container justifyContent='flex-end' spacing={1}>
               <Grid item>
                 <Button variant='contained' color='error' onClick={onResetMFA}>
@@ -257,7 +266,7 @@ const UserPopup: FC<UserPopupProps> = (props) => {
                 </Button>
               </Grid>
             </Grid>
-          </Grid>
+          </CardActions>
         </form>
       </Card>
     </Modal>

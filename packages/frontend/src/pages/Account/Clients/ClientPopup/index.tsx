@@ -2,6 +2,8 @@ import { FC, useEffect, useState } from 'react';
 import {
   Button,
   Card,
+  CardActions,
+  CardContent,
   CardHeader,
   Divider,
   Grid,
@@ -171,128 +173,135 @@ const ClientPopup: FC<ClientPopupProps> = (props) => {
           }
         />
         <form onSubmit={handleSubmit(onSubmit)}>
-          <Grid container direction='column' spacing={2} sx={{ p: 2 }}>
-            <Grid item>
-              <TextField
-                {...register('clientId')}
-                label='Client Id'
-                variant='outlined'
-                fullWidth
-                InputLabelProps={{ shrink: true }}
-                disabled
-              />
-            </Grid>
-            <Grid item>
-              <TextField
-                {...register('clientName')}
-                label='Client Name'
-                variant='outlined'
-                fullWidth
-                disabled={!!clientIdentifier}
-                error={!!errors.clientName}
-                helperText={errors.clientName ? errors.clientName.message : ''}
-              />
-            </Grid>
-            <Grid item container spacing={2}>
-              <Grid item xs={6}>
-                <ControlledSelect
-                  control={control}
-                  name='grants'
-                  label='Grants'
-                  multiple
-                  options={[
-                    {
-                      label: 'Authorization Code Flow',
-                      value: 'authorization_code',
-                    },
-                  ]}
-                  errors={errors}
+          <CardContent>
+            <Grid container direction='column' spacing={2}>
+              <Grid item>
+                <TextField
+                  {...register('clientId')}
+                  label='Client Id'
+                  variant='outlined'
+                  fullWidth
+                  InputLabelProps={{ shrink: true }}
+                  disabled
                 />
               </Grid>
-              <Grid item xs={6}>
-                <ControlledSelect
-                  control={control}
-                  name='scopes'
-                  label='Scopes'
-                  multiple
-                  options={[
-                    { label: 'Open ID', value: 'openid' },
-                    { label: 'Email', value: 'email' },
-                    { label: 'Phone', value: 'phone' },
-                    { label: 'Profile', value: 'profile' },
-                  ]}
-                  errors={errors}
+              <Grid item>
+                <TextField
+                  {...register('clientName')}
+                  label='Client Name'
+                  variant='outlined'
+                  fullWidth
+                  disabled={!!clientIdentifier}
+                  error={!!errors.clientName}
+                  helperText={
+                    errors.clientName ? errors.clientName.message : ''
+                  }
                 />
               </Grid>
-              <Grid item container direction='column' spacing={2}>
-                {redirectUriFields.map((field, index) => (
-                  <Grid
-                    container
-                    item
-                    key={field.id}
-                    spacing={1}
-                    alignItems='flex-start'
-                  >
-                    <Grid item xs={10}>
-                      <TextField
-                        {...register(`redirectUris.${index}.value`)}
-                        label={`Redirect URI ${index + 1}`}
-                        variant='outlined'
-                        fullWidth
-                        error={has(errors, `redirectUris.${index}.value`)}
-                        helperText={get(
-                          errors,
-                          `redirectUris.${index}.value.message`,
-                          '',
-                        )}
-                      />
+              <Grid item container spacing={2}>
+                <Grid item xs={6}>
+                  <ControlledSelect
+                    control={control}
+                    name='grants'
+                    label='Grants'
+                    multiple
+                    options={[
+                      {
+                        label: 'Authorization Code Flow',
+                        value: 'authorization_code',
+                      },
+                    ]}
+                    errors={errors}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <ControlledSelect
+                    control={control}
+                    name='scopes'
+                    label='Scopes'
+                    multiple
+                    options={[
+                      { label: 'Open ID', value: 'openid' },
+                      { label: 'Email', value: 'email' },
+                      { label: 'Phone', value: 'phone' },
+                      { label: 'Profile', value: 'profile' },
+                    ]}
+                    errors={errors}
+                  />
+                </Grid>
+                <Grid item container direction='column' spacing={2}>
+                  {redirectUriFields.map((field, index) => (
+                    <Grid
+                      container
+                      item
+                      key={field.id}
+                      spacing={1}
+                      alignItems='flex-start'
+                    >
+                      <Grid item xs={10}>
+                        <TextField
+                          {...register(`redirectUris.${index}.value`)}
+                          label={`Redirect URI ${index + 1}`}
+                          variant='outlined'
+                          fullWidth
+                          error={has(errors, `redirectUris.${index}.value`)}
+                          helperText={get(
+                            errors,
+                            `redirectUris.${index}.value.message`,
+                            '',
+                          )}
+                        />
+                      </Grid>
+                      <Grid item xs={2}>
+                        <Card
+                          sx={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            p: '10px 0',
+                            gap: '6px',
+                          }}
+                        >
+                          {isLastRedirectUri(index) && (
+                            <IconButton
+                              size='small'
+                              aria-label='add'
+                              color='success'
+                              onClick={() =>
+                                addRedirectUri({ id: uniqueId(), value: '' })
+                              }
+                            >
+                              <AddLinkRounded />
+                            </IconButton>
+                          )}
+                          {isLastRedirectUri(index) &&
+                            canDeleteRedirectUris && (
+                              <Divider orientation='vertical' flexItem />
+                            )}
+                          {canDeleteRedirectUris && (
+                            <IconButton
+                              size='small'
+                              aria-label='remove'
+                              color='error'
+                              onClick={() => removeRedirectUri(index)}
+                            >
+                              <Delete />
+                            </IconButton>
+                          )}
+                        </Card>
+                      </Grid>
                     </Grid>
-                    <Grid item xs={2}>
-                      <Card
-                        sx={{
-                          display: 'flex',
-                          justifyContent: 'center',
-                          p: '10px 0',
-                          gap: '6px',
-                        }}
-                      >
-                        {isLastRedirectUri(index) && (
-                          <IconButton
-                            size='small'
-                            aria-label='add'
-                            color='success'
-                            onClick={() =>
-                              addRedirectUri({ id: uniqueId(), value: '' })
-                            }
-                          >
-                            <AddLinkRounded />
-                          </IconButton>
-                        )}
-                        {isLastRedirectUri(index) && canDeleteRedirectUris && (
-                          <Divider orientation='vertical' flexItem />
-                        )}
-                        {canDeleteRedirectUris && (
-                          <IconButton
-                            size='small'
-                            aria-label='remove'
-                            color='error'
-                            onClick={() => removeRedirectUri(index)}
-                          >
-                            <Delete />
-                          </IconButton>
-                        )}
-                      </Card>
-                    </Grid>
-                  </Grid>
-                ))}
+                  ))}
+                </Grid>
               </Grid>
             </Grid>
-            <Grid item alignSelf='flex-end'>
+          </CardContent>
+          <CardActions>
+            <Grid item container justifyContent='flex-end'>
               <Button variant='contained' color='success' type='submit'>
                 {`${!clientIdentifier ? 'Create' : 'Update'} Client`}
               </Button>
             </Grid>
-          </Grid>
+          </CardActions>
         </form>
       </Card>
     </Modal>
