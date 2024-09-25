@@ -8,7 +8,7 @@ import {
   Grid,
   Modal,
 } from '@mui/material';
-import setupMFA from '../../../../api/setup-mfa';
+import setupMFA from '../../../../api/user/setup-mfa';
 import SubscriberInput from './SubscriberInput';
 import {
   APP_MFA,
@@ -20,7 +20,7 @@ import {
 import { isEmpty } from 'lodash';
 import isPhoneValid from '../../../../utils/is-phone-valid';
 import VerifyOtpInput from './VerifyOtpInput';
-import verifyMFA from '../../../../api/verify-mfa';
+import verifyMFA from '../../../../api/user/verify-mfa';
 import useFeedback from '../../../../hooks/useFeedback';
 import { KeyboardDoubleArrowDown } from '@mui/icons-material';
 

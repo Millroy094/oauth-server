@@ -1,4 +1,4 @@
-import { FC, startTransition, useEffect, useState } from "react";
+import { FC, startTransition, useEffect, useState } from 'react';
 import {
   Card,
   CardContent,
@@ -6,15 +6,15 @@ import {
   Grid,
   IconButton,
   Tooltip,
-} from "@mui/material";
-import { DataGrid, GridColDef, GridRowParams } from "@mui/x-data-grid";
-import getUsers from "../../../api/get-users";
-import useFeedback from "../../../hooks/useFeedback";
-import deleteUser from "../../../api/delete-user";
-import { ClearAll, PersonRemove } from "@mui/icons-material";
-import clearUserSessions from "../../../api/clear-user-sessions";
-import UserPopup from "./UserPopup";
-import { ADMIN_EMAIL } from "../../../constants";
+} from '@mui/material';
+import { DataGrid, GridColDef, GridRowParams } from '@mui/x-data-grid';
+import getUsers from '../../../api/admin/get-users';
+import useFeedback from '../../../hooks/useFeedback';
+import deleteUser from '../../../api/admin/delete-user';
+import { ClearAll, PersonRemove } from '@mui/icons-material';
+import clearUserSessions from '../../../api/admin/clear-user-sessions';
+import UserPopup from './UserPopup';
+import { ADMIN_EMAIL } from '../../../constants';
 
 interface User {
   id: string;
@@ -27,7 +27,7 @@ interface User {
 const Users: FC = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [open, setOpen] = useState(false);
-  const [selectedUserId, setSelectedUserId] = useState<string>("");
+  const [selectedUserId, setSelectedUserId] = useState<string>('');
   const { feedbackAxiosError, feedbackAxiosResponse } = useFeedback();
 
   const fetchUsers = async () => {
@@ -37,7 +37,7 @@ const Users: FC = () => {
     } catch (err) {
       feedbackAxiosError(
         err,
-        "There was an issue retreiving users, please try again"
+        'There was an issue retreiving users, please try again',
       );
     }
   };
@@ -49,12 +49,12 @@ const Users: FC = () => {
   const handleDelete = async (id: string): Promise<void> => {
     try {
       const response = await deleteUser(id);
-      feedbackAxiosResponse(response, "Successfully deleted user", "success");
+      feedbackAxiosResponse(response, 'Successfully deleted user', 'success');
       setUsers(users.filter((user) => user.id !== id));
     } catch (err) {
       feedbackAxiosError(
         err,
-        "There was an issue deleting the user, please try again"
+        'There was an issue deleting the user, please try again',
       );
     }
   };
@@ -64,13 +64,13 @@ const Users: FC = () => {
       const response = await clearUserSessions(id);
       feedbackAxiosResponse(
         response,
-        "Successfully deleted user sessions",
-        "success"
+        'Successfully deleted user sessions',
+        'success',
       );
     } catch (err) {
       feedbackAxiosError(
         err,
-        "There was an issue deleting the user sessions, please try again"
+        'There was an issue deleting the user sessions, please try again',
       );
     }
   };
@@ -89,50 +89,50 @@ const Users: FC = () => {
 
   const onClose = () => {
     setOpen(false);
-    setSelectedUserId("");
+    setSelectedUserId('');
     fetchUsers();
   };
 
   const columns: GridColDef<(typeof users)[number]>[] = [
     {
-      field: "firstName",
-      headerName: "First Name",
+      field: 'firstName',
+      headerName: 'First Name',
       width: 180,
       editable: false,
     },
     {
-      field: "lastName",
-      headerName: "Last Name",
+      field: 'lastName',
+      headerName: 'Last Name',
       width: 180,
       editable: false,
     },
     {
-      field: "email",
-      headerName: "Email",
+      field: 'email',
+      headerName: 'Email',
       width: 200,
       editable: false,
     },
     {
-      field: "mobile",
-      headerName: "Mobile",
+      field: 'mobile',
+      headerName: 'Mobile',
       width: 150,
       editable: false,
     },
     {
-      field: "id",
-      headerName: "",
+      field: 'id',
+      headerName: '',
       width: 100,
       editable: false,
       sortable: false,
       renderCell: (params) => {
         const isAdmin = params?.row?.email === ADMIN_EMAIL;
         return (
-          <Grid container alignContent="center">
+          <Grid container alignContent='center'>
             <Grid item>
-              <Tooltip title="Clear all sessions">
+              <Tooltip title='Clear all sessions'>
                 <IconButton
                   disabled={isAdmin}
-                  color="error"
+                  color='error'
                   onClick={(e) => {
                     e.stopPropagation();
                     handleDeleteSessions(params.value);
@@ -143,10 +143,10 @@ const Users: FC = () => {
               </Tooltip>
             </Grid>
             <Grid item>
-              <Tooltip title="Delete user">
+              <Tooltip title='Delete user'>
                 <IconButton
                   disabled={isAdmin}
-                  color="error"
+                  color='error'
                   onClick={(e) => {
                     e.stopPropagation();
                     handleDelete(params.value);
@@ -164,7 +164,7 @@ const Users: FC = () => {
 
   return (
     <Card elevation={0}>
-      <CardHeader title="Users" />
+      <CardHeader title='Users' />
       <CardContent>
         <DataGrid
           rows={users}

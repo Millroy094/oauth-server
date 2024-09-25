@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useEffect, useState } from 'react';
 import {
   Button,
   Card,
@@ -9,9 +9,9 @@ import {
   Modal,
   Skeleton,
   Typography,
-} from "@mui/material";
-import generateRecoveryCodes from "../../../../../api/generate-recovery-codes";
-import useFeedback from "../../../../../hooks/useFeedback";
+} from '@mui/material';
+import generateRecoveryCodes from '../../../../../api/user/generate-recovery-codes';
+import useFeedback from '../../../../../hooks/useFeedback';
 
 interface RecoveryCodeModalProps {
   open: boolean;
@@ -32,17 +32,17 @@ const RecoveryCodeModal: FC<RecoveryCodeModalProps> = (props) => {
       setRecoveryCodes(response.data.recoveryCodes);
       setLoading(false);
     } catch (err) {
-      feedbackAxiosError(err, "Failed to generate new recovery codes");
+      feedbackAxiosError(err, 'Failed to generate new recovery codes');
       handleClose();
     }
   };
 
   const exportRecoveryCodes = () => {
-    const fileData = recoveryCodes.join("\r\n");
-    const blob = new Blob([fileData], { type: "text/plain" });
+    const fileData = recoveryCodes.join('\r\n');
+    const blob = new Blob([fileData], { type: 'text/plain' });
     const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.download = "recoveryCodes.txt";
+    const link = document.createElement('a');
+    link.download = 'recoveryCodes.txt';
     link.href = url;
     link.click();
   };
@@ -63,23 +63,23 @@ const RecoveryCodeModal: FC<RecoveryCodeModalProps> = (props) => {
     <Modal open={open} onClose={handleClose}>
       <Card
         sx={{
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
           width: 600,
-          bgcolor: "background.paper",
+          bgcolor: 'background.paper',
           p: 2,
         }}
       >
-        <CardHeader title="Recovery codes" />
+        <CardHeader title='Recovery codes' />
         <CardContent>
           {loading ? (
             <>
-              <Skeleton width="100%" height="20px" />
-              <Skeleton width="100%" height="20px" />
-              <Skeleton width="100%" height="20px" />
-              <Skeleton width="100%" height="300px" />
+              <Skeleton width='100%' height='20px' />
+              <Skeleton width='100%' height='20px' />
+              <Skeleton width='100%' height='20px' />
+              <Skeleton width='100%' height='300px' />
             </>
           ) : (
             <>
@@ -102,7 +102,7 @@ const RecoveryCodeModal: FC<RecoveryCodeModalProps> = (props) => {
               {recoveryCodes?.length === 10 && (
                 <Grid
                   container
-                  sx={{ background: "#efefef", padding: "15px", marginTop: 2 }}
+                  sx={{ background: '#efefef', padding: '15px', marginTop: 2 }}
                 >
                   {[
                     recoveryCodes.slice(0, 5),
@@ -112,13 +112,13 @@ const RecoveryCodeModal: FC<RecoveryCodeModalProps> = (props) => {
                       key={`recoverycodechuck_${index}`}
                       container
                       item
-                      direction="column"
+                      direction='column'
                       xs={6}
                       spacing={1}
                     >
                       {chunk.map((recoveryCode) => (
                         <Grid item key={recoveryCode}>
-                          <Typography variant="caption">
+                          <Typography variant='caption'>
                             {recoveryCode}
                           </Typography>
                         </Grid>
@@ -130,10 +130,10 @@ const RecoveryCodeModal: FC<RecoveryCodeModalProps> = (props) => {
             </>
           )}
         </CardContent>
-        <CardActions sx={{ display: "flex", justifyContent: "flex-end" }}>
+        <CardActions sx={{ display: 'flex', justifyContent: 'flex-end' }}>
           <Button
-            variant="contained"
-            color="error"
+            variant='contained'
+            color='error'
             onClick={exportRecoveryCodes}
           >
             Download Recovery Codes

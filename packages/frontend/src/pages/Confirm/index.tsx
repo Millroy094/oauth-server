@@ -12,7 +12,7 @@ import {
 
 import { useParams } from 'react-router-dom';
 
-import authorizeInteraction from '../../api/authorize-interaction';
+import authorizeInteraction from '../../api/oidc/authorize-interaction';
 import useFeedback from '../../hooks/useFeedback';
 
 const StyledCard = styled(Card)({
