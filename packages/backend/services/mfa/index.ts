@@ -28,7 +28,7 @@ class MFAService {
         ({ subscriber, verified }, type) => ({ type, subscriber, verified })
       ),
       preference: userAccountMfaSetting.mfa.preference,
-      recoveryCodeCount: userAccountMfaSetting.mfa.recoveryCodes.length,
+      recoveryCodeCount: userAccountMfaSetting.mfa.recoveryCodes?.length ?? 0,
     };
   }
 
