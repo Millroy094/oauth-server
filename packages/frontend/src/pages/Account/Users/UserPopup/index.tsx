@@ -19,6 +19,7 @@ import useFeedback from "../../../../hooks/useFeedback";
 import getUser from "../../../../api/get-user";
 import { MobileNumberInput } from "../../../../components/MobileNumberInput";
 import ControlledSelect from "../../../../components/ControlledSelect";
+import { IUserPopupInput } from "./type";
 
 interface UserPopupProps {
   open: boolean;
@@ -40,7 +41,7 @@ const defaultValues: IUserPopupInput = {
 const UserPopup: FC<UserPopupProps> = (props) => {
   const { userIdentifier, open, onClose } = props;
   const [user, setUser] = useState<IUserPopupInput>(defaultValues);
-  const { feebackAxiosResponse, feedbackAxiosError } = useFeedback();
+  const { feedbackAxiosResponse, feedbackAxiosError } = useFeedback();
   const {
     watch,
     control,
@@ -103,7 +104,7 @@ const UserPopup: FC<UserPopupProps> = (props) => {
     try {
       const response = await updateUser(userIdentifier, data);
 
-      feebackAxiosResponse(response, "Successfully updated user", "success");
+      feedbackAxiosResponse(response, "Successfully updated user", "success");
       reset();
       handleClose();
     } catch (err) {

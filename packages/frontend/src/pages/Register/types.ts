@@ -1,4 +1,4 @@
-interface IRegisterFormInput {
+export interface IRegisterFormInput {
   firstName: string;
   lastName: string;
   email: string;

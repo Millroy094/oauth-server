@@ -3,7 +3,7 @@ interface IRedirectUri {
   value: string;
 }
 
-interface IClientPopupInput {
+export interface IClientPopupInput {
   clientId: string;
   clientName: string;
   scopes: string[];

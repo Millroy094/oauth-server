@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC } from "react";
 import {
   Link,
   Button,
@@ -10,24 +10,25 @@ import {
   TextField,
   Typography,
   styled,
-} from '@mui/material';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { Controller, useForm } from 'react-hook-form';
-import { omit } from 'lodash';
-import PasswordField from '../../components/PasswordField';
-import schema from './schema';
-import PasswordPopover from '../../components/PasswordPopover';
-import registerUser from '../../api/register-user';
-import { useNavigate } from 'react-router-dom';
-import useFeedback from '../../hooks/useFeedback';
-import { MobileNumberInput } from '../../components/MobileNumberInput';
+} from "@mui/material";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { Controller, useForm } from "react-hook-form";
+import { omit } from "lodash";
+import PasswordField from "../../components/PasswordField";
+import schema from "./schema";
+import PasswordPopover from "../../components/PasswordPopover";
+import registerUser from "../../api/register-user";
+import { useNavigate } from "react-router-dom";
+import useFeedback from "../../hooks/useFeedback";
+import { MobileNumberInput } from "../../components/MobileNumberInput";
+import { IRegisterFormInput } from "./types";
 
 const StyledCard = styled(Card)({
-  borderTop: '2px solid red',
+  borderTop: "2px solid red",
 });
 
 const Register: FC = () => {
-  const { feebackAxiosResponse, feedbackAxiosError } = useFeedback();
+  const { feedbackAxiosResponse, feedbackAxiosError } = useFeedback();
   const navigate = useNavigate();
   const {
     control,
@@ -37,15 +38,15 @@ const Register: FC = () => {
     reset,
   } = useForm<IRegisterFormInput>({
     resolver: yupResolver(schema, {}),
-    criteriaMode: 'all',
-    mode: 'onChange',
+    criteriaMode: "all",
+    mode: "onChange",
     defaultValues: {
-      firstName: '',
-      lastName: '',
-      email: '',
-      password: '',
-      confirmPassword: '',
-      mobile: '',
+      firstName: "",
+      lastName: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+      mobile: "",
     },
   });
 
@@ -62,95 +63,99 @@ const Register: FC = () => {
 
   const onSubmit = async (data: IRegisterFormInput): Promise<void> => {
     try {
-      const response = await registerUser(omit(data, 'confirmPassword'));
-      feebackAxiosResponse(response, 'Successfully registered user', 'success');
+      const response = await registerUser(omit(data, "confirmPassword"));
+      feedbackAxiosResponse(
+        response,
+        "Successfully registered user",
+        "success"
+      );
       reset();
-      navigate('/login');
+      navigate("/login");
     } catch (err) {
       feedbackAxiosError(
         err,
-        'There was an issue registering the user, please try again',
+        "There was an issue registering the user, please try again"
       );
     }
   };
 
   return (
-    <Container maxWidth='sm'>
+    <Container maxWidth="sm">
       <StyledCard sx={{ marginTop: 15 }}>
         <CardHeader
-          title='Register a new user'
-          titleTypographyProps={{ align: 'center' }}
+          title="Register a new user"
+          titleTypographyProps={{ align: "center" }}
           subheader={
             <>
-              <Typography variant='caption'>Already registered?</Typography>
+              <Typography variant="caption">Already registered?</Typography>
               <Link
-                variant='caption'
-                underline='none'
-                sx={{ cursor: 'pointer' }}
-                onClick={() => navigate('/login')}
+                variant="caption"
+                underline="none"
+                sx={{ cursor: "pointer" }}
+                onClick={() => navigate("/login")}
               >
                 Click here
               </Link>
-              <Typography variant='caption'>to login</Typography>
+              <Typography variant="caption">to login</Typography>
             </>
           }
           subheaderTypographyProps={{
-            display: 'flex',
-            gap: '4px',
-            justifyContent: 'center',
+            display: "flex",
+            gap: "4px",
+            justifyContent: "center",
           }}
         />
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)}>
-            <Grid container direction='column' spacing={2} sx={{ p: 2 }}>
+            <Grid container direction="column" spacing={2} sx={{ p: 2 }}>
               <Grid item container spacing={2}>
                 <Grid item xs={6}>
                   <TextField
-                    {...register('firstName')}
-                    label='First Name'
-                    variant='outlined'
+                    {...register("firstName")}
+                    label="First Name"
+                    variant="outlined"
                     fullWidth
                     error={!!errors.firstName}
                     helperText={
-                      errors.firstName ? errors.firstName.message : ''
+                      errors.firstName ? errors.firstName.message : ""
                     }
                   />
                 </Grid>
                 <Grid item xs={6}>
                   <TextField
-                    {...register('lastName')}
-                    label='Last Name'
-                    variant='outlined'
+                    {...register("lastName")}
+                    label="Last Name"
+                    variant="outlined"
                     fullWidth
                     error={!!errors.lastName}
-                    helperText={errors.lastName ? errors.lastName.message : ''}
+                    helperText={errors.lastName ? errors.lastName.message : ""}
                   />
                 </Grid>
               </Grid>
               <Grid item>
                 <TextField
-                  {...register('email')}
-                  label='Email Address'
-                  variant='outlined'
+                  {...register("email")}
+                  label="Email Address"
+                  variant="outlined"
                   fullWidth
                   error={!!errors.email}
-                  helperText={errors.email ? errors.email.message : ''}
+                  helperText={errors.email ? errors.email.message : ""}
                 />
               </Grid>
               <Grid item>
                 <Controller
-                  name='mobile'
+                  name="mobile"
                   control={control}
                   render={({ field: { onChange, value, disabled } }) => (
                     <MobileNumberInput
                       InputLabelProps={{ shrink: true }}
-                      label='Mobile Number'
-                      variant='outlined'
+                      label="Mobile Number"
+                      variant="outlined"
                       fullWidth
                       onChange={onChange}
-                      value={value ?? ''}
+                      value={value ?? ""}
                       error={!!errors.mobile}
-                      helperText={errors.mobile ? errors.mobile.message : ''}
+                      helperText={errors.mobile ? errors.mobile.message : ""}
                       readOnly={disabled ?? false}
                     />
                   )}
@@ -158,8 +163,8 @@ const Register: FC = () => {
               </Grid>
               <Grid item>
                 <PasswordField
-                  name='password'
-                  label='Password'
+                  name="password"
+                  label="Password"
                   onFocus={handleFocus}
                   onBlur={handleClose}
                   register={register}
@@ -168,16 +173,16 @@ const Register: FC = () => {
               </Grid>
               <Grid item>
                 <PasswordField
-                  name='confirmPassword'
-                  label='Confirm Password'
+                  name="confirmPassword"
+                  label="Confirm Password"
                   onFocus={handleFocus}
                   onBlur={handleClose}
                   register={register}
                   error={!!errors.confirmPassword}
                 />
               </Grid>
-              <Grid item alignSelf='flex-end'>
-                <Button variant='contained' color='error' type='submit'>
+              <Grid item alignSelf="flex-end">
+                <Button variant="contained" color="error" type="submit">
                   Register
                 </Button>
               </Grid>

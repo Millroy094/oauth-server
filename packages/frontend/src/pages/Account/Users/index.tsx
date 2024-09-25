@@ -28,7 +28,7 @@ const Users: FC = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [open, setOpen] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState<string>("");
-  const { feedbackAxiosError, feebackAxiosResponse } = useFeedback();
+  const { feedbackAxiosError, feedbackAxiosResponse } = useFeedback();
 
   const fetchUsers = async () => {
     try {
@@ -49,7 +49,7 @@ const Users: FC = () => {
   const handleDelete = async (id: string): Promise<void> => {
     try {
       const response = await deleteUser(id);
-      feebackAxiosResponse(response, "Successfully deleted user", "success");
+      feedbackAxiosResponse(response, "Successfully deleted user", "success");
       setUsers(users.filter((user) => user.id !== id));
     } catch (err) {
       feedbackAxiosError(
@@ -62,7 +62,7 @@ const Users: FC = () => {
   const handleDeleteSessions = async (id: string): Promise<void> => {
     try {
       const response = await clearUserSessions(id);
-      feebackAxiosResponse(
+      feedbackAxiosResponse(
         response,
         "Successfully deleted user sessions",
         "success"

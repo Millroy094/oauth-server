@@ -1,4 +1,4 @@
-interface ILoginFormInput {
+export interface ILoginFormInput {
   email: string;
   password: string;
   mfaType?: string;

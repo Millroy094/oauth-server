@@ -1,4 +1,4 @@
-interface IUserPopupInput {
+export interface IUserPopupInput {
   firstName: string;
   lastName: string;
   email: string;

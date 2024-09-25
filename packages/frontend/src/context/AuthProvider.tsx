@@ -5,6 +5,7 @@ import useFeedback from "../hooks/useFeedback";
 import logoutUser from "../api/logout-user";
 import { useSnackbar } from "notistack";
 import isAuthenticated from "../api/is-authenicated-user";
+import { ILoginFormInput } from "../pages/Login/types";
 
 interface IUser {
   userId: string;

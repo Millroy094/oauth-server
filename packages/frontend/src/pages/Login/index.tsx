@@ -24,6 +24,7 @@ import getLoginConfiguration from "../../api/get-login-configuration";
 import VerifyMFAOtpInput from "./VerifyOtpInput";
 import { EMAIL_VERIFICATION } from "../../constants";
 import RecoveryCodeInput from "./RecoveryCodeInput";
+import { ILoginFormInput } from "./types";
 
 const StyledCard = styled(Card)({
   borderTop: "2px solid red",

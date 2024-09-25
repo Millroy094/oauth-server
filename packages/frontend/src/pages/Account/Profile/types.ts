@@ -1,4 +1,4 @@
-interface IProfileFormInput {
+export interface IProfileFormInput {
   firstName: string;
   lastName: string;
   email: string;

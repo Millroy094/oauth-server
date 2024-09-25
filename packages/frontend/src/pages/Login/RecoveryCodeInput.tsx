@@ -13,6 +13,7 @@ import {
   FieldErrors,
   UseFormRegister,
 } from "react-hook-form";
+import { ILoginFormInput } from "./types";
 
 interface IRecoveryCodeInput {
   control: Control<ILoginFormInput>;

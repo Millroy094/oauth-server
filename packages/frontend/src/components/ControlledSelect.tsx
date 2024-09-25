@@ -1,12 +1,13 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   FormControl,
   FormHelperText,
   InputLabel,
   MenuItem,
   Select,
-} from '@mui/material';
-import { FC } from 'react';
-import { Control, Controller, FieldErrors } from 'react-hook-form';
+} from "@mui/material";
+import { FC } from "react";
+import { Control, Controller, FieldErrors } from "react-hook-form";
 
 type ControlledSelectOption = {
   label: string;
@@ -51,7 +52,7 @@ const ControlledSelect: FC<ControlledSelectProps> = (props) => {
       />
       {errors[name] && (
         <FormHelperText error>
-          {(errors[name].message as string) ?? ''}
+          {(errors[name].message as string) ?? ""}
         </FormHelperText>
       )}
     </FormControl>

@@ -20,6 +20,7 @@ import { FORGOT_PASSWORD } from "../../constants";
 import useFeedback from "../../hooks/useFeedback";
 import changePassword from "../../api/change-password";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { IForgotPasswordFormInput } from "./types";
 
 const StyledCard = styled(Card)({
   borderTop: "2px solid red",
@@ -28,7 +29,7 @@ const StyledCard = styled(Card)({
 const ForgotPassword = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const { feedback, feedbackAxiosError, feebackAxiosResponse } = useFeedback();
+  const { feedback, feedbackAxiosError, feedbackAxiosResponse } = useFeedback();
   const {
     reset,
     watch,
@@ -90,7 +91,7 @@ const ForgotPassword = () => {
     } else if (otp && password) {
       try {
         const response = await changePassword({ email, otp, password });
-        feebackAxiosResponse(
+        feedbackAxiosResponse(
           response,
           "Successfully Reset Password!",
           "success"

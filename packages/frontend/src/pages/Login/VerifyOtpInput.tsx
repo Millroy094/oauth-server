@@ -11,6 +11,7 @@ import useTimer from "../../hooks/useTimer";
 import sendOtp from "../../api/send-otp";
 import useFeedback from "../../hooks/useFeedback";
 import { Control, Controller } from "react-hook-form";
+import { ILoginFormInput } from "./types";
 
 interface IVerifyOtpInput {
   email: string;

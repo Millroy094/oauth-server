@@ -1,4 +1,4 @@
-interface IForgotPasswordFormInput {
+export interface IForgotPasswordFormInput {
   email: string;
   emailSent: boolean;
   otp?: string;
