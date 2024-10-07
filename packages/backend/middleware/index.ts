@@ -1,4 +1,4 @@
-import Provider from 'oidc-provider';
+import Provider from "oidc-provider";
 
 declare global {
   namespace Express {
@@ -9,6 +9,6 @@ declare global {
   }
 }
 
-export { default as addOIDCProvider } from './add-oidc-provider';
-export { default as authenicate } from './authenticate';
-export { default as authorize } from './authorize';
+export { default as addOIDCProvider } from "./add-oidc-provider";
+export { default as authenticate } from "./authenticate";
+export { default as authorize } from "./authorize";

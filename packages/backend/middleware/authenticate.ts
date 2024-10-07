@@ -76,7 +76,11 @@ const validateTokensFromCookies = (req: Request, res: Response) => {
   }
 };
 
-const authenicate = async (req: Request, res: Response, next: NextFunction) => {
+const authenticate = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     validateTokensFromCookies(req, res);
 
@@ -94,4 +98,4 @@ const authenicate = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-export default authenicate;
+export default authenticate;

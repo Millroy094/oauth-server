@@ -1,76 +1,76 @@
-import { Router } from 'express';
-import { AdminController } from '../controllers';
-import { authenicate, authorize } from '../middleware';
+import { Router } from "express";
+import { AdminController } from "../controllers";
+import { authenticate, authorize } from "../middleware";
 
 const router = Router();
 
 router.get(
-  '/clients',
-  authenicate,
-  authorize(['admin']),
-  AdminController.getClients,
+  "/clients",
+  authenticate,
+  authorize(["admin"]),
+  AdminController.getClients
 );
 router.post(
-  '/clients/new',
-  authenicate,
-  authorize(['admin']),
-  AdminController.createClient,
+  "/clients/new",
+  authenticate,
+  authorize(["admin"]),
+  AdminController.createClient
 );
 router.get(
-  '/clients/:id',
-  authenicate,
-  authorize(['admin']),
-  AdminController.getClient,
+  "/clients/:id",
+  authenticate,
+  authorize(["admin"]),
+  AdminController.getClient
 );
 router.put(
-  '/clients/:id',
-  authenicate,
-  authorize(['admin']),
-  AdminController.updateClient,
+  "/clients/:id",
+  authenticate,
+  authorize(["admin"]),
+  AdminController.updateClient
 );
 router.delete(
-  '/clients/:id',
-  authenicate,
-  authorize(['admin']),
-  AdminController.deleteClient,
+  "/clients/:id",
+  authenticate,
+  authorize(["admin"]),
+  AdminController.deleteClient
 );
 
 router.get(
-  '/users',
-  authenicate,
-  authorize(['admin']),
-  AdminController.getUsers,
+  "/users",
+  authenticate,
+  authorize(["admin"]),
+  AdminController.getUsers
 );
 router.get(
-  '/users/:id',
-  authenicate,
-  authorize(['admin']),
-  AdminController.getUser,
+  "/users/:id",
+  authenticate,
+  authorize(["admin"]),
+  AdminController.getUser
 );
 router.put(
-  '/users/:id',
-  authenicate,
-  authorize(['admin']),
-  AdminController.updateUser,
+  "/users/:id",
+  authenticate,
+  authorize(["admin"]),
+  AdminController.updateUser
 );
 router.delete(
-  '/users/:id',
-  authenicate,
-  authorize(['admin']),
-  AdminController.deleteUser,
+  "/users/:id",
+  authenticate,
+  authorize(["admin"]),
+  AdminController.deleteUser
 );
 router.delete(
-  '/users/:id/sessions',
-  authenicate,
-  authorize(['admin']),
-  AdminController.deleteUserSessions,
+  "/users/:id/sessions",
+  authenticate,
+  authorize(["admin"]),
+  AdminController.deleteUserSessions
 );
 
 router.post(
-  '/users/:id/mfa-reset',
-  authenicate,
-  authorize(['admin']),
-  AdminController.resetMFA,
+  "/users/:id/mfa-reset",
+  authenticate,
+  authorize(["admin"]),
+  AdminController.resetMFA
 );
 
 export default router;
