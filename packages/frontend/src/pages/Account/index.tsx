@@ -39,7 +39,7 @@ export default function Account() {
   const [value, setValue] = React.useState(0);
   const Auth = useAuth();
 
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+  const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
 

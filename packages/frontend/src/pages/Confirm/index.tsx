@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { FC } from "react";
 import {
   Button,
   Card,
@@ -8,15 +8,15 @@ import {
   Grid,
   Typography,
   styled,
-} from '@mui/material';
+} from "@mui/material";
 
-import { useParams } from 'react-router-dom';
+import { useParams } from "react-router-dom";
 
-import authorizeInteraction from '../../api/oidc/authorize-interaction';
-import useFeedback from '../../hooks/useFeedback';
+import authorizeInteraction from "../../api/oidc/authorize-interaction";
+import useFeedback from "../../hooks/useFeedback";
 
 const StyledCard = styled(Card)({
-  borderTop: '2px solid red',
+  borderTop: "2px solid red",
 });
 
 const Confirm: FC = () => {
@@ -25,23 +25,23 @@ const Confirm: FC = () => {
   const onAuthorize = async (authorize: boolean): Promise<void> => {
     try {
       const response = await authorizeInteraction(
-        interactionId ?? '',
-        authorize,
+        interactionId ?? "",
+        authorize
       );
       if (response.data.redirect) {
         window.location.href = response.data.redirect;
       }
     } catch (err) {
-      feedbackAxiosError(err, 'Failed to authorize request, please try again.');
+      feedbackAxiosError(err, "Failed to authorize request, please try again.");
     }
   };
 
   return (
-    <Container maxWidth='sm'>
+    <Container maxWidth="sm">
       <StyledCard sx={{ marginTop: 15 }}>
-        <CardHeader title='Authorize' />
+        <CardHeader title="Authorize" />
         <CardContent>
-          <Grid container direction='column' spacing={2}>
+          <Grid container direction="column" spacing={2}>
             <Grid item>
               <Typography>
                 Can you confirm you want to authorize this request?
@@ -50,18 +50,18 @@ const Confirm: FC = () => {
             <Grid item container spacing={1}>
               <Grid item>
                 <Button
-                  variant='contained'
+                  variant="contained"
                   onClick={() => onAuthorize(true)}
-                  color='success'
+                  color="success"
                 >
                   Yes
                 </Button>
               </Grid>
               <Grid item>
                 <Button
-                  variant='contained'
+                  variant="contained"
                   onClick={() => onAuthorize(false)}
-                  color='error'
+                  color="error"
                 >
                   No
                 </Button>

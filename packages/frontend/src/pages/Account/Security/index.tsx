@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import { FC } from "react";
 
 import Sessions from "./Session";
 import MFA from "./MFA";

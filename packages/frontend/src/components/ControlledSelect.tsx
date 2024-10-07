@@ -50,9 +50,9 @@ const ControlledSelect: FC<ControlledSelectProps> = (props) => {
         name={name}
         control={control}
       />
-      {errors[name] && (
+      {errors && errors[name] && (
         <FormHelperText error>
-          {(errors[name].message as string) ?? ""}
+          {(errors[name]?.message as string) ?? ""}
         </FormHelperText>
       )}
     </FormControl>
