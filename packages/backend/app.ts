@@ -32,12 +32,16 @@ class Application {
   }
 
   private setupMiddleware(): void {
-    this.expressApp.use(
-      cors({
-        origin: ["http://localhost:5173"],
-        credentials: true,
-      })
-    );
+    const NODE_ENV = config.get("env");
+
+    if (NODE_ENV === "development") {
+      this.expressApp.use(
+        cors({
+          origin: ["http://localhost:5173"],
+          credentials: true,
+        })
+      );
+    }
     this.expressApp.use(cookieParser());
     this.expressApp.use(bodyParser.json());
     this.expressApp.use(addOIDCProvider);
