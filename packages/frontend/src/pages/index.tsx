@@ -1,4 +1,4 @@
-import { lazy, useEffect } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import {
   Route,
   Routes,
@@ -6,12 +6,14 @@ import {
   useNavigate,
   useSearchParams,
 } from "react-router-dom";
+import { CirclesWithBar } from "react-loader-spinner";
 
 import getInteractionStatus from "../api/oidc/get-interaction-status";
 import { PUBLIC_ROUTES } from "../constants";
 import useFeedback from "../hooks/useFeedback";
 import globalRouter from "../utils/global-router";
 import { useAuth } from "../context/AuthProvider";
+import { Container } from "@mui/material";
 
 const Login = lazy(() => import("./Login"));
 const Confirm = lazy(() => import("./Confirm"));
@@ -51,14 +53,41 @@ function Pages() {
   }, []);
 
   return (
-    <Routes>
-      <Route path={`/registration`} element={<Register />} />
-      <Route path={`/login`} element={<Login />} />
-      <Route path={`/forgot-password`} element={<ForgotPassword />} />
-      <Route path={`/account`} element={<Account />} />
-      <Route path={`/oauth/login/:interactionId`} element={<Login />} />
-      <Route path={`/oauth/consent/:interactionId`} element={<Confirm />} />
-    </Routes>
+    <Suspense
+      fallback={
+        <Container
+          maxWidth="md"
+          sx={{
+            minHeight: "500px",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <CirclesWithBar
+            height="100"
+            width="100"
+            color="#4fa94d"
+            outerCircleColor="#4fa94d"
+            innerCircleColor="#4fa94d"
+            barColor="#4fa94d"
+            ariaLabel="circles-with-bar-loading"
+            wrapperStyle={{}}
+            wrapperClass=""
+            visible={true}
+          />
+        </Container>
+      }
+    >
+      <Routes>
+        <Route path={`/registration`} element={<Register />} />
+        <Route path={`/login`} element={<Login />} />
+        <Route path={`/forgot-password`} element={<ForgotPassword />} />
+        <Route path={`/account`} element={<Account />} />
+        <Route path={`/oauth/login/:interactionId`} element={<Login />} />
+        <Route path={`/oauth/consent/:interactionId`} element={<Confirm />} />
+      </Routes>
+    </Suspense>
   );
 }
 
