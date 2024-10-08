@@ -6,7 +6,9 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon --exec node --experimental-specifier-resolution=node --loader ts-node/esm index.ts",
+    "start": "pm2 start pm2-process.yml --no-daemon",
     "build": "tsc",
+    "generateJwks": "node --experimental-specifier-resolution=node --loader ts-node/esm ./scripts/generate-jwk.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",

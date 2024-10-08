@@ -1,0 +1,10 @@
+apps:
+  - name: "OAuth Server"
+    script: "./index.js"
+    instances: 4
+    max_memory_restart: "260M"
+    max_restarts: 20
+    merge_logs: true
+    env:
+      NODE_ENV: "production"
+      PORT: 3000,
