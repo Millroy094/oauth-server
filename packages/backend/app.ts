@@ -1,5 +1,7 @@
 import express from "express";
 import path from "path";
+import https from "https";
+import fs from "fs";
 import dynamoose from "dynamoose";
 import cors from "cors";
 import bodyParser from "body-parser";
@@ -10,15 +12,15 @@ import { addOIDCProvider } from "./middleware";
 
 class Application {
   private readonly expressApp;
+  private readonly environment;
 
   constructor() {
     this.expressApp = express();
+    this.environment = config.get("env");
   }
 
   private setupDependencies(): void {
-    const NODE_ENV = config.get("env");
-
-    if (NODE_ENV === "development") {
+    if (this.environment === "development") {
       const ddb = new dynamoose.aws.ddb.DynamoDB({
         endpoint: config.get("db"),
         credentials: {
@@ -32,9 +34,7 @@ class Application {
   }
 
   private setupMiddleware(): void {
-    const NODE_ENV = config.get("env");
-
-    if (NODE_ENV === "development") {
+    if (this.environment === "development") {
       this.expressApp.use(
         cors({
           origin: ["http://localhost:5173"],
@@ -70,12 +70,26 @@ class Application {
     this.expressApp.use("/api/admin", adminRoutes);
   }
 
+  private openConnection(): void {
+    const httpsServer = https.createServer(
+      {
+        key: fs.readFileSync("./certs/key.pem"),
+        cert: fs.readFileSync("./certs/cert.pem"),
+      },
+      this.expressApp
+    );
+
+    httpsServer.listen(3000, () => {
+      console.log("HTTPS Server running on port 3000");
+    });
+  }
+
   public start() {
     this.setupDependencies();
     this.setupMiddleware();
     this.setupRoutes();
     this.setupWebsite();
-    this.expressApp.listen(3000);
+    this.openConnection();
   }
 }
 
