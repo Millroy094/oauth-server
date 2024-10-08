@@ -1,5 +1,5 @@
 import crypto from "crypto";
-import config from "../support/env-config";
+import config from "../support/env-config.ts";
 
 const encryptionSecretKey = config.get("encryption.secret");
 const encryptionSecretIV = config.get("encryption.secretiv");

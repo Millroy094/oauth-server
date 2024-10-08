@@ -2,9 +2,9 @@ import { Configuration } from "oidc-provider";
 import fs from "fs";
 import path from "path";
 import DynamoDBAdapter from "../adapter/DynamoDbAdapter";
-import { User } from "../models";
-import { ClientService } from "../services";
-import config from "./env-config";
+import { User } from "../models/index.ts";
+import { ClientService } from "../services/index.ts";
+import config from "./env-config.ts";
 
 const getConfiguration = async (): Promise<Configuration> => {
   const clients = await ClientService.getClients();

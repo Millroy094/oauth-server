@@ -1,21 +1,25 @@
-import { Request, Response } from 'express';
-import jwt from 'jsonwebtoken';
-import { MFAService, OIDCService, UserService } from '../services';
-import config from '../support/env-config';
-import { ACCESS_TOKEN, HTTP_STATUSES, REFRESH_TOKEN } from '../constants';
+import { Request, Response } from "express";
+import jwt from "jsonwebtoken";
+import { MFAService, OIDCService, UserService } from "../services/index.ts";
+import config from "../support/env-config.ts";
+import {
+  ACCESS_TOKEN,
+  HTTP_STATUSES,
+  REFRESH_TOKEN,
+} from "../constants/index.ts";
 
 class UserController {
   public static async register(req: Request, res: Response) {
     try {
       await UserService.createUser(req.body);
       res
-        .json({ message: 'Successfully registered user!' })
+        .json({ message: "Successfully registered user!" })
         .status(HTTP_STATUSES.ok);
     } catch (err) {
       console.log(err);
       res
         .status(HTTP_STATUSES.serverError)
-        .json({ error: 'Failed registering user' });
+        .json({ error: "Failed registering user" });
     }
   }
 
@@ -23,7 +27,7 @@ class UserController {
     try {
       const user = await UserService.validateUserCredentials(
         req.body.email,
-        req.body.password,
+        req.body.password
       );
 
       if (!user.emailVerified && req.body.otp) {
@@ -32,13 +36,13 @@ class UserController {
         await MFAService.validateRecoveryCode(
           user.userId,
           req.body.recoveryCode,
-          req.body.resetMfa,
+          req.body.resetMfa
         );
       } else if (user.mfa.preference && req.body.otp) {
         await MFAService.verifyMFA(
           user.userId,
           user.mfa.preference,
-          req.body.otp,
+          req.body.otp
         );
       }
 
@@ -50,39 +54,39 @@ class UserController {
 
       const accessToken = jwt.sign(
         payload,
-        config.get('authentication.accessTokenSecret'),
+        config.get("authentication.accessTokenSecret"),
         {
-          expiresIn: config.get('authentication.accessTokenExpiry'),
-        },
+          expiresIn: config.get("authentication.accessTokenExpiry"),
+        }
       );
 
       const refreshToken = jwt.sign(
         payload,
-        config.get('authentication.refreshTokenSecret'),
+        config.get("authentication.refreshTokenSecret"),
         {
-          expiresIn: config.get('authentication.refreshTokenExpiry'),
-        },
+          expiresIn: config.get("authentication.refreshTokenExpiry"),
+        }
       );
 
       res
         .cookie(ACCESS_TOKEN, accessToken, {
           httpOnly: true,
-          secure: config.get('env') === 'production',
+          secure: config.get("env") === "production",
         })
         .cookie(REFRESH_TOKEN, refreshToken, {
           httpOnly: true,
-          secure: config.get('env') === 'production',
+          secure: config.get("env") === "production",
         })
         .status(200)
         .json({
           user: payload,
-          message: 'Login Successful',
+          message: "Login Successful",
         });
     } catch (err) {
       console.log(err);
       res
         .status(HTTP_STATUSES.unauthorised)
-        .json({ error: 'Invalid username or password' });
+        .json({ error: "Invalid username or password" });
     }
   }
 
@@ -92,13 +96,13 @@ class UserController {
       .clearCookie(REFRESH_TOKEN)
       .status(HTTP_STATUSES.ok)
       .json({
-        message: 'Successfully logged out',
+        message: "Successfully logged out",
       });
   }
 
   public static async isAuthenticated(req: Request, res: Response) {
     try {
-      const userAccount = await UserService.getUserById(req.user?.userId ?? '');
+      const userAccount = await UserService.getUserById(req.user?.userId ?? "");
 
       res.status(HTTP_STATUSES.ok).json({
         user: { ...req.user, roles: userAccount?.roles ?? [] },
@@ -107,7 +111,7 @@ class UserController {
       console.log(err);
       res
         .status(HTTP_STATUSES.notFound)
-        .json({ error: 'There was an issue checking authentication status' });
+        .json({ error: "There was an issue checking authentication status" });
     }
   }
 
@@ -122,7 +126,7 @@ class UserController {
       console.log(err);
       res
         .status(HTTP_STATUSES.notFound)
-        .json({ error: 'There was an issue fetching user info' });
+        .json({ error: "There was an issue fetching user info" });
     }
   }
 
@@ -133,12 +137,12 @@ class UserController {
       await UserService.updateUser(userId, req.body);
       res
         .status(HTTP_STATUSES.ok)
-        .json({ message: 'Successfully updated user record!' });
+        .json({ message: "Successfully updated user record!" });
     } catch (err) {
       console.log(err);
       res
         .status(HTTP_STATUSES.notFound)
-        .json({ error: 'There was an issue updating user info' });
+        .json({ error: "There was an issue updating user info" });
     }
   }
 
@@ -152,7 +156,7 @@ class UserController {
       console.log(err);
       res
         .status(HTTP_STATUSES.notFound)
-        .json({ error: 'Unable to retreive user sessions' });
+        .json({ error: "Unable to retreive user sessions" });
     }
   }
 
@@ -163,12 +167,12 @@ class UserController {
       await OIDCService.deleteAllSessions(userId);
       res
         .status(HTTP_STATUSES.ok)
-        .json({ message: 'Successfully deleted all user sessions' });
+        .json({ message: "Successfully deleted all user sessions" });
     } catch (err) {
       console.log(err);
       res
         .status(HTTP_STATUSES.serverError)
-        .json({ error: 'Unable to delete user sessions' });
+        .json({ error: "Unable to delete user sessions" });
     }
   }
 
@@ -178,12 +182,12 @@ class UserController {
       await OIDCService.deleteSession(sessionId);
       res
         .status(HTTP_STATUSES.ok)
-        .json({ message: 'Successfully deleted all user sessions' });
+        .json({ message: "Successfully deleted all user sessions" });
     } catch (err) {
       console.log(err);
       res
         .status(HTTP_STATUSES.serverError)
-        .json({ error: 'Unable to delete user sessions' });
+        .json({ error: "Unable to delete user sessions" });
     }
   }
 
@@ -197,7 +201,7 @@ class UserController {
       console.log(err);
       res
         .status(HTTP_STATUSES.notFound)
-        .json({ error: 'Unable to retrieve user MFA settings' });
+        .json({ error: "Unable to retrieve user MFA settings" });
     }
   }
   public static async setupMFA(req: Request, res: Response) {
@@ -208,12 +212,12 @@ class UserController {
       const result = await MFAService.setupMFA(userId, type, subscriber);
       res
         .status(HTTP_STATUSES.ok)
-        .json({ uri: result?.uri, message: 'Initiated MFA Setup' });
+        .json({ uri: result?.uri, message: "Initiated MFA Setup" });
     } catch (err) {
       console.log(err);
       res
         .status(HTTP_STATUSES.serverError)
-        .json({ error: 'Unable to setup MFA' });
+        .json({ error: "Unable to setup MFA" });
     }
   }
 
@@ -225,10 +229,10 @@ class UserController {
       await MFAService.verifyMFA(userId, type, otp);
       res
         .status(HTTP_STATUSES.ok)
-        .json({ message: 'Successfully verified MFA' });
+        .json({ message: "Successfully verified MFA" });
     } catch (err) {
       console.log(err);
-      res.status(HTTP_STATUSES.badRequest).json({ error: 'Invalid OTP' });
+      res.status(HTTP_STATUSES.badRequest).json({ error: "Invalid OTP" });
     }
   }
 
@@ -238,12 +242,12 @@ class UserController {
       const { userId } = user as any;
       const { type } = req.body;
       await MFAService.resetMFAByType(userId, type);
-      res.status(HTTP_STATUSES.ok).json({ message: 'Successfully reset MFA' });
+      res.status(HTTP_STATUSES.ok).json({ message: "Successfully reset MFA" });
     } catch (err) {
       console.log(err);
       res
         .status(HTTP_STATUSES.serverError)
-        .json({ error: 'Failed to reset MFA' });
+        .json({ error: "Failed to reset MFA" });
     }
   }
 
@@ -255,12 +259,12 @@ class UserController {
       await MFAService.changePreference(userId, preference);
       res
         .status(HTTP_STATUSES.ok)
-        .json({ message: 'Successfully changed MFA preference' });
+        .json({ message: "Successfully changed MFA preference" });
     } catch (err) {
       console.log(err);
       res
         .status(HTTP_STATUSES.serverError)
-        .json({ error: 'Failed to change MFA preference' });
+        .json({ error: "Failed to change MFA preference" });
     }
   }
 
@@ -271,14 +275,14 @@ class UserController {
 
       const recoveryCodes = await MFAService.generateRecoveryCodes(userId);
       res.status(HTTP_STATUSES.ok).json({
-        message: 'Successfully generated recovery codes',
+        message: "Successfully generated recovery codes",
         recoveryCodes,
       });
     } catch (err) {
       console.log(err);
       res
         .status(HTTP_STATUSES.serverError)
-        .json({ error: 'Failed to generate recovery codes' });
+        .json({ error: "Failed to generate recovery codes" });
     }
   }
 
@@ -286,19 +290,19 @@ class UserController {
     try {
       const { type, email } = req.body;
 
-      if (type === 'email_verification') {
+      if (type === "email_verification") {
         await UserService.sendEmailVerificationOtp(email);
-      } else if (type === 'forgot_password') {
+      } else if (type === "forgot_password") {
         await UserService.sendPasswordResetOtp(email);
       } else {
         await MFAService.sendOtp(email, type);
       }
-      res.status(HTTP_STATUSES.ok).json({ message: 'Successfully sent OTP' });
+      res.status(HTTP_STATUSES.ok).json({ message: "Successfully sent OTP" });
     } catch (err) {
       console.log(err);
       res
         .status(HTTP_STATUSES.serverError)
-        .json({ error: 'Failed to send OTP' });
+        .json({ error: "Failed to send OTP" });
     }
   }
 
@@ -306,14 +310,14 @@ class UserController {
     try {
       const { email } = req.query;
       const loginConfiguration = await UserService.getLoginConfiguration(
-        email as string,
+        email as string
       );
       res.status(HTTP_STATUSES.ok).json(loginConfiguration);
     } catch (err) {
       console.log(err);
       res
         .status(HTTP_STATUSES.notFound)
-        .json({ error: 'Failed to retrieve users login configuration' });
+        .json({ error: "Failed to retrieve users login configuration" });
     }
   }
 
@@ -323,14 +327,14 @@ class UserController {
       const loginConfiguration = await UserService.changePassword(
         email,
         otp,
-        password,
+        password
       );
       res.status(HTTP_STATUSES.ok).json(loginConfiguration);
     } catch (err) {
       console.log(err);
       res
         .status(HTTP_STATUSES.notFound)
-        .json({ error: 'Failed to change password' });
+        .json({ error: "Failed to change password" });
     }
   }
 }

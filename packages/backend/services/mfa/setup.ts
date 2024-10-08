@@ -1,8 +1,8 @@
 import { v4 as uuid } from "uuid";
-import { User } from "../../models";
 import { Secret, TOTP } from "otpauth";
-import { sendEmailOtp, sendSMSOtp } from "./send";
-import config from "../../support/env-config";
+import { User } from "../../models/index.ts";
+import { sendEmailOtp, sendSMSOtp } from "./send.ts";
+import config from "../../support/env-config.ts";
 
 export const setupAppMFA = async (
   userId: string,

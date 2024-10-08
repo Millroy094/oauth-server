@@ -1,11 +1,11 @@
 import { AnyItem } from "dynamoose/dist/Item";
 import isEmpty from "lodash/isEmpty";
 import bcrypt from "bcryptjs";
-import { User } from "../models";
-import OIDCService from "./oidc";
-import generateOtp from "../utils/generate-otp";
-import OTPService from "./otp";
-import { sendEmail } from "../utils/notification";
+import { User } from "../models/index.ts";
+import OIDCService from "./oidc.ts";
+import generateOtp from "../utils/generate-otp.ts";
+import OTPService from "./otp.ts";
+import { sendEmail } from "../utils/notification.ts";
 
 class UserService {
   public static async validateUserCredentials(

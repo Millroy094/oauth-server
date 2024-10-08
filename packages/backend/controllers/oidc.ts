@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { MFAService, UserService } from "../services";
-import { HTTP_STATUSES } from "../constants";
+import { MFAService, UserService } from "../services/index.ts";
+import { HTTP_STATUSES } from "../constants/index.ts";
 
 class OIDCController {
   public static async getInteractionStatus(req: Request, res: Response) {

@@ -1,5 +1,5 @@
 import isEmpty from "lodash/isEmpty";
-import { OTP } from "../models";
+import { OTP } from "../models/index.ts";
 
 class OTPService {
   public static async storeOtp(

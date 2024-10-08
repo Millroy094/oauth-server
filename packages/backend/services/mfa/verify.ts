@@ -1,7 +1,7 @@
 import { Secret, TOTP } from "otpauth";
-import { User } from "../../models";
-import OTPService from "../otp";
-import config from "../../support/env-config";
+import { User } from "../../models/index.ts";
+import OTPService from "../otp.ts";
+import config from "../../support/env-config.ts";
 
 export const verifyAppMFA = async (
   userId: string,

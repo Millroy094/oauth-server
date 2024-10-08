@@ -1,8 +1,9 @@
 import dynamoose from "dynamoose";
 import bcrypt from "bcryptjs";
 import { v4 as uuid } from "uuid";
-import { decryptData, encryptData } from "../utils/encryption";
 import { ValueType } from "dynamoose/dist/Schema";
+import { decryptData, encryptData } from "../utils/encryption.ts";
+
 const { Schema, model } = dynamoose;
 
 const UserSchema = new Schema(

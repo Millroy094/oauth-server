@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
-import { ACCESS_TOKEN, REFRESH_TOKEN } from "../constants";
-import config from "../support/env-config";
-import { UserService } from "../services";
+import { ACCESS_TOKEN, REFRESH_TOKEN } from "../constants/index.ts";
+import { UserService } from "../services/index.ts";
+import config from "../support/env-config.ts";
 
 interface JwtPayload {
   userId: string;

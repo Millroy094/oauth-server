@@ -1,6 +1,6 @@
 import nodemailer from "nodemailer";
 import { SNSClient, PublishCommand } from "@aws-sdk/client-sns";
-import config from "../support/env-config";
+import config from "../support/env-config.ts";
 
 const transporter = nodemailer.createTransport({
   service: config.get("email.service"),

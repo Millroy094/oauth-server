@@ -1,4 +1,4 @@
-export { default as User } from "./User";
-export { default as OIDCStore } from "./OIDCStore";
-export { default as Client } from "./Client";
-export { default as OTP } from "./OTP";
+export { default as User } from "./User.ts";
+export { default as OIDCStore } from "./OIDCStore.ts";
+export { default as Client } from "./Client.ts";
+export { default as OTP } from "./OTP.ts";
