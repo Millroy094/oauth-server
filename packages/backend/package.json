@@ -35,7 +35,7 @@
     "@types/oidc-provider": "^8.5.1",
     "@types/uuid": "^10.0.0",
     "babel-plugin-add-module-exports": "^1.0.4",
-    "babel-plugin-transform-imports": "^2.0.0",
+    "babel-plugin-transform-rewrite-imports": "^1.2.0",
     "node-jose": "^2.2.0",
     "nodemon": "^3.1.0",
     "ts-node": "^10.9.2",
