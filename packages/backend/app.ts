@@ -3,6 +3,7 @@ import path from "path";
 import https from "https";
 import fs from "fs";
 import dynamoose from "dynamoose";
+import Provider from "oidc-provider";
 import cors from "cors";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
@@ -11,6 +12,15 @@ import oidcRoutes from "./routes/oidc.ts";
 import userRoutes from "./routes/user.ts";
 import addOIDCProvider from "./middleware/add-oidc-provider.ts";
 import config from "./support/env-config.ts";
+
+declare global {
+  namespace Express {
+    interface Request {
+      oidcProvider: Provider;
+      user?: { userId: string; email: string };
+    }
+  }
+}
 
 class Application {
   private readonly expressApp;
