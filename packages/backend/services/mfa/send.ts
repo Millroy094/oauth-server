@@ -1,4 +1,4 @@
-import { User } from "../../models/index.ts";
+import User from "../../models/User.ts";
 import generateOtp from "../../utils/generate-otp.ts";
 import { sendEmail, sendSMS } from "../../utils/notification.ts";
 import OTPService from "../otp.ts";

@@ -1,5 +1,5 @@
 import { Secret, TOTP } from "otpauth";
-import { User } from "../../models/index.ts";
+import User from "../../models/User.ts";
 import OTPService from "../otp.ts";
 import config from "../../support/env-config.ts";
 

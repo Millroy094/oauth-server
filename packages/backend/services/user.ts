@@ -1,7 +1,7 @@
 import { AnyItem } from "dynamoose/dist/Item";
-import isEmpty from "lodash/isEmpty";
+import isEmpty from "lodash/isEmpty.js";
 import bcrypt from "bcryptjs";
-import { User } from "../models/index.ts";
+import User from "../models/User.ts";
 import OIDCService from "./oidc.ts";
 import generateOtp from "../utils/generate-otp.ts";
 import OTPService from "./otp.ts";

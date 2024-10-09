@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "nodemon --exec node --experimental-specifier-resolution=node --loader ts-node/esm index.ts",
     "start": "pm2 start pm2-process.yml --no-daemon",
-    "build": "babel ./ --out-dir ./build --extensions '.ts' --ignore '**/*.test.ts' --config-file ./.babelrc",
+    "build": "rm -rf ./build && babel ./ --out-dir ./build --extensions '.ts' --ignore '**/*.test.ts' --config-file ./.babelrc",
     "generateJwks": "node --experimental-specifier-resolution=node --loader ts-node/esm ./scripts/generate-jwk.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -16,7 +16,7 @@
   "devDependencies": {
     "@babel/cli": "^7.25.7",
     "@babel/core": "^7.25.7",
-    "@babel/plugin-proposal-class-properties": "^7.18.6",
+    "@babel/plugin-transform-class-properties": "^7.25.7",
     "@babel/plugin-transform-classes": "^7.25.7",
     "@babel/preset-env": "^7.25.7",
     "@babel/preset-react": "^7.25.7",
@@ -57,7 +57,6 @@
     "npm": "^10.8.2",
     "oidc-provider": "^8.5.1",
     "otpauth": "^9.3.2",
-    "rsa-pem-to-jwk": "^1.1.3",
     "uninstall": "^0.0.0",
     "uuid": "^10.0.0"
   }

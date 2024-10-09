@@ -1,6 +1,6 @@
 import dynamoose from "dynamoose";
 import { v4 as uuid } from "uuid";
-import isEmpty from "lodash/isEmpty";
+import isEmpty from "lodash/isEmpty.js";
 import { ValueType } from "dynamoose/dist/Schema";
 import { decryptData, encryptData } from "../utils/encryption.ts";
 

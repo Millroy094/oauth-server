@@ -1,7 +1,7 @@
 import { ObjectType } from "dynamoose/dist/General";
 import { QueryResponse, ScanResponse } from "dynamoose/dist/ItemRetriever";
 import { AnyItem } from "dynamoose/dist/Item";
-import { OIDCStore } from "../models/index.ts";
+import OIDCStore from "../models/OIDCStore.ts";
 
 interface Session {
   id: string;

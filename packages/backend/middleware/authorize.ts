@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { UserService } from "../services/index.ts";
+import UserService from "../services/user.ts";
 
 const authorize = (permissions: string[] | undefined) => {
   return async (req: Request, res: Response, next: NextFunction) => {

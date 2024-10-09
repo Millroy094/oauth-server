@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { OIDCController } from "../controllers/index.ts";
+import OIDCController from "../controllers/oidc.ts";
 
 const router = Router();
 

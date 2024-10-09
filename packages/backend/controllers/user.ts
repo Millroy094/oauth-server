@@ -1,12 +1,11 @@
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import { MFAService, OIDCService, UserService } from "../services/index.ts";
+import UserService from "../services/user.ts";
+import OIDCService from "../services/oidc.ts";
+import MFAService from "../services/mfa/index.ts";
 import config from "../support/env-config.ts";
-import {
-  ACCESS_TOKEN,
-  HTTP_STATUSES,
-  REFRESH_TOKEN,
-} from "../constants/index.ts";
+import HTTP_STATUSES from "../constants/http-status.ts";
+import { ACCESS_TOKEN, REFRESH_TOKEN } from "../constants/authentication.ts";
 
 class UserController {
   public static async register(req: Request, res: Response) {

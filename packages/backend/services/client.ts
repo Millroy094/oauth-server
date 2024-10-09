@@ -1,6 +1,6 @@
-import isEmpty from "lodash/isEmpty";
+import isEmpty from "lodash/isEmpty.js";
 import { AnyItem } from "dynamoose/dist/Item";
-import { Client } from "../models/index.ts";
+import Client from "../models/Client.ts";
 
 class ClientService {
   public static async createClient(fields: {

@@ -1,9 +1,9 @@
 import { Configuration } from "oidc-provider";
 import fs from "fs";
 import path from "path";
-import DynamoDBAdapter from "../adapter/DynamoDbAdapter";
-import { User } from "../models/index.ts";
-import { ClientService } from "../services/index.ts";
+import DynamoDBAdapter from "../adapter/DynamoDbAdapter.ts";
+import User from "../models/User.ts";
+import ClientService from "../services/client.ts";
 import config from "./env-config.ts";
 
 const getConfiguration = async (): Promise<Configuration> => {

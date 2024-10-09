@@ -6,9 +6,11 @@ import dynamoose from "dynamoose";
 import cors from "cors";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
-import { adminRoutes, oidcRoutes, userRoutes } from "./routes/index.ts";
+import adminRoutes from "./routes/admin.ts";
+import oidcRoutes from "./routes/oidc.ts";
+import userRoutes from "./routes/user.ts";
+import addOIDCProvider from "./middleware/add-oidc-provider.ts";
 import config from "./support/env-config.ts";
-import { addOIDCProvider } from "./middleware/index.ts";
 
 class Application {
   private readonly expressApp;

@@ -1,9 +1,9 @@
-import omit from "lodash/omit";
-import map from "lodash/map";
+import omit from "lodash/omit.js";
+import map from "lodash/map.js";
+import isEmpty from "lodash/isEmpty.js";
 import bcrypt from "bcryptjs";
 import { v4 as uuid } from "uuid";
-import isEmpty from "lodash/isEmpty";
-import { User } from "../../models/index.ts";
+import User from "../../models/User.ts";
 import { setupAppMFA, setupEmailMFA, setupSMSMFA } from "./setup.ts";
 import { verifyAppMFA, verifyEmailMFA, verifySMSMFA } from "./verify.ts";
 import { sendEmailOtp, sendSMSOtp } from "./send.ts";
@@ -183,7 +183,7 @@ class MFAService {
       throw new Error("No Recovery codes found");
     }
 
-    let matchedRecoveryCode = null;
+    let matchedRecoveryCode: string | null = null;
 
     for (const hashedRecoveryCode of user.mfa.recoveryCodes) {
       const match = await bcrypt.compare(recoveryCode, hashedRecoveryCode);

@@ -1,6 +1,6 @@
 import { v4 as uuid } from "uuid";
 import { Secret, TOTP } from "otpauth";
-import { User } from "../../models/index.ts";
+import User from "../../models/User.ts";
 import { sendEmailOtp, sendSMSOtp } from "./send.ts";
 import config from "../../support/env-config.ts";
 

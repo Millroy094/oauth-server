@@ -1,13 +1,10 @@
 import { Request, Response } from "express";
 import { AnyItem } from "dynamoose/dist/Item";
-import {
-  ClientService,
-  MFAService,
-  OIDCService,
-  UserService,
-} from "../services/index.ts";
-
-import { HTTP_STATUSES } from "../constants/index.ts";
+import ClientService from "../services/client.ts";
+import MFAService from "../services/mfa/index.ts";
+import OIDCService from "../services/oidc.ts";
+import UserService from "../services/user.ts";
+import HTTP_STATUSES from "../constants/http-status.ts";
 
 class AdminController {
   public static async createClient(req: Request, res: Response) {
