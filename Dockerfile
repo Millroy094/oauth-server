@@ -5,11 +5,11 @@ WORKDIR /build
 COPY . .
 
 RUN npm install -g pnpm &&\
- pnpm install &&\
- pnpm run --filter=@oauth-server/frontend build &&\
- pnpm run --filter=@oauth-server/backend build &&\
- pnpm run --filter=@oauth-server/backend generateJwks &&\
- cp ./packages/backend/keys.json ./build
+    pnpm install &&\
+    pnpm run --filter=@oauth-server/frontend build &&\
+    pnpm run --filter=@oauth-server/backend build &&\
+    pnpm run --filter=@oauth-server/backend generateJwks &&\
+    cp ./packages/backend/keys.json ./build
 
 FROM node:20-alpine3.20 AS app
 
