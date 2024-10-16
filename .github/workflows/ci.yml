@@ -14,6 +14,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{github.actor}}
+          password: ${{ secrets.GHCR_PASSWORD }}
       - name: Docker metadata
         id: metadata
         uses: docker/metadata-action@v5
@@ -23,13 +29,6 @@ jobs:
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
             type=raw,value={{sha}},enable=${{ github.ref_type != 'tag' }}
-      - name: Log in to Docker Hub
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{github.actor}}
-          password: ${{ secrets.GHCR_PASSWORD }}
-
       - name: Build and push Docker image
         uses: docker/build-push-action@v6
         with:
