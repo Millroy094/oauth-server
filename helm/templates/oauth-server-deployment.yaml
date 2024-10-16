@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: oauth-server-deployment
+  labels:
+    app: oauth-server
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: oauth-server
+  template:
+    metadata:
+      labels:
+        app: oauth-server
+    spec:
+      containers:
+        - name: oauth-server
+          image: ghcr.io/{{ .Values.Container.Image }}:{{ .Values.Container.Tag }}
+          ports:
+            - containerPort: 3000
+          env:
+            - name: COOKIE_SECRETS
+              valueFrom:
+                secretKeyRef: oauth-server-secret
+                key: cookieSecrets
+            - name: NODE_ENV
+              value: production
+            - name: ISSUER
+              valueOf:
+                configMapRef: oauth-server-config-map
+                key: issuer
+            - name: ACCESS_JWT_SECRET
+              valueFrom:
+                secretKeyRef: oauth-server-secret
+                key: AccessTokenSecret
+            - name: ACCESS_JWT_EXPIRY
+              valueFrom:
+                configMapRef: oauth-server-config-map
+                key: accessTokenExpiry
+            - name: REFRESH_JWT_SECRET
+              valueFrom:
+                secretKeyRef: oauth-server-secret
+                key: RefreshTokenSecret
+            - name: REFRESH_JWT_EXPIRY
+              valueFrom:
+                configMapRef: oauth-server-config-map
+                key: refreshTokenExpiry
+            - name: ENCRYPTION_SECRET_KEY
+              valueFrom:
+                secretKeyRef: oauth-server-secret
+                key: encryptionSecret
+            - name: ENCRYPTION_SECRET_IV
+              valueFrom:
+                secretKeyRef: oauth-server-secret
+                key: encryptionSecretIV
+            - name: ENCRYPTION_METHOD
+              valueFrom:
+                configMapRef: oauth-server-config-map
+                key: encryptionMethod
+            - name: EMAIL_SERVICE
+              valueFrom:
+                configMapRef: oauth-server-config-map
+                key: emailService
+            - name: EMAIL_ADDRESS
+              valueFrom:
+                configMapRef: oauth-server-config-map
+                key: emailAddress
+            - name: EMAIL_PASSWORD
+              valueFrom:
+                secretKeyRef: oauth-server-secret
+                key: emailPassword

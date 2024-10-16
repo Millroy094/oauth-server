@@ -1,0 +1,21 @@
+GitHub:
+  ContainerRegistrySecret:
+  Container:
+    Image:
+    Tag:
+Server:
+  CookieSecrets:
+  Authentication:
+    Issuer:
+    AccessTokenSecret:
+    AccessTokenExpiry: 1h
+    RefreshTokenSecret:
+    RefreshTokenExpiry: 2h
+  Encryption:
+    Secret:
+    SecretIV:
+    Method: aes-256-cbc
+  Email:
+    Service:
+    EmailAddress:
+    EmailPassword:
