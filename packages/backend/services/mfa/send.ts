@@ -1,7 +1,7 @@
-import User from "../../models/User.ts";
-import generateOtp from "../../utils/generate-otp.ts";
-import { sendEmail, sendSMS } from "../../utils/notification.ts";
-import OTPService from "../otp.ts";
+import User from '../../models/User.ts';
+import generateOtp from '../../utils/generate-otp.ts';
+import { sendEmail, sendSMS } from '../../utils/notification.ts';
+import OTPService from '../otp.ts';
 
 export const sendEmailOtp = async (
   userId: string,
@@ -10,12 +10,12 @@ export const sendEmailOtp = async (
   const user = await User.get(userId);
 
   if (!user) {
-    throw new Error("User does not exist");
+    throw new Error('User does not exist');
   }
 
   const otp = generateOtp();
-  await OTPService.storeOtp(userId, "email", otp);
-  await sendEmail(subscriber, "Login OTP", `Here's your OTP ${otp} to login`);
+  await OTPService.storeOtp(userId, 'email', otp);
+  await sendEmail(subscriber, 'Login OTP', `Here's your OTP ${otp} to login`);
 };
 
 export const sendSMSOtp = async (
@@ -25,10 +25,10 @@ export const sendSMSOtp = async (
   const user = await User.get(userId);
 
   if (!user) {
-    throw new Error("User does not exist");
+    throw new Error('User does not exist');
   }
 
   const otp = generateOtp();
-  await OTPService.storeOtp(userId, "sms", otp);
+  await OTPService.storeOtp(userId, 'sms', otp);
   await sendSMS(subscriber, `Here's your OTP ${otp} to login`);
 };

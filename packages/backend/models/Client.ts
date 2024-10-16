@@ -1,8 +1,8 @@
-import dynamoose from "dynamoose";
-import crypto from "crypto";
-import { v4 as uuid } from "uuid";
-import { ValueType } from "dynamoose/dist/Schema";
-import { decryptData, encryptData } from "../utils/encryption.ts";
+import dynamoose from 'dynamoose';
+import crypto from 'crypto';
+import { v4 as uuid } from 'uuid';
+import { ValueType } from 'dynamoose/dist/Schema';
+import { decryptData, encryptData } from '../utils/encryption.ts';
 
 const { Schema, model } = dynamoose;
 
@@ -11,42 +11,42 @@ const ClientSchema = new Schema(
     id: {
       type: String,
       hashKey: true,
-      default: () => uuid(),
+      default: () => uuid()
     },
     clientId: {
       type: String,
-      required: true,
+      required: true
     },
     clientName: {
       type: String,
-      required: true,
+      required: true
     },
     secret: {
       type: String,
-      default: () => crypto.randomBytes(32).toString("base64"),
+      default: () => crypto.randomBytes(32).toString('base64'),
       set: (value: ValueType) => encryptData(value as string),
-      get: (value: ValueType) => decryptData(value as string),
+      get: (value: ValueType) => decryptData(value as string)
     },
     grants: {
       type: Array,
       schema: [String],
-      required: true,
+      required: true
     },
     scopes: {
       type: Array,
       schema: [String],
-      required: true,
+      required: true
     },
     redirectUris: {
       type: Array,
       schema: [String],
-      required: true,
-    },
+      required: true
+    }
   },
   {
-    timestamps: true,
+    timestamps: true
   }
 );
-const Client = model("Client", ClientSchema);
+const Client = model('Client', ClientSchema);
 
 export default Client;

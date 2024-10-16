@@ -3,7 +3,7 @@ import axios from '../../utils/axios-instance';
 
 const logoutUser = async (): Promise<AxiosResponse> => {
   const response = await axios.get('/api/user/logout', {
-    withCredentials: true,
+    withCredentials: true
   });
 
   return response;

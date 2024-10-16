@@ -3,7 +3,7 @@ import axios from '../../utils/axios-instance';
 
 const getUser = async (id: string): Promise<AxiosResponse> => {
   const response = await axios.get(`/api/admin/users/${id}`, {
-    withCredentials: true,
+    withCredentials: true
   });
   return response;
 };

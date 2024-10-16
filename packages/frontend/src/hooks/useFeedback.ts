@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { AxiosError, AxiosResponse } from "axios";
-import { useSnackbar, VariantType } from "notistack";
+import { AxiosError, AxiosResponse } from 'axios';
+import { useSnackbar, VariantType } from 'notistack';
 
 const useFeedback = (): {
   feedbackAxiosError: (error: any, defaultMessage: string) => void;
@@ -19,7 +19,7 @@ const useFeedback = (): {
         ? error.response.data.error
         : defaultMessage;
 
-    enqueueSnackbar(feedbackMessage, { variant: "error" });
+    enqueueSnackbar(feedbackMessage, { variant: 'error' });
   };
 
   const feedbackAxiosResponse = (
@@ -28,13 +28,13 @@ const useFeedback = (): {
     type: VariantType
   ): void => {
     enqueueSnackbar(response?.data?.message ?? defaultMessage, {
-      variant: type,
+      variant: type
     });
   };
 
   const feedback = (message: string, type: VariantType) => {
     enqueueSnackbar(message, {
-      variant: type,
+      variant: type
     });
   };
 

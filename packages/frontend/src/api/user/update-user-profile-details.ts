@@ -10,7 +10,7 @@ type updateUserProfileDetailsArgs = {
 };
 
 const updateUserProfileDetails = async (
-  args: updateUserProfileDetailsArgs,
+  args: updateUserProfileDetailsArgs
 ): Promise<AxiosResponse> => {
   const { email, emailVerified, firstName, lastName, mobile } = args;
   const response = await axios.put(
@@ -20,9 +20,9 @@ const updateUserProfileDetails = async (
       emailVerified,
       firstName,
       lastName,
-      mobile,
+      mobile
     },
-    { withCredentials: true },
+    { withCredentials: true }
   );
 
   return response;

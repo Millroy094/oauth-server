@@ -1,1 +1,1 @@
-export const EMAIL_VERIFICATION = "email_verification";
+export const EMAIL_VERIFICATION = 'email_verification';

@@ -1,129 +1,129 @@
-import dotenv from "dotenv";
-import convict from "convict";
+import dotenv from 'dotenv';
+import convict from 'convict';
 
 dotenv.config();
 
 const config = convict({
   env: {
-    doc: "The application environment.",
-    format: ["production", "development"],
-    default: "development",
-    env: "NODE_ENV",
+    doc: 'The application environment.',
+    format: ['production', 'development'],
+    default: 'development',
+    env: 'NODE_ENV'
   },
   oidc: {
     cookieSecrets: {
-      doc: "Cookie secrets for OIDC configuration.",
+      doc: 'Cookie secrets for OIDC configuration.',
       format: Array,
       default: [],
-      env: "COOKIE_SECRETS",
-    },
+      env: 'COOKIE_SECRETS'
+    }
   },
   db: {
-    doc: "DynamoDB Database endpoint",
+    doc: 'DynamoDB Database endpoint',
     format: String,
-    default: "http://localhost:8000",
-    env: "DYNAMO_DB_ENDPOINT",
+    default: 'http://localhost:8000',
+    env: 'DYNAMO_DB_ENDPOINT'
   },
   authentication: {
     accessTokenSecret: {
-      doc: "Access Token Secret for Login",
-      default: "",
+      doc: 'Access Token Secret for Login',
+      default: '',
       nullable: false,
       format: String,
-      env: "ACCESS_JWT_SECRET",
+      env: 'ACCESS_JWT_SECRET'
     },
     accessTokenExpiry: {
-      doc: "Access Token Expiry Time for Login",
+      doc: 'Access Token Expiry Time for Login',
       format: String,
-      default: "2h",
-      env: "ACCESS_JWT_EXPIRY",
+      default: '2h',
+      env: 'ACCESS_JWT_EXPIRY'
     },
 
     refreshTokenSecret: {
-      doc: "Refresh Token Secret for Login",
-      default: "",
+      doc: 'Refresh Token Secret for Login',
+      default: '',
       nullable: false,
       format: String,
-      env: "REFRESH_JWT_SECRET",
+      env: 'REFRESH_JWT_SECRET'
     },
     refreshTokenExpiry: {
-      doc: "Refresh Token Expiry Time for Login",
+      doc: 'Refresh Token Expiry Time for Login',
       format: String,
-      default: "1d",
-      env: "REFRESH_JWT_EXPIRY",
+      default: '1d',
+      env: 'REFRESH_JWT_EXPIRY'
     },
     issuer: {
-      doc: "ISSUER For APP MFA",
-      default: "",
+      doc: 'ISSUER For APP MFA',
+      default: '',
       nullable: false,
       format: String,
-      env: "ISSUER_NAME",
-    },
+      env: 'ISSUER_NAME'
+    }
   },
   encryption: {
     secret: {
-      doc: "Secret for encryption",
-      default: "",
+      doc: 'Secret for encryption',
+      default: '',
       nullable: false,
       format: String,
-      env: "ENCRYPTION_SECRET_KEY",
+      env: 'ENCRYPTION_SECRET_KEY'
     },
     secretiv: {
-      doc: "Secret iv for encryption",
-      default: "",
+      doc: 'Secret iv for encryption',
+      default: '',
       nullable: false,
       format: String,
-      env: "ENCRYPTION_SECRET_IV",
+      env: 'ENCRYPTION_SECRET_IV'
     },
     method: {
-      doc: "Secret iv for encryption",
+      doc: 'Secret iv for encryption',
       nullable: false,
       format: String,
-      default: "aes-256-cbc",
-      env: "ENCRYPTION_METHOD",
-    },
+      default: 'aes-256-cbc',
+      env: 'ENCRYPTION_METHOD'
+    }
   },
   email: {
     service: {
-      doc: "Email Service name",
-      default: "",
+      doc: 'Email Service name',
+      default: '',
       nullable: false,
       format: String,
-      env: "EMAIL_SERVICE",
+      env: 'EMAIL_SERVICE'
     },
     address: {
-      doc: "Email Address to send emails from",
-      default: "",
+      doc: 'Email Address to send emails from',
+      default: '',
       nullable: false,
       format: String,
-      env: "EMAIL_ADDRESS",
+      env: 'EMAIL_ADDRESS'
     },
     password: {
-      doc: "Email Password to send emails",
-      default: "",
+      doc: 'Email Password to send emails',
+      default: '',
       nullable: false,
       format: String,
-      env: "EMAIL_PASSWORD",
-    },
+      env: 'EMAIL_PASSWORD'
+    }
   },
   aws: {
     accessKey: {
-      doc: "AWS access key",
-      default: "",
+      doc: 'AWS access key',
+      default: '',
       nullable: false,
       format: String,
-      env: "AWS_ACCESS_KEY",
+      env: 'AWS_ACCESS_KEY'
     },
     secretKey: {
-      doc: "AWS secret key",
-      default: "",
+      doc: 'AWS secret key',
+      default: '',
       nullable: false,
       format: String,
-      env: "AWS_SECRET_KEY",
-    },
-  },
+      env: 'AWS_SECRET_KEY'
+    }
+  }
 });
 
-config.validate({ allowed: "strict" });
+config.validate({ allowed: 'strict' });
 
 export default config;

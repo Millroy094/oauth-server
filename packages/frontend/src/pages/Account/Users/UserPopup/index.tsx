@@ -9,7 +9,7 @@ import {
   Grid,
   Modal,
   Switch,
-  TextField,
+  TextField
 } from '@mui/material';
 import { format } from 'date-fns';
 import { AccountCircle } from '@mui/icons-material';
@@ -38,7 +38,7 @@ const defaultValues: IUserPopupInput = {
   roles: [],
   emailVerified: false,
   suspended: false,
-  lastLoggedIn: 0,
+  lastLoggedIn: 0
 };
 
 const UserPopup: FC<UserPopupProps> = (props) => {
@@ -51,12 +51,12 @@ const UserPopup: FC<UserPopupProps> = (props) => {
     register,
     handleSubmit,
     formState: { errors },
-    reset,
+    reset
   } = useForm<IUserPopupInput>({
     resolver: yupResolver(schema),
     criteriaMode: 'all',
     mode: 'onChange',
-    values: user,
+    values: user
   });
 
   const lastLoggedIn = watch('lastLoggedIn', 0);
@@ -67,7 +67,7 @@ const UserPopup: FC<UserPopupProps> = (props) => {
         ? format(new Date(lastLoggedIn), 'dd/MM/yyyy HH:mm:ss')
         : 'Never',
 
-    [lastLoggedIn],
+    [lastLoggedIn]
   );
 
   const handleClose = (): void => {
@@ -86,12 +86,12 @@ const UserPopup: FC<UserPopupProps> = (props) => {
         roles: response.data.user.roles,
         emailVerified: response.data.user.emailVerified,
         suspended: response.data.user.suspended,
-        lastLoggedIn: response.data.user.lastLoggedIn ?? 0,
+        lastLoggedIn: response.data.user.lastLoggedIn ?? 0
       });
     } catch (err) {
       feedbackAxiosError(
         err,
-        'There was an issue retrieving the user, please try again',
+        'There was an issue retrieving the user, please try again'
       );
       handleClose();
     }
@@ -122,7 +122,7 @@ const UserPopup: FC<UserPopupProps> = (props) => {
     } catch (err) {
       feedbackAxiosError(
         err,
-        'There was an issue updating the user, please try again',
+        'There was an issue updating the user, please try again'
       );
     }
   };
@@ -137,7 +137,7 @@ const UserPopup: FC<UserPopupProps> = (props) => {
           transform: 'translate(-50%, -50%)',
           width: 600,
           bgcolor: 'background.paper',
-          p: 2,
+          p: 2
         }}
       >
         <CardHeader
@@ -226,8 +226,8 @@ const UserPopup: FC<UserPopupProps> = (props) => {
                   options={[
                     {
                       label: 'Admin',
-                      value: 'admin',
-                    },
+                      value: 'admin'
+                    }
                   ]}
                   errors={errors}
                 />

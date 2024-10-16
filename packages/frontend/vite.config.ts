@@ -11,17 +11,17 @@ export default ({ mode }: { mode: string }) => {
   const config = {
     plugins: [react()],
     define: {
-      'process.env': process.env,
+      'process.env': process.env
     },
     server: {
       proxy: {
         '/api': {
           target: process.env.VITE_BACKEND_ENDPOINT,
           changeOrigin: true,
-          rewrite: (path: string) => path.replace(/^\/api/, ''),
-        },
-      },
-    },
+          rewrite: (path: string) => path.replace(/^\/api/, '')
+        }
+      }
+    }
   };
   return defineConfig(config);
 };

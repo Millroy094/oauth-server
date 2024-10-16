@@ -17,7 +17,7 @@ axiosInstance.interceptors.response.use(
       globalRouter.navigate('/login');
     }
     return Promise.reject(error);
-  },
+  }
 );
 
 export default axiosInstance;

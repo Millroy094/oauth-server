@@ -1,25 +1,25 @@
-import { AnyItem } from "dynamoose/dist/Item";
-import isEmpty from "lodash/isEmpty.js";
-import bcrypt from "bcryptjs";
-import User from "../models/User.ts";
-import OIDCService from "./oidc.ts";
-import generateOtp from "../utils/generate-otp.ts";
-import OTPService from "./otp.ts";
-import { sendEmail } from "../utils/notification.ts";
+import { AnyItem } from 'dynamoose/dist/Item';
+import isEmpty from 'lodash/isEmpty.js';
+import bcrypt from 'bcryptjs';
+import User from '../models/User.ts';
+import OIDCService from './oidc.ts';
+import generateOtp from '../utils/generate-otp.ts';
+import OTPService from './otp.ts';
+import { sendEmail } from '../utils/notification.ts';
 
 class UserService {
   public static async validateUserCredentials(
     username: string,
     password: string
   ): Promise<AnyItem> {
-    const [userAccount] = await User.scan("email").eq(username).exec();
+    const [userAccount] = await User.scan('email').eq(username).exec();
 
     if (isEmpty(userAccount)) {
-      throw new Error("User does not exist");
+      throw new Error('User does not exist');
     }
 
     if (userAccount.suspended) {
-      throw new Error("User is suspended");
+      throw new Error('User is suspended');
     }
 
     const passwordCompare = await bcrypt.compare(
@@ -36,7 +36,7 @@ class UserService {
 
       await userAccount.save();
 
-      throw new Error("Invalid password");
+      throw new Error('Invalid password');
     }
 
     userAccount.failedLogins = 0;
@@ -55,10 +55,10 @@ class UserService {
     password: string;
   }): Promise<void> {
     const { email } = fields;
-    const [userAccount] = await User.scan("email").eq(email).exec();
+    const [userAccount] = await User.scan('email').eq(email).exec();
 
     if (!isEmpty(userAccount)) {
-      throw new Error("User already exists");
+      throw new Error('User already exists');
     }
 
     await User.create(fields);
@@ -72,30 +72,30 @@ class UserService {
   public static async getUserById(id: string): Promise<AnyItem> {
     const userAccount = await User.get(id, {
       attributes: [
-        "userId",
-        "firstName",
-        "lastName",
-        "email",
-        "emailVerified",
-        "mobile",
-        "roles",
-        "suspended",
-        "lastLoggedIn",
-      ],
+        'userId',
+        'firstName',
+        'lastName',
+        'email',
+        'emailVerified',
+        'mobile',
+        'roles',
+        'suspended',
+        'lastLoggedIn'
+      ]
     });
 
     if (isEmpty(userAccount)) {
-      throw new Error("User does not exists");
+      throw new Error('User does not exists');
     }
 
     return userAccount;
   }
 
   public static async getUserByEmail(email: string) {
-    const [user] = await User.scan("email").eq(email).exec();
+    const [user] = await User.scan('email').eq(email).exec();
 
     if (isEmpty(user)) {
-      throw new Error("User does not exists");
+      throw new Error('User does not exists');
     }
     return user;
   }
@@ -125,16 +125,16 @@ class UserService {
     try {
       user = await UserService.getUserByEmail(email);
     } catch (err) {
-      console.error("User not found");
+      console.error('User not found');
     }
 
     if (!user) {
-      return { emailVerified: true, mfa: { enabled: false, type: "" } };
+      return { emailVerified: true, mfa: { enabled: false, type: '' } };
     }
 
     return {
       emailVerified: user.emailVerified,
-      mfa: { enabled: !!user.mfa.preference, type: user.mfa.preference },
+      mfa: { enabled: !!user.mfa.preference, type: user.mfa.preference }
     };
   }
 
@@ -142,10 +142,10 @@ class UserService {
     const user = await UserService.getUserByEmail(email);
 
     const otp = generateOtp();
-    await OTPService.storeOtp(user.userId, "email", otp);
+    await OTPService.storeOtp(user.userId, 'email', otp);
     await sendEmail(
       email,
-      "Email verification",
+      'Email verification',
       `Please use ${otp} to verify your email`
     );
   }
@@ -154,11 +154,11 @@ class UserService {
     const user = await User.get(userId);
 
     if (!user) {
-      throw new Error("User does not exist");
+      throw new Error('User does not exist');
     }
 
-    if (!(await OTPService.validateOtp(userId, "email", otp))) {
-      throw new Error("Invalid OTP");
+    if (!(await OTPService.validateOtp(userId, 'email', otp))) {
+      throw new Error('Invalid OTP');
     }
 
     user.emailVerified = true;
@@ -170,10 +170,10 @@ class UserService {
     const user = await UserService.getUserByEmail(email);
 
     const otp = generateOtp();
-    await OTPService.storeOtp(user.userId, "email", otp);
+    await OTPService.storeOtp(user.userId, 'email', otp);
     await sendEmail(
       email,
-      "Password reset OTP",
+      'Password reset OTP',
       `Please use ${otp} to reset your password`
     );
   }
@@ -185,8 +185,8 @@ class UserService {
   ): Promise<void> {
     const user = await UserService.getUserByEmail(email);
 
-    if (!(await OTPService.validateOtp(user.userId, "email", otp))) {
-      throw new Error("Invalid OTP");
+    if (!(await OTPService.validateOtp(user.userId, 'email', otp))) {
+      throw new Error('Invalid OTP');
     }
 
     user.password = password;

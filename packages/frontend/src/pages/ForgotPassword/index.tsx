@@ -8,7 +8,7 @@ import {
   Container,
   Grid,
   styled,
-  TextField,
+  TextField
 } from '@mui/material';
 import PasswordField from '../../components/PasswordField';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -23,7 +23,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { IForgotPasswordFormInput } from './types';
 
 const StyledCard = styled(Card)({
-  borderTop: '2px solid red',
+  borderTop: '2px solid red'
 });
 
 const ForgotPassword = () => {
@@ -36,7 +36,7 @@ const ForgotPassword = () => {
     register,
     handleSubmit,
     formState: { errors, dirtyFields },
-    setValue,
+    setValue
   } = useForm<IForgotPasswordFormInput>({
     resolver: yupResolver(schema, {}),
     criteriaMode: 'all',
@@ -46,8 +46,8 @@ const ForgotPassword = () => {
       emailSent: false,
       otp: '',
       password: '',
-      confirmPassword: '',
-    },
+      confirmPassword: ''
+    }
   });
 
   const emailSent = watch('emailSent', false);
@@ -75,7 +75,7 @@ const ForgotPassword = () => {
     await sendOtp({ email, type: FORGOT_PASSWORD });
     feedback(
       'An email with a code to reset password has been send to your email. Please use this code to reset your password.',
-      'info',
+      'info'
     );
   };
 
@@ -94,7 +94,7 @@ const ForgotPassword = () => {
         feedbackAxiosResponse(
           response,
           'Successfully Reset Password!',
-          'success',
+          'success'
         );
         reset();
         navigateToLogin();

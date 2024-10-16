@@ -7,7 +7,7 @@ import {
   CardHeader,
   IconButton,
   Tooltip,
-  Typography,
+  Typography
 } from '@mui/material';
 import { AddBusiness, Delete, ContentCopy } from '@mui/icons-material';
 import { DataGrid, GridColDef, GridRowParams } from '@mui/x-data-grid';
@@ -35,7 +35,7 @@ const Clients: FC = () => {
     } catch (err) {
       feedbackAxiosError(
         err,
-        'There was an issue retreiving clients, please try again',
+        'There was an issue retreiving clients, please try again'
       );
     }
   };
@@ -56,7 +56,7 @@ const Clients: FC = () => {
     } catch (err) {
       feedbackAxiosError(
         err,
-        'There was an issue deleting the client, please try again',
+        'There was an issue deleting the client, please try again'
       );
     }
   };
@@ -76,13 +76,13 @@ const Clients: FC = () => {
       field: 'clientId',
       headerName: 'Client ID',
       width: 275,
-      editable: false,
+      editable: false
     },
     {
       field: 'clientName',
       headerName: 'Name',
       width: 275,
-      editable: false,
+      editable: false
     },
 
     {
@@ -96,7 +96,7 @@ const Clients: FC = () => {
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
-            height: '100%',
+            height: '100%'
           }}
         >
           <Typography
@@ -119,7 +119,7 @@ const Clients: FC = () => {
             </IconButton>
           </Tooltip>
         </Box>
-      ),
+      )
     },
     {
       field: 'id',
@@ -139,8 +139,8 @@ const Clients: FC = () => {
             <Delete />
           </IconButton>
         </Tooltip>
-      ),
-    },
+      )
+    }
   ];
 
   return (
@@ -165,9 +165,9 @@ const Clients: FC = () => {
           initialState={{
             pagination: {
               paginationModel: {
-                pageSize: 5,
-              },
-            },
+                pageSize: 5
+              }
+            }
           }}
           pageSizeOptions={[5]}
           disableRowSelectionOnClick

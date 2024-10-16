@@ -12,7 +12,7 @@ type updateUserFields = {
 
 const updateUser = async (
   id: string,
-  updatedFields: updateUserFields,
+  updatedFields: updateUserFields
 ): Promise<AxiosResponse> => {
   const { emailVerified, firstName, lastName, mobile, roles, suspended } =
     updatedFields;
@@ -24,9 +24,9 @@ const updateUser = async (
       lastName,
       mobile,
       roles,
-      suspended,
+      suspended
     },
-    { withCredentials: true },
+    { withCredentials: true }
   );
 
   return response;

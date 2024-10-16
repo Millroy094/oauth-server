@@ -12,7 +12,7 @@ type validateCredentialsArgs = {
 };
 
 const authenticateInteraction = async (
-  args: validateCredentialsArgs,
+  args: validateCredentialsArgs
 ): Promise<AxiosResponse> => {
   const {
     email,
@@ -21,7 +21,7 @@ const authenticateInteraction = async (
     loginWithRecoveryCode,
     recoveryCode,
     resetMfa,
-    interactionId,
+    interactionId
   } = args;
   const response = await axios.post(
     `/api/oidc/interaction/${interactionId}/authenticate`,
@@ -31,9 +31,9 @@ const authenticateInteraction = async (
       otp,
       loginWithRecoveryCode,
       recoveryCode,
-      resetMfa,
+      resetMfa
     },
-    { withCredentials: true },
+    { withCredentials: true }
   );
   return response;
 };

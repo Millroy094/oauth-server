@@ -12,9 +12,9 @@ const setupMFA = async (args: SetupMFAArgs): Promise<AxiosResponse> => {
     '/api/user/mfa-setup',
     {
       type,
-      subscriber,
+      subscriber
     },
-    { withCredentials: true },
+    { withCredentials: true }
   );
 
   return response;

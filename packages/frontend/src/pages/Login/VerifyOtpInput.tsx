@@ -3,7 +3,7 @@ import {
   APP_MFA,
   EMAIL_MFA,
   EMAIL_VERIFICATION,
-  SMS_MFA,
+  SMS_MFA
 } from '../../constants';
 import { Button, FormHelperText, Grid, Typography } from '@mui/material';
 import OTPInput from 'react-otp-input';
@@ -120,12 +120,12 @@ const VerifyOtpInput: FC<IVerifyOtpInput> = React.memo((props) => {
                   containerStyle={{
                     display: 'flex',
                     gap: '10px',
-                    justifyContent: 'center',
+                    justifyContent: 'center'
                   }}
                   inputStyle={{
                     width: '50px',
                     height: '50px',
-                    fontSize: '20px',
+                    fontSize: '20px'
                   }}
                 />
               </Grid>

@@ -1,7 +1,7 @@
-import { ObjectType } from "dynamoose/dist/General";
-import { QueryResponse, ScanResponse } from "dynamoose/dist/ItemRetriever";
-import { AnyItem } from "dynamoose/dist/Item";
-import OIDCStore from "../models/OIDCStore.ts";
+import { ObjectType } from 'dynamoose/dist/General';
+import { QueryResponse, ScanResponse } from 'dynamoose/dist/ItemRetriever';
+import { AnyItem } from 'dynamoose/dist/Item';
+import OIDCStore from '../models/OIDCStore.ts';
 
 interface Session {
   id: string;
@@ -13,27 +13,27 @@ interface Session {
 
 class OIDCService {
   public static async getSessions(userId: string): Promise<Session[]> {
-    const sessionResponse = await OIDCStore.scan("payload.accountId")
+    const sessionResponse = await OIDCStore.scan('payload.accountId')
       .eq(userId)
       .and()
-      .where("payload.kind")
-      .eq("Session")
+      .where('payload.kind')
+      .eq('Session')
       .exec();
     const sessions = sessionResponse.toJSON().map((session: ObjectType) => ({
       id: session.payload.jti,
       loggedInAt: session.payload.loginTs,
       clients: Object.keys(session?.payload?.authorizations ?? {}),
       iat: session.payload.iat,
-      exp: session.payload.exp,
+      exp: session.payload.exp
     }));
     return sessions;
   }
 
   public static async deleteAllSessions(userId: string): Promise<true> {
-    const results = await OIDCStore.scan("payload.accountId")
+    const results = await OIDCStore.scan('payload.accountId')
       .eq(userId)
       .or()
-      .where("payload.session.accountId")
+      .where('payload.session.accountId')
       .eq(userId)
       .exec();
 
@@ -43,7 +43,7 @@ class OIDCService {
   }
 
   public static async deleteSession(sessionId: string): Promise<true> {
-    const [session] = await OIDCStore.scan("payload.jti").eq(sessionId).exec();
+    const [session] = await OIDCStore.scan('payload.jti').eq(sessionId).exec();
 
     if (session) {
       const apps = session?.payload?.authorizations ?? {};
@@ -52,16 +52,16 @@ class OIDCService {
         const { grantId } = apps[key];
 
         if (grantId) {
-          const grantables = await OIDCStore.scan("grantId").eq(grantId).exec();
+          const grantables = await OIDCStore.scan('grantId').eq(grantId).exec();
           await OIDCService.deleteAllResults(grantables);
           await OIDCStore.delete(`Grant:${grantId}`);
         }
       }
 
-      const [interaction] = await OIDCStore.scan("payload.kind")
-        .eq("Interaction")
+      const [interaction] = await OIDCStore.scan('payload.kind')
+        .eq('Interaction')
         .and()
-        .where("payload.session.uid")
+        .where('payload.session.uid')
         .eq(session.uid)
         .exec();
 

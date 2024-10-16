@@ -11,7 +11,7 @@ type AuthenticateUserArgs = {
 };
 
 const authenticateUser = async (
-  args: AuthenticateUserArgs,
+  args: AuthenticateUserArgs
 ): Promise<AxiosResponse> => {
   const {
     email,
@@ -19,7 +19,7 @@ const authenticateUser = async (
     otp,
     loginWithRecoveryCode,
     recoveryCode,
-    resetMfa,
+    resetMfa
   } = args;
   const response = await axios.post(
     '/api/user/login',
@@ -29,9 +29,9 @@ const authenticateUser = async (
       otp,
       loginWithRecoveryCode,
       recoveryCode,
-      resetMfa,
+      resetMfa
     },
-    { withCredentials: true },
+    { withCredentials: true }
   );
   return response;
 };

@@ -5,9 +5,9 @@ const resetMfa = async (type: string): Promise<AxiosResponse> => {
   const response = await axios.post(
     '/api/user/mfa-reset',
     {
-      type,
+      type
     },
-    { withCredentials: true },
+    { withCredentials: true }
   );
 
   return response;

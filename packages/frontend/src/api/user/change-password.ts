@@ -8,7 +8,7 @@ interface IChangePasswordArgs {
 }
 
 const changePassword = async (
-  args: IChangePasswordArgs,
+  args: IChangePasswordArgs
 ): Promise<AxiosResponse> => {
   const { email, otp, password } = args;
   const response = await axios.post(
@@ -16,9 +16,9 @@ const changePassword = async (
     {
       email,
       otp,
-      password,
+      password
     },
-    { withCredentials: true },
+    { withCredentials: true }
   );
 
   return response;

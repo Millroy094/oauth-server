@@ -18,9 +18,9 @@ const registerUser = async (args: registerUserArgs): Promise<AxiosResponse> => {
       password,
       firstName,
       lastName,
-      mobile,
+      mobile
     },
-    { withCredentials: true },
+    { withCredentials: true }
   );
 
   return response;

@@ -92,7 +92,7 @@ const VerifyOtpInput: FC<IVerifyOtpInput> = (props) => {
           containerStyle={{
             display: 'flex',
             gap: '10px',
-            justifyContent: 'center',
+            justifyContent: 'center'
           }}
           inputStyle={{ width: '50px', height: '50px', fontSize: '20px' }}
         />

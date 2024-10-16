@@ -10,8 +10,8 @@ const schema = yup
     mobile: yup
       .string()
       .test('is-phone-valid', 'Please enter a valid number', (value) =>
-        isPhoneValid(value as string),
-      ),
+        isPhoneValid(value as string)
+      )
   })
   .required();
 

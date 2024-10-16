@@ -18,9 +18,9 @@ const createClient = async (args: CreateClientArgs): Promise<AxiosResponse> => {
       clientName,
       scopes,
       grants,
-      redirectUris,
+      redirectUris
     },
-    { withCredentials: true },
+    { withCredentials: true }
   );
 
   return response;

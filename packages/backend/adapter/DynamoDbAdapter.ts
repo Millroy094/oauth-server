@@ -1,5 +1,5 @@
-import { Adapter, AdapterPayload } from "oidc-provider";
-import OIDCStore from "../models/OIDCStore.ts";
+import { Adapter, AdapterPayload } from 'oidc-provider';
+import OIDCStore from '../models/OIDCStore.ts';
 
 class DynamoDBAdapter implements Adapter {
   name: string;
@@ -24,7 +24,7 @@ class DynamoDBAdapter implements Adapter {
         ...(expiresAt ? { expiresAt } : {}),
         ...(payload.userCode ? { userCode: payload.userCode } : {}),
         ...(payload.uid ? { uid: payload.uid } : {}),
-        ...(payload.grantId ? { grantId: payload.grantId } : {}),
+        ...(payload.grantId ? { grantId: payload.grantId } : {})
       });
     } catch (error) {
       console.error(error);
@@ -55,7 +55,7 @@ class DynamoDBAdapter implements Adapter {
     userCode: string
   ): Promise<void | AdapterPayload | undefined> {
     try {
-      const [record] = await OIDCStore.scan("userCode").eq(userCode).exec();
+      const [record] = await OIDCStore.scan('userCode').eq(userCode).exec();
 
       // DynamoDB can take upto 48 hours to drop expired items, so a check is required
       if (
@@ -75,7 +75,7 @@ class DynamoDBAdapter implements Adapter {
   }
   async findByUid(uid: string): Promise<void | AdapterPayload | undefined> {
     try {
-      const [record] = await OIDCStore.scan("uid").eq(uid).exec();
+      const [record] = await OIDCStore.scan('uid').eq(uid).exec();
       // DynamoDB can take upto 48 hours to drop expired items, so a check is required
       if (
         !record ||
@@ -96,7 +96,7 @@ class DynamoDBAdapter implements Adapter {
       const record = await OIDCStore.get(modelId);
       record.payload = {
         ...record.payload,
-        consumed: Math.floor(Date.now() / 1000),
+        consumed: Math.floor(Date.now() / 1000)
       };
       await record.save();
     } catch (error) {
@@ -115,7 +115,7 @@ class DynamoDBAdapter implements Adapter {
   }
   async revokeByGrantId(grantId: string): Promise<void | undefined> {
     try {
-      const results = await OIDCStore.scan("grantId").eq(grantId).exec();
+      const results = await OIDCStore.scan('grantId').eq(grantId).exec();
 
       if (!results || !results.length) {
         return;

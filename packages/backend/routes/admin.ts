@@ -1,76 +1,76 @@
-import { Router } from "express";
-import AdminController from "../controllers/admin.ts";
-import authenticate from "../middleware/authenticate.ts";
-import authorize from "../middleware/authorize.ts";
+import { Router } from 'express';
+import AdminController from '../controllers/admin.ts';
+import authenticate from '../middleware/authenticate.ts';
+import authorize from '../middleware/authorize.ts';
 
 const router = Router();
 
 router.get(
-  "/clients",
+  '/clients',
   authenticate,
-  authorize(["admin"]),
+  authorize(['admin']),
   AdminController.getClients
 );
 router.post(
-  "/clients/new",
+  '/clients/new',
   authenticate,
-  authorize(["admin"]),
+  authorize(['admin']),
   AdminController.createClient
 );
 router.get(
-  "/clients/:id",
+  '/clients/:id',
   authenticate,
-  authorize(["admin"]),
+  authorize(['admin']),
   AdminController.getClient
 );
 router.put(
-  "/clients/:id",
+  '/clients/:id',
   authenticate,
-  authorize(["admin"]),
+  authorize(['admin']),
   AdminController.updateClient
 );
 router.delete(
-  "/clients/:id",
+  '/clients/:id',
   authenticate,
-  authorize(["admin"]),
+  authorize(['admin']),
   AdminController.deleteClient
 );
 
 router.get(
-  "/users",
+  '/users',
   authenticate,
-  authorize(["admin"]),
+  authorize(['admin']),
   AdminController.getUsers
 );
 router.get(
-  "/users/:id",
+  '/users/:id',
   authenticate,
-  authorize(["admin"]),
+  authorize(['admin']),
   AdminController.getUser
 );
 router.put(
-  "/users/:id",
+  '/users/:id',
   authenticate,
-  authorize(["admin"]),
+  authorize(['admin']),
   AdminController.updateUser
 );
 router.delete(
-  "/users/:id",
+  '/users/:id',
   authenticate,
-  authorize(["admin"]),
+  authorize(['admin']),
   AdminController.deleteUser
 );
 router.delete(
-  "/users/:id/sessions",
+  '/users/:id/sessions',
   authenticate,
-  authorize(["admin"]),
+  authorize(['admin']),
   AdminController.deleteUserSessions
 );
 
 router.post(
-  "/users/:id/mfa-reset",
+  '/users/:id/mfa-reset',
   authenticate,
-  authorize(["admin"]),
+  authorize(['admin']),
   AdminController.resetMFA
 );
 

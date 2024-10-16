@@ -12,9 +12,9 @@ const sendOtp = async (args: ISendMFAOtpArgs): Promise<AxiosResponse> => {
     '/api/user/send-otp',
     {
       type,
-      email,
+      email
     },
-    { withCredentials: true },
+    { withCredentials: true }
   );
 
   return response;

@@ -12,9 +12,9 @@ const verifyMFA = async (args: VerifyMFAArgs): Promise<AxiosResponse> => {
     '/api/user/mfa-verify',
     {
       type,
-      otp,
+      otp
     },
-    { withCredentials: true },
+    { withCredentials: true }
   );
 
   return response;

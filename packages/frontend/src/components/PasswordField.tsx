@@ -1,9 +1,9 @@
-import React, { FC, useState } from "react";
-import { IconButton, InputAdornment, TextField } from "@mui/material";
-import { VisibilityOff, Visibility } from "@mui/icons-material";
-import { UseFormRegister } from "react-hook-form";
-import { IRegisterFormInput } from "../pages/Register/types";
-import { ILoginFormInput } from "../pages/Login/types";
+import React, { FC, useState } from 'react';
+import { IconButton, InputAdornment, TextField } from '@mui/material';
+import { VisibilityOff, Visibility } from '@mui/icons-material';
+import { UseFormRegister } from 'react-hook-form';
+import { IRegisterFormInput } from '../pages/Register/types';
+import { ILoginFormInput } from '../pages/Login/types';
 
 interface PasswordFieldProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -26,7 +26,7 @@ const PasswordField: FC<PasswordFieldProps> = (props) => {
     helperText,
     required,
     onFocus,
-    onBlur,
+    onBlur
   } = props;
   const [showPassword, setShowPassword] = useState(false);
 
@@ -43,21 +43,21 @@ const PasswordField: FC<PasswordFieldProps> = (props) => {
       required={required ?? false}
       error={error}
       helperText={helperText}
-      type={showPassword ? "text" : "password"}
-      variant="outlined"
+      type={showPassword ? 'text' : 'password'}
+      variant='outlined'
       InputProps={{
         endAdornment: (
-          <InputAdornment position="end" sx={{ p: 1 }}>
+          <InputAdornment position='end' sx={{ p: 1 }}>
             <IconButton
-              aria-label="toggle password visibility"
+              aria-label='toggle password visibility'
               onClick={handleClickShowPassword}
               onMouseDown={handleMouseDownPassword}
-              edge="end"
+              edge='end'
             >
               {showPassword ? <VisibilityOff /> : <Visibility />}
             </IconButton>
           </InputAdornment>
-        ),
+        )
       }}
       onFocus={onFocus}
       onBlur={onBlur}

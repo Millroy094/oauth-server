@@ -4,7 +4,7 @@ function useTimer() {
   const [timer, setTimer] = useState(60);
   const timeOutCallback = useCallback(
     () => setTimer((currentTime) => currentTime - 1),
-    [],
+    []
   );
   useEffect(() => {
     timer > 0 && setTimeout(timeOutCallback, 1000);

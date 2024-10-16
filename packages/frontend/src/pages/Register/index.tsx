@@ -9,7 +9,7 @@ import {
   Grid,
   TextField,
   Typography,
-  styled,
+  styled
 } from '@mui/material';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Controller, useForm } from 'react-hook-form';
@@ -24,7 +24,7 @@ import { MobileNumberInput } from '../../components/MobileNumberInput';
 import { IRegisterFormInput } from './types';
 
 const StyledCard = styled(Card)({
-  borderTop: '2px solid red',
+  borderTop: '2px solid red'
 });
 
 const Register: FC = () => {
@@ -35,7 +35,7 @@ const Register: FC = () => {
     register,
     handleSubmit,
     formState: { errors, dirtyFields },
-    reset,
+    reset
   } = useForm<IRegisterFormInput>({
     resolver: yupResolver(schema, {}),
     criteriaMode: 'all',
@@ -46,8 +46,8 @@ const Register: FC = () => {
       email: '',
       password: '',
       confirmPassword: '',
-      mobile: '',
-    },
+      mobile: ''
+    }
   });
 
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
@@ -67,14 +67,14 @@ const Register: FC = () => {
       feedbackAxiosResponse(
         response,
         'Successfully registered user',
-        'success',
+        'success'
       );
       reset();
       navigate('/login');
     } catch (err) {
       feedbackAxiosError(
         err,
-        'There was an issue registering the user, please try again',
+        'There was an issue registering the user, please try again'
       );
     }
   };
@@ -102,7 +102,7 @@ const Register: FC = () => {
           subheaderTypographyProps={{
             display: 'flex',
             gap: '4px',
-            justifyContent: 'center',
+            justifyContent: 'center'
           }}
         />
         <CardContent>

@@ -3,7 +3,7 @@ import axios from '../../utils/axios-instance';
 
 const getMFASettings = async (): Promise<AxiosResponse> => {
   const response = await axios.get('/api/user/mfa-settings', {
-    withCredentials: true,
+    withCredentials: true
   });
   return response;
 };

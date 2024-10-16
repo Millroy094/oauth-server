@@ -9,7 +9,7 @@ type UpdateClientArgs = {
 
 const updateClient = async (
   id: string,
-  args: UpdateClientArgs,
+  args: UpdateClientArgs
 ): Promise<AxiosResponse> => {
   const { scopes, grants, redirectUris } = args;
   const response = await axios.put(
@@ -17,9 +17,9 @@ const updateClient = async (
     {
       scopes,
       grants,
-      redirectUris,
+      redirectUris
     },
-    { withCredentials: true },
+    { withCredentials: true }
   );
 
   return response;

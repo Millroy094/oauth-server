@@ -5,7 +5,7 @@ import {
   CardHeader,
   Grid,
   IconButton,
-  Tooltip,
+  Tooltip
 } from '@mui/material';
 import { DataGrid, GridColDef, GridRowParams } from '@mui/x-data-grid';
 import getUsers from '../../../api/admin/get-users';
@@ -37,7 +37,7 @@ const Users: FC = () => {
     } catch (err) {
       feedbackAxiosError(
         err,
-        'There was an issue retreiving users, please try again',
+        'There was an issue retreiving users, please try again'
       );
     }
   };
@@ -54,7 +54,7 @@ const Users: FC = () => {
     } catch (err) {
       feedbackAxiosError(
         err,
-        'There was an issue deleting the user, please try again',
+        'There was an issue deleting the user, please try again'
       );
     }
   };
@@ -65,12 +65,12 @@ const Users: FC = () => {
       feedbackAxiosResponse(
         response,
         'Successfully deleted user sessions',
-        'success',
+        'success'
       );
     } catch (err) {
       feedbackAxiosError(
         err,
-        'There was an issue deleting the user sessions, please try again',
+        'There was an issue deleting the user sessions, please try again'
       );
     }
   };
@@ -98,25 +98,25 @@ const Users: FC = () => {
       field: 'firstName',
       headerName: 'First Name',
       width: 180,
-      editable: false,
+      editable: false
     },
     {
       field: 'lastName',
       headerName: 'Last Name',
       width: 180,
-      editable: false,
+      editable: false
     },
     {
       field: 'email',
       headerName: 'Email',
       width: 200,
-      editable: false,
+      editable: false
     },
     {
       field: 'mobile',
       headerName: 'Mobile',
       width: 150,
-      editable: false,
+      editable: false
     },
     {
       field: 'id',
@@ -158,8 +158,8 @@ const Users: FC = () => {
             </Grid>
           </Grid>
         );
-      },
-    },
+      }
+    }
   ];
 
   return (
@@ -172,9 +172,9 @@ const Users: FC = () => {
           initialState={{
             pagination: {
               paginationModel: {
-                pageSize: 5,
-              },
-            },
+                pageSize: 5
+              }
+            }
           }}
           pageSizeOptions={[5]}
           disableRowSelectionOnClick

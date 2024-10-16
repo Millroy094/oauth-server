@@ -1,5 +1,5 @@
-import { Request, Response, NextFunction } from "express";
-import UserService from "../services/user.ts";
+import { Request, Response, NextFunction } from 'express';
+import UserService from '../services/user.ts';
 
 const authorize = (permissions: string[] | undefined) => {
   return async (req: Request, res: Response, next: NextFunction) => {
@@ -7,12 +7,12 @@ const authorize = (permissions: string[] | undefined) => {
       try {
         if (!req.user) {
           res.status(401).json({
-            error: "Authorisation failed! user not authenticated",
+            error: 'Authorisation failed! user not authenticated'
           });
           return;
         }
 
-        const userId = req.user?.userId ?? "";
+        const userId = req.user?.userId ?? '';
 
         const userAccount = await UserService.getUserById(userId);
 
@@ -29,7 +29,7 @@ const authorize = (permissions: string[] | undefined) => {
         console.error(error);
         return res.status(403).json({
           error:
-            "Authorisation failed! user doesn't have sufficient permissions to carry out this task",
+            "Authorisation failed! user doesn't have sufficient permissions to carry out this task"
         });
       }
     }

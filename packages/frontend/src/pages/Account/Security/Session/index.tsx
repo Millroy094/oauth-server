@@ -6,7 +6,7 @@ import {
   CardContent,
   CardHeader,
   IconButton,
-  Tooltip,
+  Tooltip
 } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { Delete } from '@mui/icons-material';
@@ -34,7 +34,7 @@ const Sessions: FC = () => {
     } catch (err) {
       feedbackAxiosError(
         err,
-        'There was an issue retreiving user sessions, please try again',
+        'There was an issue retreiving user sessions, please try again'
       );
     }
   };
@@ -50,7 +50,7 @@ const Sessions: FC = () => {
       width: 200,
       editable: false,
       renderCell: (params) =>
-        !isEmpty(params.value) ? params.value.join(', ') : 'None',
+        !isEmpty(params.value) ? params.value.join(', ') : 'None'
     },
     {
       field: 'loggedInAt',
@@ -58,7 +58,7 @@ const Sessions: FC = () => {
       width: 180,
       editable: false,
       valueFormatter: (value) =>
-        format(new Date(value * 1000), 'dd/MM/yyyy HH:mm:ss'),
+        format(new Date(value * 1000), 'dd/MM/yyyy HH:mm:ss')
     },
     {
       field: 'iat',
@@ -66,7 +66,7 @@ const Sessions: FC = () => {
       width: 180,
       editable: false,
       valueFormatter: (value) =>
-        format(new Date(value * 1000), 'dd/MM/yyyy HH:mm:ss'),
+        format(new Date(value * 1000), 'dd/MM/yyyy HH:mm:ss')
     },
     {
       field: 'exp',
@@ -74,7 +74,7 @@ const Sessions: FC = () => {
       width: 180,
       editable: false,
       valueFormatter: (value) =>
-        format(new Date(value * 1000), 'dd/MM/yyyy HH:mm:ss'),
+        format(new Date(value * 1000), 'dd/MM/yyyy HH:mm:ss')
     },
     {
       field: 'id',
@@ -87,8 +87,8 @@ const Sessions: FC = () => {
             <Delete />
           </IconButton>
         </Tooltip>
-      ),
-    },
+      )
+    }
   ];
 
   const handleDelete = async (sessionId: string): Promise<void> => {
@@ -97,13 +97,13 @@ const Sessions: FC = () => {
       feedbackAxiosResponse(
         response,
         'Successfully deleted session',
-        'success',
+        'success'
       );
       setSessions(sessions.filter((session) => session.id !== sessionId));
     } catch (err) {
       feedbackAxiosError(
         err,
-        'There was an issue deleting the session, please try again',
+        'There was an issue deleting the session, please try again'
       );
     }
   };
@@ -114,14 +114,14 @@ const Sessions: FC = () => {
       feedbackAxiosResponse(
         response,
         'Successfully deleted all sessions',
-        'success',
+        'success'
       );
 
       setSessions([]);
     } catch (err) {
       feedbackAxiosError(
         err,
-        'There was an issue deleting all sessions, please try again',
+        'There was an issue deleting all sessions, please try again'
       );
     }
   };
@@ -149,9 +149,9 @@ const Sessions: FC = () => {
           initialState={{
             pagination: {
               paginationModel: {
-                pageSize: 5,
-              },
-            },
+                pageSize: 5
+              }
+            }
           }}
           pageSizeOptions={[5]}
           disableRowSelectionOnClick

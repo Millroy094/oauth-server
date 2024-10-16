@@ -10,7 +10,7 @@ import {
   Paper,
   Switch,
   Tooltip,
-  Typography,
+  Typography
 } from '@mui/material';
 import getMFASettings from '../../../../api/user/get-mfa-settings';
 import useFeedback from '../../../../hooks/useFeedback';
@@ -50,7 +50,7 @@ const MFA: FC = () => {
     } catch (err) {
       feedbackAxiosError(
         err,
-        'There was an issue retrieving mfa setting, please try again',
+        'There was an issue retrieving mfa setting, please try again'
       );
     }
   };
@@ -173,7 +173,7 @@ const MFA: FC = () => {
                             setSetupModal({
                               open: true,
                               type: mfaType.type,
-                              defaultValue: mfaType.subscriber || '',
+                              defaultValue: mfaType.subscriber || ''
                             })
                           }
                         >

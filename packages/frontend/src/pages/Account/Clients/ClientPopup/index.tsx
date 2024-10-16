@@ -9,7 +9,7 @@ import {
   Grid,
   IconButton,
   Modal,
-  TextField,
+  TextField
 } from '@mui/material';
 import { AddLinkRounded, Business, Delete } from '@mui/icons-material';
 import { useFieldArray, useForm } from 'react-hook-form';
@@ -37,7 +37,7 @@ const defaultValues: IClientPopupInput = {
   clientName: '',
   grants: [],
   scopes: [],
-  redirectUris: [{ id: uniqueId(), value: '' }],
+  redirectUris: [{ id: uniqueId(), value: '' }]
 };
 
 const ClientPopup: FC<ClientPopupProps> = (props) => {
@@ -51,12 +51,12 @@ const ClientPopup: FC<ClientPopupProps> = (props) => {
     formState: { errors },
     reset,
     setValue,
-    watch,
+    watch
   } = useForm<IClientPopupInput>({
     resolver: yupResolver(schema),
     criteriaMode: 'all',
     mode: 'onChange',
-    values: client,
+    values: client
   });
 
   const handleClose = (): void => {
@@ -74,13 +74,13 @@ const ClientPopup: FC<ClientPopupProps> = (props) => {
         scopes: response.data.client.scopes,
         redirectUris: response.data.client.redirectUris.map((uri: string) => ({
           id: uniqueId(),
-          value: uri,
-        })),
+          value: uri
+        }))
       });
     } catch (err) {
       feedbackAxiosError(
         err,
-        'There was an issue retrieving the client, please try again',
+        'There was an issue retrieving the client, please try again'
       );
       handleClose();
     }
@@ -101,10 +101,10 @@ const ClientPopup: FC<ClientPopupProps> = (props) => {
   const {
     fields: redirectUriFields,
     append: addRedirectUri,
-    remove: removeRedirectUri,
+    remove: removeRedirectUri
   } = useFieldArray<IClientPopupInput>({
     control,
-    name: 'redirectUris',
+    name: 'redirectUris'
   });
 
   const canDeleteRedirectUris = redirectUriFields.length > 1;
@@ -119,21 +119,21 @@ const ClientPopup: FC<ClientPopupProps> = (props) => {
         response = await createClient({
           ...data,
           redirectUris: data.redirectUris.map(
-            (redirectUri) => redirectUri.value,
-          ),
+            (redirectUri) => redirectUri.value
+          )
         });
       } else {
         response = await updateClient(clientIdentifier, {
           ...data,
           redirectUris: data.redirectUris.map(
-            (redirectUri) => redirectUri.value,
-          ),
+            (redirectUri) => redirectUri.value
+          )
         });
       }
       feedbackAxiosResponse(
         response,
         `Successfully ${!clientIdentifier ? 'created' : 'updated'} client`,
-        'success',
+        'success'
       );
       reset();
       handleClose();
@@ -142,7 +142,7 @@ const ClientPopup: FC<ClientPopupProps> = (props) => {
         err,
         `There was an issue ${
           !clientIdentifier ? 'creating' : 'updating'
-        } the client, please try again`,
+        } the client, please try again`
       );
     }
   };
@@ -157,7 +157,7 @@ const ClientPopup: FC<ClientPopupProps> = (props) => {
           transform: 'translate(-50%, -50%)',
           width: 600,
           bgcolor: 'background.paper',
-          p: 2,
+          p: 2
         }}
       >
         <CardHeader
@@ -208,8 +208,8 @@ const ClientPopup: FC<ClientPopupProps> = (props) => {
                     options={[
                       {
                         label: 'Authorization Code Flow',
-                        value: 'authorization_code',
-                      },
+                        value: 'authorization_code'
+                      }
                     ]}
                     errors={errors}
                   />
@@ -224,7 +224,7 @@ const ClientPopup: FC<ClientPopupProps> = (props) => {
                       { label: 'Open ID', value: 'openid' },
                       { label: 'Email', value: 'email' },
                       { label: 'Phone', value: 'phone' },
-                      { label: 'Profile', value: 'profile' },
+                      { label: 'Profile', value: 'profile' }
                     ]}
                     errors={errors}
                   />
@@ -248,7 +248,7 @@ const ClientPopup: FC<ClientPopupProps> = (props) => {
                           helperText={get(
                             errors,
                             `redirectUris.${index}.value.message`,
-                            '',
+                            ''
                           )}
                         />
                       </Grid>
@@ -258,7 +258,7 @@ const ClientPopup: FC<ClientPopupProps> = (props) => {
                             display: 'flex',
                             justifyContent: 'center',
                             p: '10px 0',
-                            gap: '6px',
+                            gap: '6px'
                           }}
                         >
                           {isLastRedirectUri(index) && (

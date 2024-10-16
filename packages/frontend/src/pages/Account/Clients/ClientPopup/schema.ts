@@ -11,11 +11,11 @@ const schema = yup
       .of(
         yup.object({
           id: yup.string().required('redirect uri id is required'),
-          value: yup.string().url('url is invalid').required('url is required'),
-        }),
+          value: yup.string().url('url is invalid').required('url is required')
+        })
       )
       .min(1, 'atleast one url should be present')
-      .required('url is required'),
+      .required('url is required')
   })
   .required();
 
