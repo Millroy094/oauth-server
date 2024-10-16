@@ -16,7 +16,9 @@ spec:
     spec:
       containers:
         - name: oauth-server
-          image: ghcr.io/{{ .Values.Container.Image }}:{{ .Values.Container.Tag }}
+          image: ghcr.io/{{ .Values.GitHub.Container.Image }}:{{ .Values.GitHub.Container.Tag }}
+          imagePullSecrets:
+            - name: { { .Values.GitHub.ContainerRegistrySecret } }
           ports:
             - containerPort: 3000
           env:
