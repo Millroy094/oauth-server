@@ -30,7 +30,7 @@ spec:
               value: production
             - name: ISSUER
               valueOf:
-                configMapRef: oauth-server-config-map
+                configMapKeyRef: oauth-server-config-map
                 key: issuer
             - name: ACCESS_JWT_SECRET
               valueFrom:
@@ -38,7 +38,7 @@ spec:
                 key: AccessTokenSecret
             - name: ACCESS_JWT_EXPIRY
               valueFrom:
-                configMapRef: oauth-server-config-map
+                configMapKeyRef: oauth-server-config-map
                 key: accessTokenExpiry
             - name: REFRESH_JWT_SECRET
               valueFrom:
@@ -46,7 +46,7 @@ spec:
                 key: RefreshTokenSecret
             - name: REFRESH_JWT_EXPIRY
               valueFrom:
-                configMapRef: oauth-server-config-map
+                configMapKeyRef: oauth-server-config-map
                 key: refreshTokenExpiry
             - name: ENCRYPTION_SECRET_KEY
               valueFrom:
@@ -58,15 +58,15 @@ spec:
                 key: encryptionSecretIV
             - name: ENCRYPTION_METHOD
               valueFrom:
-                configMapRef: oauth-server-config-map
+                configMapKeyRef: oauth-server-config-map
                 key: encryptionMethod
             - name: EMAIL_SERVICE
               valueFrom:
-                configMapRef: oauth-server-config-map
+                configMapKeyRef: oauth-server-config-map
                 key: emailService
             - name: EMAIL_ADDRESS
               valueFrom:
-                configMapRef: oauth-server-config-map
+                configMapKeyRef: oauth-server-config-map
                 key: emailAddress
             - name: EMAIL_PASSWORD
               valueFrom:
