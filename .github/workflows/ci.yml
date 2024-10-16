@@ -2,11 +2,16 @@ name: Build and publish a Docker image
 on:
   push:
     branches:
-      - 'main'
+      - "main"
     tags:
-      - 'v[0-9]+.[0-9]+.[0-9]+'
+      - "v[0-9]+.[0-9]+.[0-9]+"
 jobs:
   build:
+    name: Build & push docker image
+    runs-on: ubuntu-latest
+    env:
+      IMG_NAME: "millroy098/${{ github.repository }}"
+    steps:
       - name: Dump GitHub context
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
@@ -31,11 +36,6 @@ jobs:
         env:
           MATRIX_CONTEXT: ${{ toJson(matrix) }}
         run: echo "$MATRIX_CONTEXT"
-    name: Build & push docker image
-    runs-on: ubuntu-latest
-    env:
-      IMG_NAME: 'millroy098/${{ github.repository }}'
-    steps:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Docker metadata
