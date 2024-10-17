@@ -18,7 +18,7 @@ spec:
         - name: oauth-server
           image: 'ghcr.io/{{ .Values.GitHub.Container.Image }}:{{ .Values.GitHub.Container.Tag }}'
           imagePullSecrets:
-            - name: {{ .Values.GitHub.ContainerRegistrySecret }}
+            - name: '{{ .Values.GitHub.ContainerRegistrySecret }}'
           resources:
             requests:
               memory: "64Mi"
@@ -31,51 +31,63 @@ spec:
           env:
             - name: COOKIE_SECRETS
               valueFrom:
-                secretKeyRef: oauth-server-secret
-                key: cookieSecrets
+                secretKeyRef: 
+                  name: oauth-server-secret
+                  key: cookieSecrets
             - name: NODE_ENV
               value: production
             - name: ISSUER
               valueOf:
-                configMapKeyRef: oauth-server-config-map
-                key: issuer
+                configMapKeyRef: 
+                  name: oauth-server-config-map
+                  key: issuer
             - name: ACCESS_JWT_SECRET
               valueFrom:
-                secretKeyRef: oauth-server-secret
-                key: AccessTokenSecret
+                secretKeyRef: 
+                  name: oauth-server-secret
+                  key: AccessTokenSecret
             - name: ACCESS_JWT_EXPIRY
               valueFrom:
-                configMapKeyRef: oauth-server-config-map
-                key: accessTokenExpiry
+                configMapKeyRef: 
+                  name: oauth-server-config-map
+                  key: accessTokenExpiry
             - name: REFRESH_JWT_SECRET
               valueFrom:
-                secretKeyRef: oauth-server-secret
-                key: RefreshTokenSecret
+                secretKeyRef: 
+                  name: oauth-server-secret
+                  key: RefreshTokenSecret
             - name: REFRESH_JWT_EXPIRY
               valueFrom:
-                configMapKeyRef: oauth-server-config-map
-                key: refreshTokenExpiry
+                configMapKeyRef:
+                  name: oauth-server-config-map
+                  key: refreshTokenExpiry
             - name: ENCRYPTION_SECRET_KEY
               valueFrom:
-                secretKeyRef: oauth-server-secret
-                key: encryptionSecret
+                secretKeyRef: 
+                  name: oauth-server-secret
+                  key: encryptionSecret
             - name: ENCRYPTION_SECRET_IV
               valueFrom:
-                secretKeyRef: oauth-server-secret
-                key: encryptionSecretIV
+                secretKeyRef: 
+                  name: oauth-server-secret
+                  key: encryptionSecretIV
             - name: ENCRYPTION_METHOD
               valueFrom:
-                configMapKeyRef: oauth-server-config-map
-                key: encryptionMethod
+                configMapKeyRef: 
+                  name: oauth-server-config-map
+                  key: encryptionMethod
             - name: EMAIL_SERVICE
               valueFrom:
-                configMapKeyRef: oauth-server-config-map
-                key: emailService
+                configMapKeyRef: 
+                  name: oauth-server-config-map
+                  key: emailService
             - name: EMAIL_ADDRESS
               valueFrom:
-                configMapKeyRef: oauth-server-config-map
-                key: emailAddress
+                configMapKeyRef: 
+                  name: oauth-server-config-map
+                  key: emailAddress
             - name: EMAIL_PASSWORD
               valueFrom:
-                secretKeyRef: oauth-server-secret
-                key: emailPassword
+                secretKeyRef: 
+                  name: oauth-server-secret
+                  key: emailPassword
