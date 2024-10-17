@@ -16,9 +16,16 @@ spec:
     spec:
       containers:
         - name: oauth-server
-          image: ghcr.io/{{ .Values.GitHub.Container.Image }}:{{ .Values.GitHub.Container.Tag }}
+          image: 'ghcr.io/{{ .Values.GitHub.Container.Image }}:{{ .Values.GitHub.Container.Tag }}'
           imagePullSecrets:
             - name: {{ .Values.GitHub.ContainerRegistrySecret }}
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "250m"
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
           ports:
             - containerPort: 3000
           env:
