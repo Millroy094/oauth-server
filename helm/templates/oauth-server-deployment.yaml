@@ -45,7 +45,7 @@ spec:
               valueFrom:
                 secretKeyRef: 
                   name: oauth-server-secret
-                  key: AccessTokenSecret
+                  key: accessTokenSecret
             - name: ACCESS_JWT_EXPIRY
               valueFrom:
                 configMapKeyRef: 
@@ -55,7 +55,7 @@ spec:
               valueFrom:
                 secretKeyRef: 
                   name: oauth-server-secret
-                  key: RefreshTokenSecret
+                  key: refreshTokenSecret
             - name: REFRESH_JWT_EXPIRY
               valueFrom:
                 configMapKeyRef:
