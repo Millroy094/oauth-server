@@ -1,5 +1,9 @@
+ImageCredentials:
+  Registry: 
+  Username: 
+  Password: 
+  Email:
 GitHub:
-  ContainerRegistrySecret:
   Container:
     Image:
     Tag:

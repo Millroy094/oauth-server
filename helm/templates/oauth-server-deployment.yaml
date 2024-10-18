@@ -14,11 +14,11 @@ spec:
       labels:
         app: oauth-server
     spec:
+      imagePullSecrets:
+        - name: registry-key
       containers:
         - name: oauth-server
-          image: 'ghcr.io/{{ .Values.GitHub.Container.Image }}:{{ .Values.GitHub.Container.Tag }}'
-          imagePullSecrets:
-            - name: '{{ .Values.GitHub.ContainerRegistrySecret }}'
+          image: {{ .Values.ImageCredentials.Registry }}/{{ .Values.ImageCredentials.Username }}/{{ .Values.GitHub.Container.Image }}:{{ .Values.GitHub.Container.Tag }}
           resources:
             requests:
               memory: "64Mi"
@@ -37,7 +37,7 @@ spec:
             - name: NODE_ENV
               value: production
             - name: ISSUER
-              valueOf:
+              valueFrom:
                 configMapKeyRef: 
                   name: oauth-server-config-map
                   key: issuer
