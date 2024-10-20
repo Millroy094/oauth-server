@@ -1,1 +1,0 @@
-variable "oauth_server_eks_subnet" {}
