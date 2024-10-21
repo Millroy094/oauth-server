@@ -22,9 +22,6 @@ jobs:
       - name: Init OpenTofu
         id: init
         run: tofu init --backend-config="bucket=${{vars.AWS_TERRAFORM_STATE_BUCKET_NAME}}" --backend-config="key=${{vars.AWS_TERRAFORM_STATE_KEY}}.tfstate"
-      - name: OpenTofu Validate
-        id: validate
-        run: tofu validate
       - name: Provision recipe lambda & website
         working-directory: "./infra"
         run: tofu apply -auto-approve
