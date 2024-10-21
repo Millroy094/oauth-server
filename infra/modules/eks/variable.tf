@@ -2,6 +2,13 @@ variable "vpc_id" {
   type = string
 }
 
+variable "tags" {
+   type = "map" 
+    default = { 
+        app: "oauth-server",
+  } 
+}
+
 variable "private_subnet_ids" {
 }
 
