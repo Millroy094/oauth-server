@@ -179,6 +179,6 @@ resource "helm_release" "oauth_lb" {
 
   set {
     name  = "clusterName"
-    value = "oauth-server-cluster"
+    value = local.cluster_name
   }
 }
