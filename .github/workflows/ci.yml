@@ -1,5 +1,6 @@
-name: Build and publish a Docker image
+name: Build OAuth Server Artefact
 on:
+  workflow_dispatch:
   push:
     branches:
       - "main"
