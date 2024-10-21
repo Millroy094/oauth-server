@@ -2,7 +2,7 @@ name: Destroy OAuth Server
 
 on:
   workflow_dispatch:
-
+  workflow_run:
 jobs:
   destroy:
     runs-on: ubuntu-latest
