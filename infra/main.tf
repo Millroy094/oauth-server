@@ -16,5 +16,5 @@ module "eks" {
   source              = "./modules/eks"
   vpc_id              = module.vpc.vpc_id
   private_subnet_ids  = module.vpc.private_subnet_ids
-  dynamodb_table_arns = module.dynamodb.*
+  dynamodb_table_arns = [module.dynamodb.client_dynamodb_table_arn, module.dynamodb.user_dynamodb_table_arn, module.dynamodb.otp_dynamodb_table_arn, module.dynamodb.oidc_store_dynamodb_table_arn]
 }
