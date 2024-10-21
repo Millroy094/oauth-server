@@ -1,10 +1,10 @@
-variable "access_key" {
+variable "aws_access_key" {
   type        = string
   description = "The AWS development account access key"
   nullable    = false
 }
 
-variable "secret_key" {
+variable "aws_secret_key" {
   type        = string
   description = "The AWS development account secret key"
   nullable    = false
