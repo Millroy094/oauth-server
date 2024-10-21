@@ -17,13 +17,13 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: eu-west-2
-      - name: Setup Open Tofu
-        uses: opentofu/setup-opentofu@v1
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
       - name: Provision oauth server eks cluster
         working-directory: "./infra"
         run: |
-          tofu init --backend-config="bucket=${{vars.AWS_TERRAFORM_STATE_BUCKET_NAME}}" --backend-config="key=${{vars.AWS_TERRAFORM_STATE_KEY}}.tfstate"
-          tofu apply -auto-approve
+          terraform init --backend-config="bucket=${{vars.AWS_TERRAFORM_STATE_BUCKET_NAME}}" --backend-config="key=${{vars.AWS_TERRAFORM_STATE_KEY}}.tfstate"
+          terraform apply -auto-approve
         env:
           TF_VAR_aws_access_key: "${{secrets.AWS_ACCESS_KEY_ID}}"
           TF_VAR_aws_secret_key: "${{secrets.AWS_SECRET_ACCESS_KEY}}"
