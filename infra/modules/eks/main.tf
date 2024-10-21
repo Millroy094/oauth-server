@@ -29,7 +29,7 @@ resource "aws_security_group" "eks_sg" {
   tags = merge({
     Name = "${local.app_name} EKS Security Group",
     "kubernetes.io/cluster/${local.cluster_name}" : "owned"
-  }, var.tags)
+  })
 }
 
 module "eks" {
@@ -60,14 +60,14 @@ module "eks" {
 
       instance_types = ["t3.medium"]
       capacity_type  = "SPOT"
-      labels         = var.tags
+      labels         = "OAuth Server node groups"
       taints = {
       }
-      tags = var.tags
+      tags = "OAuth Server node groups"
     }
   }
 
-  tags = var.tags
+  tags = "OAuth Server cluster"
 }
 
 module "ouath_server_eks_lb_role" {
