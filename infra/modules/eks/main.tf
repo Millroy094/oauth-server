@@ -141,6 +141,7 @@ resource "kubernetes_service_account" "service-account" {
       "eks.amazonaws.com/sts-regional-endpoints" = "true"
     }
   }
+  automount_service_account_token = true
 }
 
 resource "helm_release" "oauth_lb" {
