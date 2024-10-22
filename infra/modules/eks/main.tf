@@ -71,8 +71,8 @@ module "eks" {
 }
 
 module "ouath_server_eks_lb_role" {
-  source = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
-
+  source                                 = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
+  version                                = "5.47.0"
   role_name                              = "oauth_server_eks_lb_role"
   attach_load_balancer_controller_policy = true
 
@@ -141,7 +141,6 @@ resource "kubernetes_service_account" "service-account" {
       "eks.amazonaws.com/sts-regional-endpoints" = "true"
     }
   }
-  automount_service_account_token = true
 }
 
 resource "helm_release" "oauth_lb" {
