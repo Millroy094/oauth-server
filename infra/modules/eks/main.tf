@@ -34,7 +34,7 @@ resource "aws_security_group" "eks_sg" {
 
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
-  version = "18.19.0"
+  version = "20.26.0"
 
   cluster_name                          = local.cluster_name
   cluster_version                       = "1.31"

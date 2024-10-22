@@ -1,6 +1,6 @@
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
-  version = "5.0.0"
+  version = "5.14.0"
 
   name = "oauth-server-vpc"
   cidr = "10.0.0.0/16"
@@ -25,4 +25,4 @@ module "vpc" {
   }
 }
 
- 
+
