@@ -157,10 +157,10 @@ resource "helm_release" "oauth_lb" {
     value = "eu-west-2"
   }
 
-  # set {
-  #   name  = "vpcId"
-  #   value = var.vpc_id
-  # }
+  set {
+    name  = "vpcId"
+    value = var.vpc_id
+  }
 
   # set {
   #   name  = "image.repository"
