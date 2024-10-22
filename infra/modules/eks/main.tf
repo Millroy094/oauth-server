@@ -177,8 +177,8 @@ resource "helm_release" "oauth_lb" {
     value = "aws-load-balancer-controller"
   }
 
-  # set {
-  #   name  = "clusterName"
-  #   value = local.cluster_name
-  # }
+  set {
+    name  = "clusterName"
+    value = local.cluster_name
+  }
 }
