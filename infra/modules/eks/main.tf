@@ -168,11 +168,6 @@ resource "helm_release" "oauth_lb" {
   }
 
   set {
-    name  = "serviceAccount.create"
-    value = "false"
-  }
-
-  set {
     name  = "serviceAccount.name"
     value = "aws-load-balancer-controller"
   }
@@ -180,5 +175,10 @@ resource "helm_release" "oauth_lb" {
   set {
     name  = "clusterName"
     value = local.cluster_name
+  }
+
+  set {
+    name  = "serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
+    value = module.ouath_server_eks_lb_role.iam_role_arn
   }
 }
