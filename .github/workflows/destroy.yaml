@@ -17,7 +17,7 @@ jobs:
           aws-region: us-west-2
       - name: Setup Open Tofu
         uses: opentofu/setup-opentofu@v1
-      - name: Destroy Recipe lambda & website
+      - name: Destroy OAuth Server Cluster & Other Resources
         working-directory: "./infra"
         run: |
           tofu init --backend-config="bucket=${{vars.AWS_TERRAFORM_STATE_BUCKET_NAME}}" --backend-config="key=${{vars.AWS_TERRAFORM_STATE_KEY}}.tfstate"
