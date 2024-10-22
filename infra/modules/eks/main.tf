@@ -159,7 +159,7 @@ resource "helm_release" "oauth_lb" {
 
   set {
     name  = "vpcId"
-    value = var.vpc_id
+    value = "'${var.vpc_id}'"
   }
 
   # set {
