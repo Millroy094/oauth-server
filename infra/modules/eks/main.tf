@@ -79,7 +79,7 @@ module "ouath_server_eks_lb_role" {
   oidc_providers = {
     main = {
       provider_arn               = module.eks.oidc_provider_arn
-      namespace_service_accounts = ["oauth:aws-load-balancer-controller"]
+      namespace_service_accounts = ["kube-system:aws-load-balancer-controller"]
     }
   }
 }
@@ -131,7 +131,7 @@ provider "helm" {
 resource "kubernetes_service_account" "service-account" {
   metadata {
     name      = "aws-load-balancer-controller"
-    namespace = "oauth"
+    namespace = "kube-system"
     labels = {
       "app.kubernetes.io/name"      = "aws-load-balancer-controller"
       "app.kubernetes.io/component" = "controller"
@@ -147,7 +147,7 @@ resource "helm_release" "oauth_lb" {
   name       = "aws-load-balancer-controller"
   repository = "https://aws.github.io/eks-charts"
   chart      = "aws-load-balancer-controller"
-  namespace  = "oauth"
+  namespace  = "kube-system"
   depends_on = [
     kubernetes_service_account.service-account
   ]
