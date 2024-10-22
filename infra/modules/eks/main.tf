@@ -70,6 +70,11 @@ module "eks" {
   tags = var.tags
 }
 
+data "aws_eks_cluster_auth" "oauth_server_eks_cluster_auth" {
+  name       = module.eks.cluster_name
+  depends_on = [module.eks.cluster_name]
+}
+
 module "ouath_server_eks_lb_role" {
   source = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
 
@@ -109,22 +114,15 @@ resource "aws_iam_role_policy_attachment" "policy_attachment" {
 provider "kubernetes" {
   host                   = module.eks.cluster_endpoint
   cluster_ca_certificate = base64decode(module.eks.cluster_certificate_authority_data)
-  exec {
-    api_version = "client.authentication.k8s.io/v1beta1"
-    args        = ["eks", "get-token", "--cluster-name", local.cluster_name]
-    command     = "aws"
-  }
+  token                  = data.aws_eks_cluster_auth.oauth_server_eks_cluster_auth.token
 }
 
 provider "helm" {
   kubernetes {
     host                   = module.eks.cluster_endpoint
     cluster_ca_certificate = base64decode(module.eks.cluster_certificate_authority_data)
-    exec {
-      api_version = "client.authentication.k8s.io/v1beta1"
-      args        = ["eks", "get-token", "--cluster-name", local.cluster_name]
-      command     = "aws"
-    }
+    token                  = data.aws_eks_cluster_auth.oauth_server_eks_cluster_auth.token
+
   }
 }
 
