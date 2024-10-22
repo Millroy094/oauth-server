@@ -152,10 +152,10 @@ resource "helm_release" "oauth_lb" {
     kubernetes_service_account.service-account
   ]
 
-  # set {
-  #   name  = "region"
-  #   value = "eu-west-2"
-  # }
+  set {
+    name  = "region"
+    value = "eu-west-2"
+  }
 
   # set {
   #   name  = "vpcId"
