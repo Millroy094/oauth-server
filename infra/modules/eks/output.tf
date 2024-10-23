@@ -1,3 +1,3 @@
 output "cluster_endpoint" {
-  value = aws_eks_cluster.oauth_server_eks_cluster.endpoint
+  value = module.oauth_server_eks_cluster.cluster_endpoint
 }

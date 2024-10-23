@@ -1,8 +1,7 @@
-variable "app_name" {
-  type="string"
-  default="oauth-server"
+variable "eks_cluster_name" {
+  type        = string
+  description = "Name of the EKS Cluster"
 }
-
 variable "vpc_cidr_block" {
   type        = string
   default     = "10.0.0.0/16"
@@ -16,7 +15,7 @@ variable "private_subnet_cidr_blocks" {
 }
 
 variable "public_subnet_cidr_blocks" {
-  type = list(string)
+  type        = list(string)
   default     = ["10.0.2.0/24", "10.0.3.0/24"]
   description = "CIDR block range for the public subnet"
 }

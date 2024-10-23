@@ -15,3 +15,9 @@ variable "aws_region" {
   description = "The AWS development account region"
   default     = "eu-west-2"
 }
+
+variable "app_name" {
+  type        = string
+  description = "Name of the application"
+  default     = "oauth-server"
+}

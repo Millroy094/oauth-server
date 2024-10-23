@@ -3,7 +3,10 @@ kind: Service
 metadata:
   name: oauth-server-service
   namespace: oauth
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-type: nlb
 spec:
+  type: LoadBalancer
   selector:
     app: oauth-server
   ports:
