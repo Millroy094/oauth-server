@@ -56,9 +56,9 @@ jobs:
             --set Server.Authentication.Issuer=${{ env.AUTH_ISSUER }} \
             --set Server.Email.Service=${{ env.EMAIL_SERVICE }} \
             --set Server.Email.EmailAddress=${{ env.EMAIL_SERVICE_SENDER_ADDRESS }} \
-            # --set Server.Authentication.AccessTokenSecret=${{ secrets.ACCESS_TOKEN_SECRET }} \ 
+            --set Server.Authentication.AccessTokenSecret=${{ secrets.ACCESS_TOKEN_SECRET }} \ 
             --set Server.Authentication.RefreshTokenSecret=${{ secrets.REFRESH_TOKEN_SECRET }} \
             --set Server.Encryption.Secret=${{ secrets.GITHUB_TOKENENCRYPTION_SECRET }} \
             --set Server.Encryption.SecretIV=${{ secrets.ENCRYPTION_SECRET_IV }} \
             --set Server.Email.EmailPassword='${{ secrets.EMAIL_SERVICE_PASSWORD }}' \
-            # --set 'Server.CookieSecrets={${{ secrets.COOKIE_SECRETS }}}'
+            --set Server.CookieSecrets='{${{ secrets.COOKIE_SECRETS }}}'
