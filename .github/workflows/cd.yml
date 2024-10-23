@@ -46,7 +46,7 @@ jobs:
           curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
       - name: Helm Deploy OAuth Server
         run: |
-          helm upgrade --install oauth-server helm \
+          helm install oauth-server ./helm \
             --set GitHub.Container.Image=${{ github.event.repository.name }} \
             --set GitHub.Container.Tag=latest \
             --set ImageCredentials.Registry=ghcr.io \
