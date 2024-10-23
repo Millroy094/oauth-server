@@ -27,14 +27,14 @@ jobs:
         env:
           TF_VAR_aws_access_key: "${{secrets.AWS_ACCESS_KEY_ID}}"
           TF_VAR_aws_secret_key: "${{secrets.AWS_SECRET_ACCESS_KEY}}"
-      - name: Install AWS CLI and kubectl
+      - name: Install AWS CLI
         run: |
           sudo apt-get update
           sudo apt-get install -y awscli
-          sudo curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl"
-          chmod +x ./kubectl
-          sudo mv ./kubectl /usr/local/bin/kubectl
-
+      - name: Install kubectl
+        uses: azure/setup-kubectl@v3
+        with:
+          version: 'latest'
       - name: Generate KUBECONFIG for EKS
         run: |
           aws eks update-kubeconfig --name oauth-server-cluster --region eu-west-2
