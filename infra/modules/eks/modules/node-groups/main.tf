@@ -3,7 +3,7 @@ resource "aws_eks_node_group" "private-nodes" {
   node_group_name = "oauth-server-node-groups"
   node_role_arn   = aws_iam_role.oauth_server_eks_node_groups_role.arn
 
-  subnet_ids = var.private_subnets.*.id
+  subnet_ids = var.private_subnet_ids
 
   capacity_type  = "ON_DEMAND"
   instance_types = ["t3.small"]

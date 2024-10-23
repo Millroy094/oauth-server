@@ -3,10 +3,10 @@ variable "eks_cluster_name" {
   type        = string
 }
 
-variable "private_subnets" {
-  description = "List of private subnets."
+variable "private_subnet_ids" {
+  description = "List of private subnet IDs."
 }
 
-variable "public_subnets" {
-  description = "List of public subnets."
+variable "public_subnet_ids" {
+  description = "List of public subnet IDs."
 }

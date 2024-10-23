@@ -3,12 +3,12 @@ variable "eks_cluster_name" {
   type        = string
 }
 
-variable "private_subnets" {
+variable "private_subnet_ids" {
   type        = list(string)
-  description = "List of private subnets."
+  description = "List of private subnet IDs."
 }
 
-variable "public_subnets" {
+variable "public_subnet_ids" {
   type        = list(string)
-  description = "List of public subnets."
+  description = "List of public subnet IDs."
 }

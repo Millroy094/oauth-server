@@ -14,8 +14,8 @@ module "dynamodb" {
 }
 
 module "eks" {
-  source           = "./modules/eks"
-  eks_cluster_name = "${var.app_name}-cluster"
-  public_subnets   = module.vpc.public_subnets
-  private_subnets  = module.vpc.private_subnets
+  source             = "./modules/eks"
+  eks_cluster_name   = "${var.app_name}-cluster"
+  public_subnet_ids  = module.vpc.public_subnet_ids
+  private_subnet_ids = module.vpc.public_subnet_ids
 }

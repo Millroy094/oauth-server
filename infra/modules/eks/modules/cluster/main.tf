@@ -3,7 +3,7 @@ resource "aws_eks_cluster" "oauth_server_eks_cluster" {
   role_arn = aws_iam_role.oauth_server_eks_cluster_role.arn
 
   vpc_config {
-    subnet_ids = concat(var.private_subnets.id, var.public_subnets.id)
+    subnet_ids = concat(var.private_subnet_ids, var.public_subnet_ids)
   }
 
   depends_on = [aws_iam_role_policy_attachment.oauth_server_eks_cluster_policy]
