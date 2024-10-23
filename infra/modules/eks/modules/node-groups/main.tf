@@ -1,5 +1,5 @@
 resource "aws_eks_node_group" "private-nodes" {
-  cluster_name    = aws_eks_cluster.demo.name
+  cluster_name    = var.eks_cluster_name
   node_group_name = "oauth-server-node-groups"
   node_role_arn   = aws_iam_role.oauth_server_eks_node_groups_role.arn
 
