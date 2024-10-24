@@ -61,4 +61,4 @@ jobs:
             --set Server.Encryption.Secret=${{ secrets.GITHUB_TOKENENCRYPTION_SECRET }} \
             --set Server.Encryption.SecretIV=${{ secrets.ENCRYPTION_SECRET_IV }} \
             --set Server.Email.EmailPassword='${{ secrets.EMAIL_SERVICE_PASSWORD }}' \
-            --set Server.CookieSecrets='{${{ secrets.COOKIE_SECRETS }}}'
+            --set 'Server.CookieSecrets={${{ secrets.COOKIE_SECRETS }}}'
