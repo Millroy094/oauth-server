@@ -1,6 +1,5 @@
 data "tls_certificate" "eks" {
-  url        = var.cluster_oidc_issuer
-  depends_on = [aws_eks_cluster.oauth_server_eks_cluster]
+  url = var.cluster_oidc_issuer
 }
 
 resource "aws_iam_openid_connect_provider" "oauth_server_eks_oidc_provider" {
