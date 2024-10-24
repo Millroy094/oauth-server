@@ -1,5 +1,6 @@
 module "oauth_server_eks_cluster" {
   source             = "./modules/cluster"
+  aws_account_id     = var.aws_account_id
   eks_cluster_name   = var.eks_cluster_name
   private_subnet_ids = var.private_subnet_ids
   public_subnet_ids  = var.public_subnet_ids

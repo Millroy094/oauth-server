@@ -1,3 +1,8 @@
+variable "aws_account_id" {
+  type        = string
+  description = "The AWS development account id"
+  nullable    = false
+}
 variable "aws_access_key" {
   type        = string
   description = "The AWS development account access key"

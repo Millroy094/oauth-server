@@ -15,6 +15,7 @@ module "dynamodb" {
 
 module "eks" {
   source             = "./modules/eks"
+  aws_account_id     = var.aws_account_id
   eks_cluster_name   = "${var.app_name}-cluster"
   public_subnet_ids  = module.vpc.public_subnet_ids
   private_subnet_ids = module.vpc.public_subnet_ids
