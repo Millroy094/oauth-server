@@ -55,9 +55,9 @@ jobs:
             --set ImageCredentials.Username=${{ github.actor }} \
             --set ImageCredentials.Email=${{ github.event.pusher.email }} \
             --set ImageCredentials.Password=${{ secrets.GHCR_K8_PASSWORD }} \
-            --set Server.Authentication.Issuer=${{ env.AUTH_ISSUER }} \
-            --set Server.Email.Service=${{ env.EMAIL_SERVICE }} \
-            --set Server.Email.EmailAddress=${{ env.EMAIL_SERVICE_SENDER_ADDRESS }} \
+            --set Server.Authentication.Issuer=${{ vars.AUTH_ISSUER }} \
+            --set Server.Email.Service=${{ vars.EMAIL_SERVICE }} \
+            --set Server.Email.EmailAddress=${{ vars.EMAIL_SERVICE_SENDER_ADDRESS }} \
             --set Server.Authentication.AccessTokenSecret=${{ secrets.ACCESS_TOKEN_SECRET }} \
             --set Server.Authentication.RefreshTokenSecret=${{ secrets.REFRESH_TOKEN_SECRET }} \
             --set Server.Encryption.Secret=${{ secrets.GITHUB_TOKENENCRYPTION_SECRET }} \
