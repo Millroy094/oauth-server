@@ -19,7 +19,7 @@ spec:
         - name: registry-key
       containers:
         - name: oauth-server
-          image: {{ .Values.ImageCredentials.Registry }}/{{ .Values.ImageCredentials.Username }}/{{ .Values.GitHub.Container.Image }}:{{ .Values.GitHub.Container.Tag }}
+          image: {{ lower .Values.ImageCredentials.Registry }}/{{ lower .Values.ImageCredentials.Username }}/{{ .Values.GitHub.Container.Image }}:{{ lower .Values.GitHub.Container.Tag }}
           resources:
             requests:
               memory: "64Mi"

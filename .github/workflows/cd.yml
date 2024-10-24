@@ -1,9 +1,10 @@
 name: Deploy OAuth Server
 on:
   workflow_dispatch:
-  # workflow_run:
-  #   workflows: ['Build OAuth Server Artefact']
-  #   types: ['completed']
+    inputs:
+      imageTag:
+        description: 'Tag of container image'     
+        required: true
 jobs:
   provision-and-deploy:
     runs-on: ubuntu-latest
@@ -49,7 +50,7 @@ jobs:
         run: |
           helm upgrade --install oauth-server ./helm \
             --set GitHub.Container.Image=${{ github.event.repository.name }} \
-            --set GitHub.Container.Tag=latest \
+            --set GitHub.Container.Tag=${{ github.event.inputs.imageTag }} \
             --set ImageCredentials.Registry=ghcr.io \
             --set ImageCredentials.Username=${{ github.actor }} \
             --set ImageCredentials.Email=${{ github.event.pusher.email }} \
