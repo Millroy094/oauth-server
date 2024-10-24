@@ -15,6 +15,9 @@ module "oauth_server_eks_node_groups" {
 
 module "oauth_server_service_accounts" {
   source              = "./modules/service-accounts"
+  cluster_name        = var.eks_cluster_name
   cluster_oidc_issuer = module.oauth_server_eks_cluster.cluster_oidc_issuer
+  cluster_endpoint    = module.oauth_server_eks_cluster.cluster_endpoint
+  cluster_ca          = module.oauth_server_eks_cluster.cluster_ca
   depends_on          = [module.oauth_server_eks_cluster]
 }
