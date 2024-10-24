@@ -1,6 +1,6 @@
 locals {
   dynamodb_service_account_name = "oauth-server-dynamob-service-account"
-  namespace                     = "oauth"
+  namespace                     = "default"
 }
 
 data "tls_certificate" "oauth_server_tls_certificate" {
@@ -33,7 +33,7 @@ resource "aws_iam_role" "oauth_server_eks_dynamodb_role" {
       Action = "sts:AssumeRoleWithWebIdentity"
       Condition = {
         StringEquals = {
-          "${aws_eks_cluster.oauth_server_eks_cluster.identity[0].oidc[0].issuer}:sub" = "system:serviceaccount:${local.namespace}:${local.dynamodb_service_account_name}"
+          "${aws_iam_openid_connect_provider.oauth_server_eks_oidc_provider.url}:sub" = "system:serviceaccount:${local.namespace}:${local.dynamodb_service_account_name}"
         }
       }
     }]

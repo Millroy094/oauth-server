@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: oauth-server-deployment
-  namespace: oauth
   labels:
     app: oauth-server
 spec:
