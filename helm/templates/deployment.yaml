@@ -6,6 +6,7 @@ metadata:
   labels:
     app: oauth-server
 spec:
+  serviceAccountName: oauth-server-dynamob-service-account
   replicas: 2
   selector:
     matchLabels:

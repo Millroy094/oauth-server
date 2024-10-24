@@ -13,19 +13,6 @@ resource "aws_eks_cluster" "oauth_server_eks_cluster" {
 
   depends_on = [aws_iam_role_policy_attachment.oauth_server_eks_cluster_policy]
 }
-
-
-data "tls_certificate" "eks" {
-  url        = aws_eks_cluster.oauth_server_eks_cluster.identity[0].oidc[0].issuer
-  depends_on = [aws_eks_cluster.oauth_server_eks_cluster]
-}
-
-resource "aws_iam_openid_connect_provider" "oauth_server_eks_oidc_provider" {
-  client_id_list  = ["sts.amazonaws.com"]
-  thumbprint_list = [data.tls_certificate.eks.certificates[0].sha1_fingerprint]
-  url             = aws_eks_cluster.oauth_server_eks_cluster.identity[0].oidc[0].issuer
-}
-
 resource "aws_eks_access_entry" "oauth_server_admin_access_entry" {
   cluster_name  = aws_eks_cluster.oauth_server_eks_cluster.name
   principal_arn = aws_iam_role.oauth_server_eks_cluster_access_entry_admin_role.arn
