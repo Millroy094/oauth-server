@@ -13,7 +13,7 @@ resource "kubernetes_service_account" "oauth_server_dynamodb_service_account" {
     name      = local.dynamodb_service_account_name
     namespace = local.namespace
     annotations = {
-      "eks.amazonaws.com/role-arn" = module.iam_eks_role.iam_role_arn
+      "eks.amazonaws.com/role-arn" = aws_iam_role.oauth_server_eks_dynamodb_role.arn
     }
   }
 
