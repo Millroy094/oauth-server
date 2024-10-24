@@ -33,6 +33,7 @@ jobs:
         run: |
           curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
       - name: Helm Deploy OAuth Server
+        continue-on-error: true
         run: |
           helm uninstall oauth-server
       - name: Setup Open Tofu
