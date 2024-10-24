@@ -28,14 +28,14 @@ resource "aws_iam_openid_connect_provider" "oauth_server_eks_oidc_provider" {
 
 resource "aws_eks_access_entry" "oauth_server_admin_access_entry" {
   cluster_name  = aws_eks_cluster.oauth_server_eks_cluster.name
-  principal_arn = aws_iam_role.oauth_server_eks_cluster_access_entry_admin_role
+  principal_arn = aws_iam_role.oauth_server_eks_cluster_access_entry_admin_role.arn
   type          = "STANDARD"
 }
 
 resource "aws_eks_access_policy_association" "oauth_server_admin_access_entry_policy_association" {
   cluster_name  = aws_eks_cluster.oauth_server_eks_cluster.name
   policy_arn    = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy"
-  principal_arn = aws_iam_role.oauth_server_eks_cluster_access_entry_admin_role
+  principal_arn = aws_iam_role.oauth_server_eks_cluster_access_entry_admin_role.arn
   access_scope {
     type = "cluster"
   }
