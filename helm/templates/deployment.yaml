@@ -29,6 +29,24 @@ spec:
               cpu: "500m"
           ports:
             - containerPort: 3000
+          livenessProbe:
+            httpGet:
+              path: /api/health-check/status
+              port: 3000
+              initialDelaySeconds: 10
+              periodSeconds: 60
+          startupProbe:
+            httpGet:
+              path: /api/health-check/status
+              port: 3000
+              failureThreshold: 30
+              periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /api/health-check/status
+              port: 3000
+              initialDelaySeconds: 5
+              periodSeconds: 30
           env:
             - name: COOKIE_SECRETS
               valueFrom:

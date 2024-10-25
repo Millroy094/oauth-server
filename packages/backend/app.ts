@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { NextFunction, Request, Response, Errback } from 'express';
 import path from 'path';
 import https from 'https';
 import fs from 'fs';
@@ -10,8 +10,10 @@ import cookieParser from 'cookie-parser';
 import adminRoutes from './routes/admin.ts';
 import oidcRoutes from './routes/oidc.ts';
 import userRoutes from './routes/user.ts';
+import healthCheckRoutes from './routes/health-check'
 import addOIDCProvider from './middleware/add-oidc-provider.ts';
 import config from './support/env-config.ts';
+import HTTP_STATUSES from './constants/http-status.ts';
 
 declare global {
   namespace Express {
@@ -80,6 +82,16 @@ class Application {
     this.expressApp.use('/api/oidc', oidcRoutes);
     this.expressApp.use('/api/user', userRoutes);
     this.expressApp.use('/api/admin', adminRoutes);
+    this.expressApp.use('/api/health-check', healthCheckRoutes);
+
+  }
+
+  private setupFallOut(): void {
+    this.expressApp.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+      console.log(err)
+      res.status(HTTP_STATUSES.serverError).send({message: "There was an issue serving this request"})
+    });
+
   }
 
   private openConnection(): void {
@@ -101,6 +113,7 @@ class Application {
     this.setupMiddleware();
     this.setupRoutes();
     this.setupWebsite();
+    this.setupFallOut()
     this.openConnection();
   }
 }
