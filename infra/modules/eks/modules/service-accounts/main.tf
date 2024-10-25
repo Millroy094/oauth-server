@@ -1,23 +1,18 @@
-locals {
-  dynamodb_service_account_name = "oauth-server-dynamob-service-account"
-  namespace                     = "default"
-}
+
 
 data "tls_certificate" "oauth_server_tls_certificate" {
-  url        = aws_eks_cluster.oauth_server_eks_cluster.identity[0].oidc[0].issuer
-  depends_on = [aws_eks_cluster.oauth_server_eks_cluster]
+  url        = var.cluster_oidc_issuer
 }
+
 data "aws_eks_cluster_auth" "oauth_server_eks_cluster_auth" {
-  name       = aws_eks_cluster.oauth_server_eks_cluster.name
-  depends_on = [aws_eks_cluster.oauth_server_eks_cluster]
+  name       = var.cluster_name
 }
 
 
 resource "aws_iam_openid_connect_provider" "oauth_server_eks_oidc_provider" {
   client_id_list  = ["sts.amazonaws.com"]
   thumbprint_list = [data.tls_certificate.oauth_server_tls_certificate.certificates[0].sha1_fingerprint]
-  url             = aws_eks_cluster.oauth_server_eks_cluster.identity[0].oidc[0].issuer
-  depends_on      = [aws_eks_cluster.oauth_server_eks_cluster]
+  url             = var.cluster_oidc_issuer
 }
 
 resource "aws_iam_role" "oauth_server_eks_dynamodb_role" {
@@ -33,13 +28,13 @@ resource "aws_iam_role" "oauth_server_eks_dynamodb_role" {
       Action = "sts:AssumeRoleWithWebIdentity"
       Condition = {
         StringEquals = {
-          "${aws_eks_cluster.oauth_server_eks_cluster.identity[0].oidc[0].issuer}:sub" = "system:serviceaccount:${local.namespace}:${local.dynamodb_service_account_name}"
+          "${var.cluster_oidc_issuer}:sub" = "system:serviceaccount:${local.namespace}:${local.dynamodb_service_account_name}"
         }
       }
     }]
   })
 
-  depends_on = [aws_eks_cluster.oauth_server_eks_cluster, aws_iam_openid_connect_provider.oauth_server_eks_oidc_provider]
+  depends_on = [aws_iam_openid_connect_provider.oauth_server_eks_oidc_provider]
 }
 
 resource "aws_iam_policy" "oauth_server_dynamodb_access_policy" {
@@ -61,8 +56,8 @@ resource "aws_iam_role_policy_attachment" "attach_dynamodb_policy" {
 
 
 provider "kubernetes" {
-  host                   = aws_eks_cluster.oauth_server_eks_cluster.endpoint
-  cluster_ca_certificate = base64decode(aws_eks_cluster.oauth_server_eks_cluster.certificate_authority[0].data)
+  host                   = var.cluster_endpoint
+  cluster_ca_certificate = base64decode(var.cluster_oidc_ca)
   token                  = data.aws_eks_cluster_auth.oauth_server_eks_cluster_auth.token
 }
 
