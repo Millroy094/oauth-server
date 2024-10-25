@@ -1,9 +1,9 @@
 import {Request, Response} from 'express'
-import User from '../models/User'
-import OIDCStore from '../models/OIDCStore'
-import  Client  from '../models/Client'
-import OTP from '../models/OTP'
-import HTTP_STATUSES from '../constants/http-status'
+import User from '../models/User.ts'
+import OIDCStore from '../models/OIDCStore.ts'
+import  Client  from '../models/Client.ts'
+import OTP from '../models/OTP.ts'
+import HTTP_STATUSES from '../constants/http-status.ts'
 
 class HealthCheckController {
     public static async getStatus(req: Request, res: Response) {

@@ -10,7 +10,7 @@ import cookieParser from 'cookie-parser';
 import adminRoutes from './routes/admin.ts';
 import oidcRoutes from './routes/oidc.ts';
 import userRoutes from './routes/user.ts';
-import healthCheckRoutes from './routes/health-check'
+import healthCheckRoutes from './routes/health-check.ts'
 import addOIDCProvider from './middleware/add-oidc-provider.ts';
 import config from './support/env-config.ts';
 import HTTP_STATUSES from './constants/http-status.ts';
