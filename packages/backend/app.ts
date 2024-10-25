@@ -45,7 +45,13 @@ class Application {
       });
       dynamoose.aws.ddb.set(ddb);
     } else {
-      const ddb = new dynamoose.aws.ddb.DynamoDB({region: "eu-west-2"})
+      const ddb = new dynamoose.aws.ddb.DynamoDB({
+        region: config.get('aws.region'),
+        credentials: {
+          accessKeyId: config.get('aws.accessKey'),
+          secretAccessKey: config.get('aws.secretKey')
+        }
+      });
       dynamoose.aws.ddb.set(ddb);
     }
   }

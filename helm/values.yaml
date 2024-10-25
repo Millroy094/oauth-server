@@ -23,3 +23,7 @@ Server:
     Service:
     EmailAddress:
     EmailPassword:
+  Aws:
+    Region:
+    Key:
+    Secret:

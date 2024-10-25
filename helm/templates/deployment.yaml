@@ -113,3 +113,18 @@ spec:
                 secretKeyRef: 
                   name: oauth-server-secret
                   key: emailPassword
+            - name: AWS_REGION
+              valueFrom:
+                secretKeyRef: 
+                  name: oauth-server-secret
+                  key: awsRegion
+            - name: AWS_ACCESS_KEY
+              valueFrom:
+                secretKeyRef: 
+                  name: oauth-server-secret
+                  key: awsKey
+            - name: AWS_SECRET_KEY
+              valueFrom:
+                secretKeyRef: 
+                  name: oauth-server-secret
+                  key: awsSecret

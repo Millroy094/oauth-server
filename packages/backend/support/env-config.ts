@@ -120,6 +120,13 @@ const config = convict({
       nullable: false,
       format: String,
       env: 'AWS_SECRET_KEY'
+    },
+    region: {
+      doc: 'AWS region',
+      default: '',
+      nullable: false,
+      format: String,
+      env: 'AWS_REGION'
     }
   }
 });
