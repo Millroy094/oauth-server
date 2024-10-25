@@ -44,6 +44,9 @@ class Application {
         region: 'local'
       });
       dynamoose.aws.ddb.set(ddb);
+    } else {
+      const ddb = new dynamoose.aws.ddb.DynamoDB({region: "eu-west-2"})
+      dynamoose.aws.ddb.set(ddb);
     }
   }
 
