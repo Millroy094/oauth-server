@@ -31,18 +31,21 @@ spec:
             - containerPort: 3000
           livenessProbe:
             httpGet:
+              scheme: 'HTTPS'
               path: /api/health-check/status
               port: 3000
               initialDelaySeconds: 10
               periodSeconds: 60
           startupProbe:
             httpGet:
+              scheme: 'HTTPS'
               path: /api/health-check/status
               port: 3000
               failureThreshold: 30
               periodSeconds: 10
           readinessProbe:
             httpGet:
+              scheme: 'HTTPS'
               path: /api/health-check/status
               port: 3000
               initialDelaySeconds: 5
