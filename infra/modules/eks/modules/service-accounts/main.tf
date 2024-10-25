@@ -8,7 +8,6 @@ data "aws_eks_cluster_auth" "oauth_server_eks_cluster_auth" {
   name       = var.cluster_name
 }
 
-
 resource "aws_iam_openid_connect_provider" "oauth_server_eks_oidc_provider" {
   client_id_list  = ["sts.amazonaws.com"]
   thumbprint_list = [data.tls_certificate.oauth_server_tls_certificate.certificates[0].sha1_fingerprint]
@@ -28,7 +27,7 @@ resource "aws_iam_role" "oauth_server_eks_dynamodb_role" {
       Action = "sts:AssumeRoleWithWebIdentity"
       Condition = {
         StringEquals = {
-          "${var.cluster_oidc_issuer}:sub" = "system:serviceaccount:${local.namespace}:${local.dynamodb_service_account_name}"
+          "${var.cluster_oidc_issuer}:sub" = "system:serviceaccount:${var.cluster_namespace}:${var.dynamodb_service_account_name}"
         }
       }
     }]
@@ -63,8 +62,8 @@ provider "kubernetes" {
 
 resource "kubernetes_service_account" "oauth_server_dynamodb_service_account" {
   metadata {
-    name      = local.dynamodb_service_account_name
-    namespace = local.namespace
+    name      = var.dynamodb_service_account_name
+    namespace = var.cluster_namespace
     annotations = {
       "eks.amazonaws.com/role-arn" = aws_iam_role.oauth_server_eks_dynamodb_role.arn
     }

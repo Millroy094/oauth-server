@@ -19,3 +19,14 @@ variable "cluster_oidc_ca" {
   description = "Cluster oidc certificate"
 }
 
+variable "dynamodb_service_account_name" {
+  type = string
+  description = "Dynamo DB Policy Service Account Name"
+  default = "oauth-server-dynamob-service-account"
+}
+
+variable "cluster_namespace" {
+  type = string
+  description = "Cluster namespace"
+  default = "default"
+}
