@@ -13,13 +13,3 @@ module "oauth_server_eks_node_groups" {
 
   depends_on = [module.oauth_server_eks_cluster]
 }
-
-module "oauth_server_cluster_service_accounts" {
-  source = "./modules/service-accounts"
-  cluster_name = module.oauth_server_eks_cluster.cluster_name
-  cluster_endpoint = module.oauth_server_eks_cluster.cluster_endpoint
-  cluster_oidc_issuer = module.oauth_server_eks_cluster.cluster_oidc_issuer
-  cluster_oidc_ca = module.oauth_server_eks_cluster.custer_oidc_ca
-
-  depends_on = [ module.oauth_server_eks_cluster ]
-}
