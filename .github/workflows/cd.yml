@@ -76,47 +76,13 @@ jobs:
             --set Server.Encryption.SecretIV=${{ secrets.ENCRYPTION_SECRET_IV }} \
             --set Server.Email.EmailPassword='${{ secrets.EMAIL_SERVICE_PASSWORD }}' \
             --set 'Server.CookieSecrets={${{ secrets.COOKIE_SECRETS }}}'
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.x'
-      - name: Install bcrypt
-        run: |
-          pip install bcrypt
-      - name: Hash Password
+      - name: Run Hash and Store Script
         working-directory: "./scripts"
-        id: hash_password
         env:
-          PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
-        run: |
-          python hash-password.py
-      - name: Create an Admin User
-        continue-on-error: true
-        env:
+          PASSWORD: ${{ secrets.PASSWORD }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: eu-west-2
+          AWS_REGION: ${{ secrets.AWS_REGION }}
         run: |
-          set +e
-          aws dynamodb put-item \
-            --table-name User \
-            --item '{
-              \"userId\": {\"S\": \"'$(uuidgen)'\"},
-              \"email\": {\"S\": \"admin@admin.com\"},
-              \"firstName\": {\"S\": \"Admin\"},
-              \"lastName\": {\"S\": \"Admin\"},
-              \"mobile\": {\"S\": \"\"},
-              \"password\": {\"S\": \"${{ steps.hash_password.outputs.hashed_password }}\"}
-            }' \
-            --condition-expression "attribute_not_exists(email)"
-          exit_code=$?
-          set -e
-          
-          if [ $exit_code -eq 0 ]; then
-            echo "User created successfully."
-          elif [ $exit_code -eq 12 ]; then
-            echo "User already exists, skipping insert."
-          else
-            echo "An error occurred while trying to insert the user."
-            exit $exit_code
-          fi
+          chmod +x create-admin-user.sh
+          ./create-admin-user.sh
