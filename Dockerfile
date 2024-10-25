@@ -8,15 +8,14 @@ RUN npm install -g pnpm &&\
     pnpm install &&\
     pnpm run --filter=@oauth-server/frontend build &&\
     pnpm run --filter=@oauth-server/backend build &&\
-    pnpm run --filter=@oauth-server/backend generateJwks &&\
-    cp ./packages/backend/keys.json ./build
+    pnpm run --filter=@oauth-server/backend generateJwks
 
 FROM node:20-alpine3.20 AS app
 
 WORKDIR /app
 
 COPY --from=builder /build/packages/backend/build /app
-COPY --from=builder /build/keys.json /app
+COPY --from=builder /build/packages/backend/keys.json /app
 COPY  --from=builder /build/packages/backend/package.json /app
 COPY  --from=builder /build/packages/backend/package-lock.json /app
 COPY  --from=builder /build/packages/backend/pm2-process.yml /app
