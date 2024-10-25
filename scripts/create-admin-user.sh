@@ -62,10 +62,40 @@ put_result=$(aws dynamodb put-item \
   --item "{
     \"userId\": {\"S\": \"$(uuidgen)\"},
     \"email\": {\"S\": \"admin@admin.com\"},
+    \"emailVerified\": {\"BOOL\": true},
     \"firstName\": {\"S\": \"Admin\"},
     \"lastName\": {\"S\": \"Admin\"},
     \"mobile\": {\"S\": \"\"},
-    \"password\": {\"S\": \"$hashed_password\"}
+    \"password\": {\"S\": \"$hashed_password\"},
+    \"roles\": {\"L\": [{\"S\": \"admin\"}]},
+    \"lastLoggedIn\": {\"N\": \"0\"},
+    \"failedLogins\": {\"N\": \"0\"},
+    \"suspended\": {\"BOOL\": false},
+    \"mfa\": {
+      \"M\": {
+        \"preference\": {\"S\": \"\"},
+        \"recoveryCodes\": {\"L\": []},
+        \"app\": {
+          \"M\": {
+            \"secret\": {\"S\": \"\"},
+            \"subscriber\": {\"S\": \"\"},
+            \"verified\": {\"BOOL\": false}
+          }
+        },
+        \"sms\": {
+          \"M\": {
+            \"subscriber\": {\"S\": \"\"},
+            \"verified\": {\"BOOL\": false}
+          }
+        },
+        \"email\": {
+          \"M\": {
+            \"subscriber\": {\"S\": \"\"},
+            \"verified\": {\"BOOL\": false}
+          }
+        }
+      }
+    }
   }" \
   --condition-expression "attribute_not_exists(email)" 2>&1)
 exit_code=$?
