@@ -20,7 +20,7 @@ COPY  --from=builder /build/packages/backend/package.json /app
 COPY  --from=builder /build/packages/backend/package-lock.json /app
 COPY  --from=builder /build/packages/backend/pm2-process.yml /app
 COPY  --from=builder /build/packages/backend/certs /app/certs
-COPY  --from=builder /build/packages/frontend/dist ./app/public
+COPY  --from=builder /build/packages/frontend/dist /app/public
 
 RUN npm ci --production && npm install -g pm2
 
