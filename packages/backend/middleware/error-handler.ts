@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import HTTP_STATUSES from '../constants/http-status';
+import HTTP_STATUSES from '../constants/http-status.ts';
 
 const errorHandler = (
   err: Error,
