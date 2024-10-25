@@ -35,15 +35,7 @@ class Application {
 
   private setupDependencies(): void {
     if (this.environment === 'development') {
-      const ddb = new dynamoose.aws.ddb.DynamoDB({
-        endpoint: config.get('db'),
-        credentials: {
-          accessKeyId: 'LOCAL',
-          secretAccessKey: 'LOCAL'
-        },
-        region: 'local'
-      });
-      dynamoose.aws.ddb.set(ddb);
+      dynamoose.aws.ddb.local();
     } else {
       const ddb = new dynamoose.aws.ddb.DynamoDB({
         region: config.get('aws.region'),
