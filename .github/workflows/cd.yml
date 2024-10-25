@@ -89,7 +89,7 @@ jobs:
         env:
           PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
         run: |
-          python hash_password.py
+          python hash-password.py
       - name: Create an Admin User
         continue-on-error: true
         env:
