@@ -4,7 +4,7 @@ data "aws_eks_cluster"  "oauth_server_eks_cluster" {
 }
 
 data "tls_certificate" "oauth_server_tls_certificate" {
-  url        = aws_eks_cluster.oauth_server_eks_cluster.identity[0].oidc[0].issuer
+  url        = data.aws_eks_cluster.oauth_server_eks_cluster.identity[0].oidc[0].issuer
   depends_on = [ data.aws_eks_cluster.oauth_server_eks_cluster ]
 }
 
@@ -15,7 +15,7 @@ data "aws_eks_cluster_auth" "oauth_server_eks_cluster_auth" {
 resource "aws_iam_openid_connect_provider" "oauth_server_eks_oidc_provider" {
   client_id_list  = ["sts.amazonaws.com"]
   thumbprint_list = [data.tls_certificate.oauth_server_tls_certificate.certificates[0].sha1_fingerprint]
-  url             = aws_eks_cluster.oauth_server_eks_cluster.identity[0].oidc[0].issuer
+  url             = data.ws_eks_cluster.oauth_server_eks_cluster.identity[0].oidc[0].issuer
 
   depends_on = [ data.aws_eks_cluster.oauth_server_eks_cluster, data.tls_certificate.oauth_server_tls_certificate ]
 
