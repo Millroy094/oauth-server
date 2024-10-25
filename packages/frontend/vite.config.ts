@@ -21,6 +21,11 @@ export default ({ mode }: { mode: string }) => {
           rewrite: (path: string) => path.replace(/^\/api/, '')
         }
       }
+    },
+    test: {
+      globals: true,
+      environment: 'jsdom',
+      setupFiles: './setup.ts'
     }
   };
   return defineConfig(config);

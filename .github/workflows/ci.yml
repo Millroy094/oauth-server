@@ -7,6 +7,28 @@ on:
     tags:
       - "v[0-9]+.[0-9]+.[0-9]+"
 jobs:
+  unit-tests:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        component:
+          - backend
+          - frontend
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Use Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20.11.0"
+          cache: npm
+          cache-dependency-path: "**/package-lock.json"
+      - name: "run ${{matrix.component}} unit tests"
+        working-directory: "./packages/${{matrix.component}}"
+        run: |
+          npm ci
+          npm run test:unit
   build:
     name: Build & push docker image
     runs-on: ubuntu-latest
