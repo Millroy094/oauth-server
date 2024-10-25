@@ -16,6 +16,7 @@ FROM node:20-alpine3.20 AS app
 WORKDIR /app
 
 COPY --from=builder /build/packages/backend/build /app
+COPY --from=builder /build/keys.json /app
 COPY  --from=builder /build/packages/backend/package.json /app
 COPY  --from=builder /build/packages/backend/package-lock.json /app
 COPY  --from=builder /build/packages/backend/pm2-process.yml /app
