@@ -34,7 +34,7 @@ jobs:
           curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
       - name: Helm Destroy OAuth Server
         run: |
-          helm uninstall oauth-server
+          helm uninstall oauth-server --ignore-not-found
       - name: Setup Open Tofu
         uses: opentofu/setup-opentofu@v1
       - name: Destroy OAuth Server Cluster & Other Resources
