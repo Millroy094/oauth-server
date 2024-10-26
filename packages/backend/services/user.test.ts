@@ -2,11 +2,14 @@ import bcrypt from 'bcryptjs';
 import UserService from './user.ts';
 import OTPService from './otp.ts';
 import User from '../models/User.ts';
+import { sendEmail } from '../utils/notification';
+import generateOtp from '../utils/generate-otp';
 
 jest.mock('bcryptjs');
 jest.mock('../models/User.ts');
 jest.mock('./otp');
 jest.mock('../utils/notification');
+jest.mock('../utils/generate-otp');
 
 describe('UserService', () => {
   beforeEach(() => {
@@ -28,11 +31,9 @@ describe('UserService', () => {
     it('should error when user is suspended', async () => {
       const suspendedUser = { suspended: true };
       (User.scan as jest.Mock).mockReturnValue({
-        eq: jest
-          .fn()
-          .mockReturnValue({
-            exec: jest.fn().mockResolvedValue([suspendedUser])
-          })
+        eq: jest.fn().mockReturnValue({
+          exec: jest.fn().mockResolvedValue([suspendedUser])
+        })
       });
 
       await expect(
@@ -90,11 +91,9 @@ describe('UserService', () => {
     it('should throw an error if the user already exists', async () => {
       const existingUser = { email: 'existing@example.com' };
       (User.scan as jest.Mock).mockReturnValue({
-        eq: jest
-          .fn()
-          .mockReturnValue({
-            exec: jest.fn().mockResolvedValue([existingUser])
-          })
+        eq: jest.fn().mockReturnValue({
+          exec: jest.fn().mockResolvedValue([existingUser])
+        })
       });
 
       await expect(
@@ -123,6 +122,30 @@ describe('UserService', () => {
       ).resolves.toBeUndefined();
       expect(User.create).toHaveBeenCalledWith(
         expect.objectContaining({ email: 'newuser@example.com' })
+      );
+    });
+  });
+
+  describe('getUserById', () => {
+    it('should return user by id', async () => {
+      const mockUser = {
+        userId: 'user123',
+        email: 'test@example.com',
+        firstName: 'Test',
+        lastName: 'User'
+      };
+
+      (User.get as jest.Mock).mockResolvedValue(mockUser);
+
+      const user = await UserService.getUserById('user123');
+      expect(user).toEqual(mockUser);
+    });
+
+    it('should throw an error if user does not exist', async () => {
+      (User.get as jest.Mock).mockResolvedValue(null);
+
+      await expect(UserService.getUserById('invalidId')).rejects.toThrow(
+        'User does not exists'
       );
     });
   });
@@ -192,6 +215,43 @@ describe('UserService', () => {
 
       expect(user.password).toBe('new_password');
       expect(user.save).toHaveBeenCalled();
+    });
+  });
+
+  describe('sendPasswordResetOtp', () => {
+    it('should send a password reset OTP', async () => {
+      const email = 'test@example.com';
+      const mockUser = {
+        userId: 'user123',
+        email
+      };
+
+      UserService.getUserByEmail = jest.fn().mockResolvedValue(mockUser);
+      const otp = '123456';
+      (generateOtp as jest.Mock).mockReturnValue(otp);
+
+      await UserService.sendPasswordResetOtp(email);
+      expect(OTPService.storeOtp).toHaveBeenCalledWith(
+        mockUser.userId,
+        'email',
+        otp
+      );
+      expect(sendEmail).toHaveBeenCalledWith(
+        email,
+        'Password reset OTP',
+        `Please use ${otp} to reset your password`
+      );
+    });
+
+    it('should throw an error if user does not exist', async () => {
+      const email = 'notfound@example.com';
+      UserService.getUserByEmail = jest
+        .fn()
+        .mockRejectedValue(new Error('User does not exist'));
+
+      await expect(UserService.sendPasswordResetOtp(email)).rejects.toThrow(
+        'User does not exist'
+      );
     });
   });
 });
