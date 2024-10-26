@@ -9,7 +9,7 @@ function useTimer() {
   useEffect(() => {
     if (timer > 0) {
       const id = setTimeout(timeOutCallback, 1000);
-      return () => clearTimeout(id); // Cleanup on unmount or timer change
+      return () => clearTimeout(id); 
     }
   }, [timer, timeOutCallback]);
 

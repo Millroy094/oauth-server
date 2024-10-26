@@ -9,7 +9,7 @@ describe('OTPService', () => {
     userId,
     type: 'sms',
     otp: '123456',
-    expiresAt: new Date(Date.now() + 5 * 60 * 1000), // expires in 5 minutes
+    expiresAt: new Date(Date.now() + 5 * 60 * 1000), 
     delete: jest.fn()
   };
 

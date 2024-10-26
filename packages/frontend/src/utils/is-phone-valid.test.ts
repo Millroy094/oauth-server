@@ -23,7 +23,7 @@ describe('isPhoneValid', () => {
   });
 
   it('should return true for a valid phone number', () => {
-    const validPhoneNumber = '+14155552671'; // Example valid phone number
+    const validPhoneNumber = '+14155552671'; 
     (phoneUtil.parseAndKeepRawInput as jest.Mock).mockReturnValue(validPhoneNumber);
     (phoneUtil.isValidNumber as jest.Mock).mockReturnValue(true);
 
@@ -36,7 +36,7 @@ describe('isPhoneValid', () => {
   });
 
   it('should return false for an invalid phone number', () => {
-    const invalidPhoneNumber = '123'; // Example invalid phone number
+    const invalidPhoneNumber = '123'; 
     (phoneUtil.parseAndKeepRawInput as jest.Mock).mockReturnValue(invalidPhoneNumber);
     (phoneUtil.isValidNumber as jest.Mock).mockReturnValue(false);
 
@@ -49,7 +49,7 @@ describe('isPhoneValid', () => {
   });
 
   it('should return false if an error is thrown during parsing', () => {
-    const errorPhoneNumber = 'invalid-phone-number'; // Example phone number that causes an error
+    const errorPhoneNumber = 'invalid-phone-number'; 
     (phoneUtil.parseAndKeepRawInput as jest.Mock).mockImplementation(() => {
       throw new Error('Invalid phone number format');
     });
@@ -59,6 +59,6 @@ describe('isPhoneValid', () => {
     expect(phoneUtil.parseAndKeepRawInput).toHaveBeenCalledWith(
       errorPhoneNumber
     );
-    expect(phoneUtil.isValidNumber).not.toHaveBeenCalled(); // isValidNumber should not be called
+    expect(phoneUtil.isValidNumber).not.toHaveBeenCalled();
   });
 });

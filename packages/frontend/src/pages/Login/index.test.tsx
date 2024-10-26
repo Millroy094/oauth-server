@@ -107,7 +107,7 @@ describe('Login Component', () => {
         screen.getByText(
           'Please enter the 6 digit one time passcode shown on your chosen authenticator app'
         )
-      ).toBeInTheDocument(); // Adjust this based on your actual MFA input
+      ).toBeInTheDocument();
     });
   });
 });
