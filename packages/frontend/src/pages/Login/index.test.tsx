@@ -2,8 +2,9 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import Login from './index';
 import { useAuth } from '../../context/AuthProvider';
-import { vi } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import getLoginConfiguration from '../../api/user/get-login-configuration';
+import { beforeEach } from 'node:test';
 
 vi.mock('../../context/AuthProvider', () => ({
   useAuth: vi.fn()
@@ -15,8 +16,8 @@ describe('Login Component', () => {
   const mockLogin = vi.fn();
 
   beforeEach(() => {
-    (useAuth as vi.Mock).mockReturnValue({ login: mockLogin });
-    (getLoginConfiguration as vi.Mock).mockResolvedValue({
+    (useAuth as jest.Mock).mockReturnValue({ login: mockLogin });
+    (getLoginConfiguration as jest.Mock).mockResolvedValue({
       data: { emailVerified: true, mfa: { enabled: false } }
     });
   });
@@ -69,7 +70,7 @@ describe('Login Component', () => {
   });
 
   it('handles MFA flow', async () => {
-    (getLoginConfiguration as vi.Mock).mockResolvedValueOnce({
+    (getLoginConfiguration as jest.Mock).mockResolvedValueOnce({
       data: { emailVerified: true, mfa: { enabled: true, type: 'app' } }
     });
 

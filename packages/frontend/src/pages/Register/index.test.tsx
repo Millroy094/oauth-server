@@ -3,6 +3,7 @@ import { MemoryRouter } from 'react-router-dom';
 import { SnackbarProvider } from 'notistack';
 import Register from './index';
 import AuthProvider from '../../context/AuthProvider';
+import { vi, expect } from 'vitest';
 
 vi.mock('../../api/user/register-user');
 

@@ -1,4 +1,4 @@
-// isPhoneValid.test.ts
+import { vi } from 'vitest';
 import isPhoneValid from './is-phone-valid';
 import { PhoneNumberUtil } from 'google-libphonenumber';
 
@@ -24,8 +24,8 @@ describe('isPhoneValid', () => {
 
   it('should return true for a valid phone number', () => {
     const validPhoneNumber = '+14155552671'; // Example valid phone number
-    phoneUtil.parseAndKeepRawInput.mockReturnValue(validPhoneNumber);
-    phoneUtil.isValidNumber.mockReturnValue(true);
+    (phoneUtil.parseAndKeepRawInput as jest.Mock).mockReturnValue(validPhoneNumber);
+    (phoneUtil.isValidNumber as jest.Mock).mockReturnValue(true);
 
     const result = isPhoneValid(validPhoneNumber);
     expect(result).toBe(true);
@@ -37,8 +37,8 @@ describe('isPhoneValid', () => {
 
   it('should return false for an invalid phone number', () => {
     const invalidPhoneNumber = '123'; // Example invalid phone number
-    phoneUtil.parseAndKeepRawInput.mockReturnValue(invalidPhoneNumber);
-    phoneUtil.isValidNumber.mockReturnValue(false);
+    (phoneUtil.parseAndKeepRawInput as jest.Mock).mockReturnValue(invalidPhoneNumber);
+    (phoneUtil.isValidNumber as jest.Mock).mockReturnValue(false);
 
     const result = isPhoneValid(invalidPhoneNumber);
     expect(result).toBe(false);
@@ -50,7 +50,7 @@ describe('isPhoneValid', () => {
 
   it('should return false if an error is thrown during parsing', () => {
     const errorPhoneNumber = 'invalid-phone-number'; // Example phone number that causes an error
-    phoneUtil.parseAndKeepRawInput.mockImplementation(() => {
+    (phoneUtil.parseAndKeepRawInput as jest.Mock).mockImplementation(() => {
       throw new Error('Invalid phone number format');
     });
 

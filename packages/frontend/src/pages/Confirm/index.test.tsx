@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import Confirm from './index';
-import { vi } from 'vitest';
+import { vi, expect } from 'vitest';
 
 vi.mock('../../api/oidc/authorize-interaction');
 vi.mock('../../hooks/useFeedback', () => ({

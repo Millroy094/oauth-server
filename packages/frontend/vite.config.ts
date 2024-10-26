@@ -28,7 +28,7 @@ export default ({ mode }: { mode: string }) => {
             name: 'exclude-test-files',
             enforce: 'post',
             resolveId(source: string) {
-              if (source.match(/\.(test|spec)\.(js|ts)$/)) {
+              if (source.match(/\.(test|spec)\.(js|ts|jsx|tsx)$/)) {
                 return { id: source, external: true };
               }
             }
