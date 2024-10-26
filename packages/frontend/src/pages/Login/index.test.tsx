@@ -15,7 +15,7 @@ describe('Login Component', () => {
   const mockLogin = vi.fn();
 
   beforeEach(() => {
-    (useAuth as vi.Mock).mockReturnValue({ login: mockLogin });
+    (useAuth as jest.Mock).mockReturnValue({ login: mockLogin });
     (getLoginConfiguration as jest.Mock).mockResolvedValue({
       data: { emailVerified: true, mfa: { enabled: false } }
     });
