@@ -7,7 +7,7 @@ jest.mock('../otp.ts');
 
 describe('verifyAppMFA', () => {
   const userId = 'user-123';
-  const validOtp = '123456'; // Replace with a valid OTP
+  const validOtp = '123456';
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -31,7 +31,6 @@ describe('verifyAppMFA', () => {
       secret: 'secretKey'
     });
 
-    // Mock the TOTP validation
     jest.spyOn(TOTP.prototype, 'validate').mockReturnValue(0);
 
     await verifyAppMFA(userId, validOtp);
@@ -67,7 +66,6 @@ describe('verifyAppMFA', () => {
       secret: 'secretKey'
     });
 
-    // Mock the TOTP validation to return null
     jest.spyOn(totp, 'validate').mockReturnValue(null);
 
     await expect(verifyAppMFA(userId, validOtp)).rejects.toThrow('Invalid OTP');

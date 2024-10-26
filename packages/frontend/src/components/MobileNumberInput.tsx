@@ -80,7 +80,6 @@ export const MobileNumberInput: React.FC<MUIPhoneProps> = ({
                     display: 'block'
                   }
                 },
-                // Update default spacing
                 '.MuiSelect-select': {
                   padding: '8px',
                   paddingRight: '24px !important'

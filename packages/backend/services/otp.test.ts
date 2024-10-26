@@ -65,7 +65,7 @@ describe('OTPService', () => {
       const expiredOtpData = {
         ...otpData,
         expiresAt: new Date(Date.now() - 1000)
-      }; // expired OTP
+      };
 
       (OTP.scan as jest.Mock).mockReturnValue({
         eq: jest.fn().mockReturnThis(),

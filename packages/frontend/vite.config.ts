@@ -4,7 +4,6 @@ import react from '@vitejs/plugin-react';
 
 dotenv.config();
 
-// https://vitejs.dev/config/
 export default ({ mode }: { mode: string }) => {
   process.env = { ...process.env, ...loadEnv(mode, process.cwd()) };
 
@@ -20,6 +19,21 @@ export default ({ mode }: { mode: string }) => {
           changeOrigin: true,
           rewrite: (path: string) => path.replace(/^\/api/, '')
         }
+      }
+    },
+    build: {
+      rollupOptions: {
+        plugins: [
+          {
+            name: 'exclude-test-files',
+            enforce: 'post',
+            resolveId(source: string) {
+              if (source.match(/\.(test|spec)\.(js|ts)$/)) {
+                return { id: source, external: true };
+              }
+            }
+          }
+        ]
       }
     },
     test: {

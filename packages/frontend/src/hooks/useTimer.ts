@@ -3,15 +3,18 @@ import { useCallback, useEffect, useState } from 'react';
 function useTimer() {
   const [timer, setTimer] = useState(60);
   const timeOutCallback = useCallback(
-    () => setTimer((currentTime) => currentTime - 1),
+    () => setTimer((currentTime) => (currentTime > 0 ? currentTime - 1 : 0)),
     []
   );
   useEffect(() => {
-    timer > 0 && setTimeout(timeOutCallback, 1000);
+    if (timer > 0) {
+      const id = setTimeout(timeOutCallback, 1000);
+      return () => clearTimeout(id); // Cleanup on unmount or timer change
+    }
   }, [timer, timeOutCallback]);
 
   const resetTimer = () => {
-    if (!timer) {
+    if (timer === 0) {
       setTimer(60);
     }
   };
