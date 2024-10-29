@@ -276,7 +276,9 @@ test.describe('User Journey', () => {
     const state = uuid();
     const nonce = uuid();
 
-    test.beforeEach(async ({ page }) => {
+    test.beforeEach(async ({ page, context }) => {
+      await context.grantPermissions(['clipboard-write']);
+
       page.goto('/');
       await page.locator('[name="email"]').fill(process.env.ADMIN_EMAIL!);
       await page.getByRole('button', { name: 'NEXT' }).click();
@@ -311,6 +313,7 @@ test.describe('User Journey', () => {
         .getByRole('row', { name: clientId })
         .getByLabel('Copy Secret')
         .click();
+
       await page.getByRole('button', { name: 'LOG OUT' }).click();
     });
 
@@ -335,17 +338,17 @@ test.describe('User Journey', () => {
     test('can login through open id connect', async ({
       page,
       inbox,
-      baseURL
+      baseURL,
+      context
     }) => {
-      const clientSecret = await page.evaluate(async () => {
-        try {
-          const text = await navigator.clipboard.readText(); // Use the clipboard API
-          return text;
-        } catch (err) {
-          console.error('Failed to read clipboard contents: ', err);
-          return '';
-        }
-      });
+      await context.grantPermissions(['clipboard-read']);
+
+      const handle = await page.evaluateHandle(() =>
+        navigator.clipboard.readText()
+      );
+      const clientSecret = await handle.jsonValue();
+
+      console.log(clientSecret);
 
       await page.goto(
         `/api/oidc/auth?client_id=${clientId}&redirect_uri=${clientURL}&response_type=code&scope=openid&nonce=${nonce}&state=${state}`
