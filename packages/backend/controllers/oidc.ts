@@ -14,7 +14,7 @@ class OIDCController {
       console.log(err);
       res
         .status(HTTP_STATUSES.badRequest)
-        .json({ error: 'Unable to process authentication' });
+        .json({ error: `Unable to process authentication: ${err}` });
     }
   }
 

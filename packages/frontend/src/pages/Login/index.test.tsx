@@ -1,4 +1,10 @@
-import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
+import {
+  render,
+  screen,
+  fireEvent,
+  waitFor,
+  act
+} from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import Login from './index';
 import { useAuth } from '../../context/AuthProvider';
@@ -40,14 +46,12 @@ describe('Login Component', () => {
     );
 
     act(() => {
-
       fireEvent.input(screen.getByLabelText('Email Address'), {
         target: { value: 'test@example.com' }
       });
-  
-      fireEvent.click(screen.getByText('Next'));
-    })
 
+      fireEvent.click(screen.getByText('Next'));
+    });
 
     await waitFor(() => {
       expect(getLoginConfiguration).toHaveBeenCalledWith('test@example.com');
@@ -57,10 +61,9 @@ describe('Login Component', () => {
       fireEvent.input(screen.getByLabelText('Password'), {
         target: { value: 'password123' }
       });
-  
-      fireEvent.click(screen.getByText('Sign in'));
-    })
 
+      fireEvent.click(screen.getByText('Sign in'));
+    });
 
     await waitFor(() => {
       expect(mockLogin).toHaveBeenCalledWith({

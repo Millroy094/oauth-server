@@ -10,7 +10,9 @@
   "devDependencies": {
     "@playwright/test": "^1.48.2",
     "@types/node": "^20.11.27",
+    "axios": "^1.7.7",
     "dotenv": "^16.4.5",
-    "mailslurp-client": "^15.20.2"
+    "mailslurp-client": "^15.20.2",
+    "uuid": "^11.0.2"
   }
 }

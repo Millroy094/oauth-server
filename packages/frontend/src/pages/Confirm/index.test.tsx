@@ -12,7 +12,6 @@ vi.mock('../../hooks/useFeedback', () => ({
 }));
 
 describe('Confirm Component', () => {
-
   beforeEach(() => {
     vi.clearAllMocks();
   });

@@ -1,7 +1,7 @@
 import { defineConfig, devices } from '@playwright/test';
 import dotenv from 'dotenv';
 
-dotenv.config()
+dotenv.config();
 
 export default defineConfig({
   testDir: './tests',
@@ -13,30 +13,30 @@ export default defineConfig({
   use: {
     baseURL: 'https://127.0.0.1:3000',
     ignoreHTTPSErrors: true,
-    trace: 'on-first-retry',
+    trace: 'on-first-retry'
   },
   /* Configure projects for major browsers */
   projects: [
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      use: { ...devices['Desktop Chrome'] }
     },
 
     {
       name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
+      use: { ...devices['Desktop Firefox'] }
     },
 
     {
       name: 'webkit',
-      use: { ...devices['Desktop Safari'] },
-    },
+      use: { ...devices['Desktop Safari'] }
+    }
   ],
 
-   webServer: {
-     command: 'cd ../packages/backend/ && npm run dev',
-     url: 'https://localhost:3000',
-     reuseExistingServer: !process.env.CI,
-     ignoreHTTPSErrors: true,
-   },
+  webServer: {
+    command: 'cd ../packages/backend/ && npm run dev',
+    url: 'https://localhost:3000',
+    reuseExistingServer: !process.env.CI,
+    ignoreHTTPSErrors: true
+  }
 });

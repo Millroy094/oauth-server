@@ -3,26 +3,31 @@ import { MailSlurp } from 'mailslurp-client';
 
 const apiKey = process.env.MAILSLURP_API_KEY!;
 
-export const test = base.extend <{}, {
-  mailslurp: MailSlurp;
-  inbox: { id: string; emailAddress: string, password: string };
-}>({
+export const test = base.extend<
+  {},
+  {
+    mailslurp: MailSlurp;
+    inbox: { id: string; emailAddress: string; password: string };
+  }
+>({
   // Fixture to initialize MailSlurp
-  mailslurp: [async ({}, use) => {
-    const mailslurp = new MailSlurp({ apiKey });
-    await use(mailslurp);
-  }, { scope: 'worker' }],
+  mailslurp: [
+    async ({}, use) => {
+      const mailslurp = new MailSlurp({ apiKey });
+      await use(mailslurp);
+    },
+    { scope: 'worker' }
+  ],
 
   // Fixture to create a single shared inbox for the entire test file
-  inbox: [async ({ mailslurp }, use) => {
-    // Create an inbox before all tests
-    const { id, emailAddress } = await mailslurp.createInbox();
-    const password = "Password123!"  
-    await use({ id, emailAddress, password });
-
-    // Cleanup: Delete inbox after all tests complete
-    await mailslurp.deleteInbox(id);
-  }, { scope: 'worker' }] 
+  inbox: [
+    async ({ mailslurp }, use) => {
+      // const { id, emailAddress } = await mailslurp.createInbox();
+      // const password = 'Password123!';
+      await use({ id: '', emailAddress: '', password: '' });
+    },
+    { scope: 'worker' }
+  ]
 });
 
 // Ensure you export 'expect' from Playwright

@@ -60,8 +60,7 @@ const getConfiguration = async (): Promise<Configuration> => {
       profile: ['firstName', 'lastName']
     },
     interactions: {
-      url: (ctx, interaction) =>
-        `http://localhost:5173?interactionId=${interaction.jti}`
+      url: (ctx, interaction) => `/?interactionId=${interaction.jti}`
     }
   };
 };
