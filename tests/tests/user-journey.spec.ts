@@ -7,6 +7,7 @@ import {
   generateCodeVerifierAndChallenge,
   getOpenIDTokensByAuthCode,
   getOpenIDTokensByClientCredentials,
+  getOpenIDTokensByRefreshToken,
   login,
   loginAsAdmin,
   loginFirstTime,
@@ -305,7 +306,7 @@ test.describe('User Journey', () => {
 
       const code = urlObj.searchParams.get('code');
 
-      const { accessToken } = await getOpenIDTokensByAuthCode(
+      const { accessToken, refreshToken } = await getOpenIDTokensByAuthCode(
         baseURL!,
         code!,
         clientId,
@@ -317,6 +318,29 @@ test.describe('User Journey', () => {
       expect(
         accessToken,
         'access token received by auth code'
+      ).not.toBeUndefined();
+
+      expect(
+        refreshToken,
+        'refresh token received by auth code'
+      ).not.toBeUndefined();
+
+      const { accessToken: newAccessToken, refreshToken: newRefreshToken } =
+        await getOpenIDTokensByRefreshToken(
+          baseURL!,
+          refreshToken,
+          clientId,
+          clientSecret
+        );
+
+      expect(
+        newAccessToken,
+        'access token received by refresh token'
+      ).not.toBeUndefined();
+
+      expect(
+        newRefreshToken,
+        'refresh token received by by refresh token'
       ).not.toBeUndefined();
     });
 
@@ -359,6 +383,9 @@ test.describe('User Journey', () => {
         .getByRole('row', { name: inbox.emailAddress })
         .getByLabel('Delete User')
         .click();
+      await expect(
+        await page.getByRole('row', { name: inbox.emailAddress })
+      ).not.toBeVisible();
       await logout(page);
     });
   });

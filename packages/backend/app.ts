@@ -34,7 +34,7 @@ class Application {
   }
 
   private setupDependencies(): void {
-    if (this.environment === 'development') {
+    if (['development', 'test'].includes(this.environment)) {
       dynamoose.aws.ddb.local();
     } else {
       const ddb = new dynamoose.aws.ddb.DynamoDB({

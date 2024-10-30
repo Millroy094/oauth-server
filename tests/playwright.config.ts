@@ -35,7 +35,7 @@ export default defineConfig({
 
   webServer: !process.env.CI
     ? {
-        command: 'cd ../packages/backend/ && npm run dev',
+        command: 'cd ../packages/backend/ && NODE_ENV=test npm run dev',
         url: 'https://localhost:3000',
         reuseExistingServer: true,
         ignoreHTTPSErrors: true

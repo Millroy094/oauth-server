@@ -116,14 +116,16 @@ export function buildAuthorizationCodeUrl({
   const responseType = 'code';
   const scope = 'openid offline_access';
   const codeChallengeMethod = 'S256';
+  const prompt = 'consent';
 
   const queryParams = new URLSearchParams({
     client_id: clientId,
     redirect_uri: redirectUri,
     response_type: responseType,
-    scope: scope,
-    nonce: nonce,
-    state: state,
+    scope,
+    nonce,
+    state,
+    prompt,
     code_challenge: codeChallenge,
     code_challenge_method: codeChallengeMethod
   });
@@ -159,8 +161,6 @@ export async function getOpenIDTokensByClientCredentials(
         httpsAgent
       }
     );
-
-    console.log(response.data);
 
     return {
       accessToken: response.data.access_token,
@@ -200,7 +200,6 @@ export async function getOpenIDTokensByAuthCode(
       }),
       { httpsAgent }
     );
-    console.log(response.data);
     return {
       accessToken: response.data.access_token,
       refreshToken: response.data.refresh_token
@@ -227,7 +226,8 @@ export async function getOpenIDTokensByRefreshToken(
         refresh_token: refreshToken,
         client_id: clientId,
         client_secret: clientSecret
-      })
+      }),
+      { httpsAgent }
     );
 
     return {
