@@ -352,10 +352,6 @@ test.describe('User Journey', () => {
       await loginAsAdmin(page);
     });
 
-    test.afterEach(async ({ page }) => {
-      await logout(page);
-    });
-
     test('Can delete users', async ({ page, inbox }) => {
       await page.getByRole('tab', { name: 'Users' }).click();
       await findTextOnPaginatedTable(page, inbox.emailAddress);
