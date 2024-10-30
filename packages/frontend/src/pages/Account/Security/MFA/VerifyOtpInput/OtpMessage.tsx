@@ -1,6 +1,5 @@
 import { FC } from 'react';
 import { Typography, Grid } from '@mui/material';
-import PropTypes from 'prop-types';
 import { APP_MFA, EMAIL_MFA, SMS_MFA } from '../../../../../constants';
 import { QRCodeSVG } from 'qrcode.react';
 
@@ -39,11 +38,6 @@ const OtpMessage: FC<IOtpMessageProps> = (props) => {
     default:
       return null;
   }
-};
-
-OtpMessage.propTypes = {
-  type: PropTypes.string.isRequired,
-  uri: PropTypes.string
 };
 
 export default OtpMessage;

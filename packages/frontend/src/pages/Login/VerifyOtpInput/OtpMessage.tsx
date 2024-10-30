@@ -1,5 +1,4 @@
 import { ReactNode } from 'react';
-import PropTypes from 'prop-types';
 import {
   APP_MFA,
   EMAIL_MFA,
@@ -25,10 +24,6 @@ const OtpMessage = (props: IOtpMessageProps): ReactNode => {
     default:
       return '';
   }
-};
-
-OtpMessage.propTypes = {
-  type: PropTypes.string.isRequired
 };
 
 export default OtpMessage;
