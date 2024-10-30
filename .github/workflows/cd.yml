@@ -110,7 +110,7 @@ jobs:
         with:
           node-version: '20.11.0'
       - name: Install Playwright Browsers && dependencies
-        run: cd ./test && npm install && npx playwright install --with-deps
+        run: cd ./tests && npm install && npx playwright install --with-deps
       - name: Run Playwright tests
         run: npm run test:e2e
       - name: Upload test results
