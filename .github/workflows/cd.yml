@@ -9,7 +9,7 @@ jobs:
   provision-and-deploy:
     runs-on: ubuntu-latest
     outputs:
-      lb_ip: ${{ steps.get-lb-ip.outputs.lb_ip }}
+      lb_ip: ${{ steps.get-lb-ip.outputs.lb_host }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -78,12 +78,12 @@ jobs:
             --set Server.Encryption.SecretIV=${{ secrets.ENCRYPTION_SECRET_IV }} \
             --set Server.Email.EmailPassword='${{ secrets.EMAIL_SERVICE_PASSWORD }}' \
             --set 'Server.CookieSecrets={${{ secrets.COOKIE_SECRETS }}}'
-      - name: Get LoadBalancer IP
-        id: get-lb-ip
+      - name: Get LoadBalancer Host
+        id: get-lb-host
         run: |
-          LB_IP=$(kubectl get svc oauth-server-service -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
-          echo "lb_ip=$LB_IP" >> $GITHUB_OUTPUT
-          echo "LoadBalancer IP: $LB_IP"
+          LB_HOST=$(kubectl get svc oauth-server-service -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+          echo "lb_host=$LB_HOST" >> $GITHUB_OUTPUT
+          echo "LoadBalancer IP: $LB_HOST"
       - name: Create Admin User
         working-directory: "./scripts"
         env:
@@ -98,7 +98,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: provision-and-deploy
     env:
-      BASE_URL: "https://${{ needs.provision-and-deploy.outputs.lb_ip }}"
+      BASE_URL: "https://${{ needs.provision-and-deploy.outputs.lb_host }}"
       MAILSLURP_API_KEY: ${{ secrets.MAILSLURP_API_KEY }}
       ADMIN_EMAIL: "admin@admin.com"
       ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
