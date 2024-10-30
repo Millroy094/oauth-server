@@ -9,7 +9,7 @@ jobs:
   provision-and-deploy:
     runs-on: ubuntu-latest
     outputs:
-      lb_ip: ${{ steps.get-lb-ip.outputs.lb_host }}
+      lb_ip: ${{ steps.get-lb-host.outputs.lb_host }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -83,7 +83,7 @@ jobs:
         run: |
           LB_HOST=$(kubectl get svc oauth-server-service -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
           echo "lb_host=$LB_HOST" >> $GITHUB_OUTPUT
-          echo "LoadBalancer IP: $LB_HOST"
+          echo "LoadBalancer Host: $LB_HOST"
       - name: Create Admin User
         working-directory: "./scripts"
         env:
