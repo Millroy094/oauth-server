@@ -9,7 +9,7 @@ jobs:
   provision-and-deploy:
     runs-on: ubuntu-latest
     outputs:
-      lb_ip: ${{ steps.get-lb-host.outputs.lb_host }}
+      lb_host: ${{ steps.get-lb-host.outputs.lb_host }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
