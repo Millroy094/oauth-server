@@ -105,7 +105,8 @@ jobs:
       CI: "true"
     steps:
       - name: Debug LoadBalancer Host
-        run: echo "LoadBalancer Host: ${{ needs.provision-and-deploy.outputs.lb_host }}"
+        run: |
+          echo "LoadBalancer Host: ${{ needs.provision-and-deploy.outputs.lb_host }}"
       - name: Checkout code
         uses: actions/checkout@v4
       - name: Set up Node.js
