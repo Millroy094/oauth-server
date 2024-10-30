@@ -11,7 +11,7 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   reporter: 'html',
   use: {
-    baseURL: 'https://127.0.0.1:3000',
+    baseURL: process.env.BASE_URL,
     ignoreHTTPSErrors: true,
     trace: 'on-first-retry'
   },
@@ -35,7 +35,7 @@ export default defineConfig({
 
   webServer: {
     command: 'cd ../packages/backend/ && npm run dev',
-    url: 'https://localhost:3000',
+    url: process.env.BASE_URL,
     reuseExistingServer: !process.env.CI,
     ignoreHTTPSErrors: true
   }
