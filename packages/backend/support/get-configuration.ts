@@ -64,7 +64,7 @@ const getConfiguration = async (): Promise<Configuration> => {
     },
     interactions: {
       url: (ctx, interaction) =>
-        `${config.get('env') === 'development' ? 'http://localhost:5173' : ''}/?interactionId=${interaction.jti}`
+        `/?interactionId=${interaction.jti}`
     }
   };
 };

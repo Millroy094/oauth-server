@@ -95,6 +95,7 @@ jobs:
           ./create-admin-user.sh
   e2e-tests:
     runs-on: ubuntu-latest
+    needs: provision-and-deploy
     env:
       BASE_URL: "https://${{ needs.provision-and-deploy.outputs.lb_ip }}"
       MAILSLURP_API_KEY: ${{ secrets.MAILSLURP_API_KEY }}
