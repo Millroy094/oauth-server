@@ -33,10 +33,12 @@ export default defineConfig({
     }
   ],
 
-  webServer: {
-    command: 'cd ../packages/backend/ && npm run dev',
-    url: process.env.BASE_URL,
-    reuseExistingServer: !process.env.CI,
-    ignoreHTTPSErrors: true
-  }
+  webServer: !process.env.CI
+    ? {
+        command: 'cd ../packages/backend/ && npm run dev',
+        url: 'https://localhost:3000',
+        reuseExistingServer: true,
+        ignoreHTTPSErrors: true
+      }
+    : undefined
 });
