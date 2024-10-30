@@ -63,20 +63,22 @@ class Application {
   }
 
   private setupWebsite(): void {
-    this.expressApp.use(express.static(`${path.resolve()}/public`));
-    this.expressApp.use((req, res, next) => {
-      if (/(.ico|.js|.css|.jpg|.png|.map)$/i.test(req.path)) {
-        next();
-      } else {
-        res.header(
-          'Cache-Control',
-          'private, no-cache, no-store, must-revalidate'
-        );
-        res.header('Expires', '-1');
-        res.header('Pragma', 'no-cache');
-        res.sendFile(`${path.resolve()}/public/index.html`);
-      }
-    });
+    if (this.environment !== 'development') {
+      this.expressApp.use(express.static(`${path.resolve()}/public`));
+      this.expressApp.use((req, res, next) => {
+        if (/(.ico|.js|.css|.jpg|.png|.map)$/i.test(req.path)) {
+          next();
+        } else {
+          res.header(
+            'Cache-Control',
+            'private, no-cache, no-store, must-revalidate'
+          );
+          res.header('Expires', '-1');
+          res.header('Pragma', 'no-cache');
+          res.sendFile(`${path.resolve()}/public/index.html`);
+        }
+      });
+    }
   }
 
   private setupRoutes(): void {

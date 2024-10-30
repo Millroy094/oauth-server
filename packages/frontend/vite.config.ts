@@ -17,7 +17,8 @@ export default ({ mode }: { mode: string }) => {
         '/api': {
           target: process.env.VITE_BACKEND_ENDPOINT,
           changeOrigin: true,
-          rewrite: (path: string) => path.replace(/^\/api/, '')
+          rewrite: (path: string) => path.replace(/^\/api/, ''),
+          secure: false
         }
       }
     },

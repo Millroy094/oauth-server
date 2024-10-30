@@ -8,6 +8,8 @@ on:
 jobs:
   provision-and-deploy:
     runs-on: ubuntu-latest
+    outputs:
+      lb_ip: ${{ steps.get-lb-ip.outputs.lb_ip }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -76,6 +78,11 @@ jobs:
             --set Server.Encryption.SecretIV=${{ secrets.ENCRYPTION_SECRET_IV }} \
             --set Server.Email.EmailPassword='${{ secrets.EMAIL_SERVICE_PASSWORD }}' \
             --set 'Server.CookieSecrets={${{ secrets.COOKIE_SECRETS }}}'
+      - name: Get LoadBalancer IP
+        id: get-lb-ip
+        run: |
+          LB_IP=$(kubectl get svc oauth-server -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+          echo "::set-output name=lb_ip::$LB_IP"
       - name: Create Admin User
         working-directory: "./scripts"
         env:
@@ -89,7 +96,7 @@ jobs:
   e2e-tests:
     runs-on: ubuntu-latest
     env:
-      BASE_URL: <TODO://>
+      BASE_URL: "https://${{ needs.provision-and-deploy.outputs.lb_ip }}"
       MAILSLURP_API_KEY: ${{ secrets.MAILSLURP_API_KEY }}
       ADMIN_EMAIL: "admin@admin.com"
       ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}

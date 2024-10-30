@@ -377,13 +377,12 @@ test.describe('User Journey', () => {
       await expect(page).toHaveURL(/\oauth\/consent\/.*/);
       await page.getByRole('button', { name: 'Yes' }).click();
 
-      const clientURLRegex = new RegExp(`^${clientURL}\/?(\\?.*)?$`);
+      const clientURLRegex = new RegExp(`^${clientURL}/?(\\?.*)?$`);
 
       await expect(page).toHaveURL(clientURLRegex);
 
       const url = page.url();
       const urlObj = new URL(url);
-      urlObj;
 
       expect(`${urlObj.protocol}//${urlObj.hostname}`).toBe(clientURL);
       expect(urlObj.searchParams.has('code')).toBe(true);

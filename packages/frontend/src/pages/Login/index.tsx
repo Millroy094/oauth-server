@@ -1,4 +1,4 @@
-import { FC, ReactElement, useState } from 'react';
+import { FC, useState } from 'react';
 import {
   Button,
   Card,
@@ -8,26 +8,27 @@ import {
   Container,
   Grid,
   Link,
-  TextField,
   Typography,
   styled
 } from '@mui/material';
-import PasswordField from '../../components/PasswordField';
-import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
 import schema from './schema';
 import { useNavigate, useParams } from 'react-router-dom';
 import authenticateInteraction from '../../api/oidc/authenticate-interaction';
 import useFeedback from '../../hooks/useFeedback';
 import { useAuth } from '../../context/AuthProvider';
 import getLoginConfiguration from '../../api/user/get-login-configuration';
-import VerifyMFAOtpInput from './VerifyOtpInput';
-import { EMAIL_VERIFICATION } from '../../constants';
-import RecoveryCodeInput from './RecoveryCodeInput';
+import { EMAIL_VERIFICATION, MFA_LOGIN_STAGE, PASSWORD_LOGIN_STAGE, RECOVERY_CODE_STAGE, USERNAME_LOGIN_STAGE } from '../../constants';
 import { ILoginFormInput } from './types';
+import UsernameInput from './UsernameInput';
+import PasswordInput from './PasswordInput';
+import VerifyMFAOtpInput from './VerifyOtpInput';
+import RecoveryCodeInput from './RecoveryCodeInput';
 
 const StyledCard = styled(Card)({
-  borderTop: '2px solid red'
+  borderTop: '2px solid red',
+  marginTop: 15,
 });
 
 type ILoginStage = 'USERNAME' | 'PASSWORD' | 'MFA' | 'RECOVERY_CODE';
@@ -47,7 +48,7 @@ const Login: FC = () => {
     trigger,
     register,
     handleSubmit,
-    formState: { errors }
+    formState: { errors },
   } = useForm<ILoginFormInput>({
     resolver: yupResolver(schema),
     defaultValues: {
@@ -57,209 +58,104 @@ const Login: FC = () => {
       otp: '',
       loginWithRecoveryCode: false,
       recoveryCode: '',
-      resetMfa: false
-    }
+      resetMfa: false,
+    },
   });
 
   const email = getValues('email');
   const mfaType = getValues('mfaType');
 
   const onReset = () => {
-    setLoginStage('USERNAME');
+    setLoginStage(USERNAME_LOGIN_STAGE);
     reset();
   };
 
-  const onNextStep = async () => {
-    if (loginStage === 'USERNAME') {
-      const isEmailValid = await trigger('email');
+  const handleEmailVerification = async () => {
+    try {
+      const email = getValues('email');
+      const { data } = await getLoginConfiguration(email);
+      setValue('mfaType', !data.emailVerified ? EMAIL_VERIFICATION : data.mfa.type);
+    } catch (err) {
+      feedbackAxiosError(err, 'Failed to retrieve login configuration');
+    }
+  };
 
-      if (isEmailValid) {
-        try {
-          const email = getValues('email');
-          const response = await getLoginConfiguration(email);
-          if (!response.data.emailVerified) {
-            setValue('mfaType', EMAIL_VERIFICATION);
-          } else if (response.data.mfa.enabled) {
-            setValue('mfaType', response.data.mfa.type);
-          }
-        } catch (err) {
-          feedbackAxiosError(err, 'Failed to retrieve login configuration');
-        }
-        setLoginStage('PASSWORD');
-      }
-    } else if (loginStage === 'PASSWORD') {
-      const isPasswordValid = await trigger('password');
-      if (isPasswordValid && !mfaType) {
-        handleSubmit(onSubmit)();
-      } else if (isPasswordValid && mfaType) {
-        setLoginStage('MFA');
-      }
+  const onNextStep = async () => {
+    if (loginStage === USERNAME_LOGIN_STAGE && await trigger('email')) {
+      await handleEmailVerification();
+      setLoginStage(PASSWORD_LOGIN_STAGE);
+    } else if (loginStage === PASSWORD_LOGIN_STAGE && await trigger('password')) {
+      mfaType ? setLoginStage(MFA_LOGIN_STAGE) : handleSubmit(onSubmit)();
     } else {
       handleSubmit(onSubmit)();
     }
   };
 
-  const onSubmit = async (data: ILoginFormInput): Promise<void> => {
+  const onSubmit = async (data: ILoginFormInput) => {
     try {
-      if (interactionId) {
-        const response = await authenticateInteraction({
-          ...data,
-          interactionId: interactionId
-        });
+      const response = interactionId
+        ? await authenticateInteraction({ ...data, interactionId })
+        : await Auth?.login(data);
 
-        if (response.data.redirect) {
-          window.location.href = response.data.redirect;
-        }
-      } else {
-        await Auth?.login(data);
-      }
+      response?.data.redirect && (window.location.href = response.data.redirect);
     } catch (err) {
-      feedbackAxiosError(
-        err,
-        'Failed to authenticate credentials, please try again.'
-      );
+      feedbackAxiosError(err, 'Failed to authenticate credentials, please try again.');
     }
-    setLoginStage('USERNAME');
-    reset();
+    onReset();
   };
 
-  const navigateToForgotPassword = () => {
-    navigate(
-      `/forgot-password${
-        interactionId ? `?interactionId=${interactionId}` : ''
-      }`
-    );
-  };
-
-  const loginViaRecoveryCode = () => {
-    setValue('loginWithRecoveryCode', true);
-    setLoginStage('RECOVERY_CODE');
-  };
-
-  const extraProps: {
-    subheader?: ReactElement;
-    subheaderTypographyProps?: Record<string, string | number>;
-  } = {};
-
-  if (!interactionId) {
-    extraProps.subheader = (
-      <>
-        <Typography variant='caption'>Not registered?</Typography>
-        <Link
-          variant='caption'
-          underline='none'
-          sx={{ cursor: 'pointer' }}
-          onClick={() => navigate('/registration')}
-        >
-          Click here
-        </Link>
-        <Typography variant='caption'>to register</Typography>
-      </>
-    );
-
-    extraProps.subheaderTypographyProps = {
-      display: 'flex',
-      gap: '4px',
-      justifyContent: 'center'
-    };
-  }
+  const navigateToForgotPassword = () => navigate(`/forgot-password${interactionId ? `?interactionId=${interactionId}` : ''}`);
+  const loginViaRecoveryCode = () => { setValue('loginWithRecoveryCode', true); setLoginStage(RECOVERY_CODE_STAGE); };
 
   return (
     <Container maxWidth='sm'>
-      <StyledCard sx={{ marginTop: 15 }}>
+      <StyledCard>
         <CardHeader
           title='Log In'
           titleTypographyProps={{ align: 'center' }}
-          {...extraProps}
+          subheader={!interactionId && (
+            <>
+              <Typography variant='caption'>Not registered?</Typography>
+              <Link
+                variant='caption'
+                underline='none'
+                sx={{ cursor: 'pointer' }}
+                onClick={() => navigate('/registration')}
+              >
+                Click here
+              </Link>
+              <Typography variant='caption'>to register</Typography>
+            </>
+          )}
+          subheaderTypographyProps={{ display: 'flex', gap: '4px', justifyContent: 'center' }}
         />
         <CardContent>
           <Grid container direction='column' spacing={2} sx={{ p: 2 }}>
-            {!['MFA', 'RECOVERY_CODE'].includes(loginStage) && (
-              <>
-                <Grid item>
-                  {loginStage === 'USERNAME' ? (
-                    <TextField
-                      {...register('email')}
-                      label='Email Address'
-                      variant='outlined'
-                      fullWidth
-                      error={!!errors.email}
-                      helperText={errors.email ? errors.email.message : ''}
-                    />
-                  ) : (
-                    <Typography variant='body2'>{email}</Typography>
-                  )}
-                </Grid>
-                {loginStage !== 'USERNAME' && (
-                  <Grid container item direction='column'>
-                    <Grid item>
-                      <PasswordField
-                        name='password'
-                        label='Password'
-                        register={register}
-                        error={!!errors.password}
-                        helperText={
-                          errors.password ? errors.password.message : ''
-                        }
-                      />
-                    </Grid>
-                    <Grid item alignSelf='flex-end'>
-                      <Button color='error' onClick={navigateToForgotPassword}>
-                        <Typography variant='caption'>
-                          Forgot Password?
-                        </Typography>
-                      </Button>
-                    </Grid>
-                  </Grid>
-                )}
-              </>
-            )}
-
-            {loginStage === 'MFA' && (
-              <VerifyMFAOtpInput
-                email={email}
-                control={control}
-                type={mfaType ?? ''}
-              />
-            )}
-            {loginStage === 'RECOVERY_CODE' && (
-              <RecoveryCodeInput
-                register={register}
-                control={control}
-                errors={errors}
-              />
-            )}
+            {loginStage === USERNAME_LOGIN_STAGE && <UsernameInput register={register} errors={errors} />}
+            {loginStage === PASSWORD_LOGIN_STAGE && <PasswordInput register={register} errors={errors} email={email} navigateToForgotPassword={navigateToForgotPassword} />}
+            {loginStage === MFA_LOGIN_STAGE && <VerifyMFAOtpInput email={email} control={control} type={mfaType ?? ''} />}
+            {loginStage === RECOVERY_CODE_STAGE && <RecoveryCodeInput register={register} control={control} errors={errors} />}
           </Grid>
         </CardContent>
         <CardActions
           sx={{
             display: 'flex',
             padding: '20px 20px',
-            justifyContent:
-              loginStage === 'USERNAME' ? 'flex-end' : 'space-between'
+            justifyContent: loginStage === 'USERNAME' ? 'flex-end' : 'space-between',
           }}
         >
-          {!['USERNAME', 'MFA'].includes(loginStage) && (
-            <Button color='error' onClick={onReset}>
-              Sign in with a different user
-            </Button>
+          {loginStage !== USERNAME_LOGIN_STAGE && loginStage !== MFA_LOGIN_STAGE && (
+            <Button color='error' onClick={onReset}>Sign in with a different user</Button>
           )}
-
-          {loginStage === 'MFA' && (
-            <Button color='error' onClick={loginViaRecoveryCode}>
-              Don't have OTP?
-            </Button>
+          {loginStage === MFA_LOGIN_STAGE && (
+            <Button color='error' onClick={loginViaRecoveryCode}>Don't have OTP?</Button>
           )}
-
           <Button
             variant='contained'
             color='error'
-            sx={{ display: 'flex', justifySelf: 'flex-start' }}
             onClick={onNextStep}
           >
-            {(!mfaType || loginStage === 'MFA') && loginStage !== 'USERNAME'
-              ? 'Sign in'
-              : 'Next'}
+            {[MFA_LOGIN_STAGE, RECOVERY_CODE_STAGE].includes(loginStage) || (loginStage === PASSWORD_LOGIN_STAGE && !mfaType) ? 'Sign in' : 'Next'}
           </Button>
         </CardActions>
       </StyledCard>
