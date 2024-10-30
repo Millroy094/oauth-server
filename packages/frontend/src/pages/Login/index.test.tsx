@@ -71,7 +71,6 @@ describe('Login Component', () => {
         otp: '',
         email: 'test@example.com',
         password: 'password123',
-        mfaType: '',
         recoveryCode: '',
         resetMfa: false
       });
@@ -108,7 +107,7 @@ describe('Login Component', () => {
     await waitFor(() => {
       expect(
         screen.getByText(
-          'Please enter the 6 digit one time passcode shown on your chosen authenticator app'
+          'Please enter the 6 digit passcode shown on your authenticator app'
         )
       ).toBeInTheDocument();
     });

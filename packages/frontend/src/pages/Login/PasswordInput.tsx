@@ -9,14 +9,14 @@ interface PasswordInputProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   errors: Record<string, any>;
   email: string;
-  navigateToForgotPassword: () => void; 
+  navigateToForgotPassword: () => void;
 }
 
 const PasswordInput: FC<PasswordInputProps> = ({
   register,
   errors,
   email,
-  navigateToForgotPassword,
+  navigateToForgotPassword
 }) => {
   return (
     <Grid container item direction='column' spacing={2}>
@@ -28,8 +28,8 @@ const PasswordInput: FC<PasswordInputProps> = ({
           name='password'
           label='Password'
           register={register}
-          error={!!errors.password} 
-          helperText={errors.password?.message} 
+          error={!!errors.password}
+          helperText={errors.password?.message}
         />
       </Grid>
       <Grid item alignSelf='flex-end'>

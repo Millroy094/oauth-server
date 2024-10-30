@@ -20,7 +20,9 @@ const getConfiguration = async (): Promise<Configuration> => {
     },
     features: {
       devInteractions: { enabled: false },
-      clientCredentials: { enabled: true }
+      clientCredentials: { enabled: true },
+      deviceFlow: { enabled: true },
+      revocation: { enabled: true }
     },
     findAccount: async (_, id) => {
       const account = await User.get(id);

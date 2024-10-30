@@ -232,7 +232,8 @@ const ClientPopup: FC<ClientPopupProps> = (props) => {
                       { label: 'Open ID', value: 'openid' },
                       { label: 'Email', value: 'email' },
                       { label: 'Phone', value: 'phone' },
-                      { label: 'Profile', value: 'profile' }
+                      { label: 'Profile', value: 'profile' },
+                      { label: 'Offline Access', value: 'offline_access' }
                     ]}
                     errors={errors}
                   />

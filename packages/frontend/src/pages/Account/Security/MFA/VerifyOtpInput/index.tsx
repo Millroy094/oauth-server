@@ -16,8 +16,11 @@ interface IVerifyOtpInput {
   error: boolean;
 }
 
-const OtpResendSection: FC<{ handleResend: () => void; timer: number }> = ({ handleResend, timer }) => (
-  <Grid item container alignItems="center" justifyContent="center">
+const OtpResendSection: FC<{ handleResend: () => void; timer: number }> = ({
+  handleResend,
+  timer
+}) => (
+  <Grid item container alignItems='center' justifyContent='center'>
     <Typography>Haven't received OTP?</Typography>
     <Button onClick={handleResend} disabled={timer !== 0}>
       {timer ? `Click here in ${timer} seconds` : 'Click here'}
@@ -25,7 +28,13 @@ const OtpResendSection: FC<{ handleResend: () => void; timer: number }> = ({ han
   </Grid>
 );
 
-const VerifyOtpInput: FC<IVerifyOtpInput> = ({ type, onChange, value, uri, error }) => {
+const VerifyOtpInput: FC<IVerifyOtpInput> = ({
+  type,
+  onChange,
+  value,
+  uri,
+  error
+}) => {
   const { timer, resetTimer } = useTimer();
   const auth = useAuth();
   const { feedbackAxiosError } = useFeedback();
@@ -40,8 +49,8 @@ const VerifyOtpInput: FC<IVerifyOtpInput> = ({ type, onChange, value, uri, error
   };
 
   return (
-    <Grid container direction="column" alignItems="center" spacing={4}>
-      <Grid item container direction="column" alignItems="center" spacing={2}>
+    <Grid container direction='column' alignItems='center' spacing={4}>
+      <Grid item container direction='column' alignItems='center' spacing={2}>
         {type === APP_MFA ? (
           <OtpMessage type={type} uri={uri} />
         ) : (
@@ -51,18 +60,22 @@ const VerifyOtpInput: FC<IVerifyOtpInput> = ({ type, onChange, value, uri, error
           </>
         )}
       </Grid>
-      <Grid item container direction="column" justifyContent="center">
+      <Grid item container direction='column' justifyContent='center'>
         <OTPInput
           value={value}
           onChange={onChange}
           numInputs={6}
           renderInput={(props) => <input {...props} />}
-          inputType="tel"
-          containerStyle={{ display: 'flex', gap: '10px', justifyContent: 'center' }}
+          inputType='tel'
+          containerStyle={{
+            display: 'flex',
+            gap: '10px',
+            justifyContent: 'center'
+          }}
           inputStyle={{ width: '50px', height: '50px', fontSize: '20px' }}
         />
         {error && (
-          <Grid container justifyContent="center">
+          <Grid container justifyContent='center'>
             <FormHelperText error>OTP must be 6 digits</FormHelperText>
           </Grid>
         )}
