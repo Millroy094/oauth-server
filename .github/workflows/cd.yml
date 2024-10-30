@@ -104,9 +104,6 @@ jobs:
       ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
       CI: "true"
     steps:
-      - name: Debug LoadBalancer Host
-        run: |
-          echo "LoadBalancer Host: ${{ needs.provision-and-deploy.outputs.lb_host }}"
       - name: Checkout code
         uses: actions/checkout@v4
       - name: Set up Node.js
@@ -114,7 +111,7 @@ jobs:
         with:
           node-version: '20.11.0'
       - name: Install Playwright Browsers & dependencies
-        run: cd ./tests && npm install && npx playwright install --with-deps
+        run: cd ./tests && npm ci && npx playwright install --with-deps
       - name: Run Playwright tests
         run: npm run test:e2e
       - name: Upload test results
@@ -123,3 +120,4 @@ jobs:
         with:
           name: playwright-report
           path: playwright-report
+          retention-days: 30
