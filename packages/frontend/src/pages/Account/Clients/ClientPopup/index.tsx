@@ -209,6 +209,14 @@ const ClientPopup: FC<ClientPopupProps> = (props) => {
                       {
                         label: 'Authorization Code Flow',
                         value: 'authorization_code'
+                      },
+                      {
+                        label: 'Refresh Token',
+                        value: 'refresh_token'
+                      },
+                      {
+                        label: 'Client Credentials',
+                        value: 'client_credentials'
                       }
                     ]}
                     errors={errors}

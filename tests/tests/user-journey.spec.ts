@@ -1,7 +1,17 @@
 import { v4 as uuid } from 'uuid';
 import axios from 'axios';
 import https from 'https';
+import crypto from 'crypto';
 import { test, expect } from '../fixtures';
+
+const generateCodeVerifierAndChallenge = () => {
+  const codeVerifier = crypto.randomBytes(32).toString('base64url');
+  const codeChallenge = crypto
+    .createHash('sha256')
+    .update(codeVerifier)
+    .digest('base64url');
+  return { codeVerifier, codeChallenge };
+};
 
 const httpsAgent = new https.Agent({
   rejectUnauthorized: false
@@ -12,7 +22,8 @@ async function getOpenIDToken(
   authCode: string,
   clientId: string,
   clientSecret: string,
-  redirectUri: string
+  redirectUri: string,
+  codeVerifier: string
 ) {
   const tokenUrl = `${baseUrl}/api/oidc/token`;
 
@@ -24,7 +35,8 @@ async function getOpenIDToken(
         code: authCode,
         redirect_uri: redirectUri,
         client_id: clientId,
-        client_secret: clientSecret
+        client_secret: clientSecret,
+        code_verifier: codeVerifier
       }),
       { httpsAgent }
     );
@@ -348,23 +360,18 @@ test.describe('User Journey', () => {
       );
       const clientSecret = await handle.jsonValue();
 
-      console.log(clientSecret);
+      const { codeChallenge, codeVerifier } =
+        generateCodeVerifierAndChallenge();
 
       await page.goto(
-        `/api/oidc/auth?client_id=${clientId}&redirect_uri=${clientURL}&response_type=code&scope=openid&nonce=${nonce}&state=${state}`
+        `/api/oidc/auth?client_id=${clientId}&redirect_uri=${clientURL}&response_type=code&scope=openid&nonce=${nonce}&state=${state}&code_challenge=${codeChallenge}&code_challenge_method=S256`
       );
       await expect(page).toHaveURL(/\oauth\/login\/.*/);
 
-      // await page.locator('[name="email"]').fill(inbox.emailAddress);
-      // await page.getByRole('button', { name: 'NEXT' }).click();
-
-      // await page.locator('[name="password"]').fill(inbox.password);
-      //   await page.getByRole('button', { name: 'Sign in', exact: true }).click();
-
-      await page.locator('[name="email"]').fill(process.env.ADMIN_EMAIL!);
+      await page.locator('[name="email"]').fill(inbox.emailAddress);
       await page.getByRole('button', { name: 'NEXT' }).click();
 
-      await page.locator('[name="password"]').fill(process.env.ADMIN_PASSWORD!);
+      await page.locator('[name="password"]').fill(inbox.password);
       await page.getByRole('button', { name: 'Sign in', exact: true }).click();
 
       await expect(page).toHaveURL(/\oauth\/consent\/.*/);
@@ -389,7 +396,8 @@ test.describe('User Journey', () => {
         code!,
         clientId,
         clientSecret,
-        clientURL
+        clientURL,
+        codeVerifier
       );
 
       expect(accessToken).not.toBeUndefined();

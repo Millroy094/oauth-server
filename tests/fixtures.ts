@@ -10,7 +10,6 @@ export const test = base.extend<
     inbox: { id: string; emailAddress: string; password: string };
   }
 >({
-  // Fixture to initialize MailSlurp
   mailslurp: [
     async ({}, use) => {
       const mailslurp = new MailSlurp({ apiKey });
@@ -19,16 +18,14 @@ export const test = base.extend<
     { scope: 'worker' }
   ],
 
-  // Fixture to create a single shared inbox for the entire test file
   inbox: [
     async ({ mailslurp }, use) => {
-      // const { id, emailAddress } = await mailslurp.createInbox();
-      // const password = 'Password123!';
-      await use({ id: '', emailAddress: '', password: '' });
+      const { id, emailAddress } = await mailslurp.createInbox();
+      const password = 'Password123!';
+      await use({ id, emailAddress, password });
     },
     { scope: 'worker' }
   ]
 });
 
-// Ensure you export 'expect' from Playwright
 export { expect } from '@playwright/test';

@@ -19,7 +19,8 @@ const getConfiguration = async (): Promise<Configuration> => {
       short: { httpOnly: true, sameSite: 'strict' }
     },
     features: {
-      devInteractions: { enabled: false }
+      devInteractions: { enabled: false },
+      clientCredentials: { enabled: true }
     },
     findAccount: async (_, id) => {
       const account = await User.get(id);
@@ -52,7 +53,7 @@ const getConfiguration = async (): Promise<Configuration> => {
       grant_types: client.grants,
       scope: client.scopes.join(' ')
     })),
-    pkce: { required: () => false, methods: ['S256'] },
+    pkce: { required: () => true, methods: ['S256'] },
     claims: {
       openid: ['sub'],
       email: ['email', 'emailVerified'],
@@ -60,7 +61,8 @@ const getConfiguration = async (): Promise<Configuration> => {
       profile: ['firstName', 'lastName']
     },
     interactions: {
-      url: (ctx, interaction) => `/?interactionId=${interaction.jti}`
+      url: (ctx, interaction) =>
+        `${config.get('env') === 'development' ? 'http://localhost:5173' : ''}/?interactionId=${interaction.jti}`
     }
   };
 };
