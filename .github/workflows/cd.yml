@@ -81,7 +81,7 @@ jobs:
       - name: Get LoadBalancer IP
         id: get-lb-ip
         run: |
-          LB_IP=$(kubectl get svc oauth-server-service -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+          LB_IP=$(kubectl get svc oauth-server-service -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
           echo "lb_ip=$LB_IP" >> $GITHUB_OUTPUT
           echo "LoadBalancer IP: $LB_IP"
       - name: Create Admin User
