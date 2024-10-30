@@ -63,7 +63,7 @@ class Application {
   }
 
   private setupWebsite(): void {
-    // if (this.environment !== 'development') {
+    if (this.environment !== 'development') {
       this.expressApp.use(express.static(`${path.resolve()}/public`));
       this.expressApp.use((req, res, next) => {
         if (/(.ico|.js|.css|.jpg|.png|.map)$/i.test(req.path)) {
@@ -78,7 +78,7 @@ class Application {
           res.sendFile(`${path.resolve()}/public/index.html`);
         }
       });
-    // }
+    }
   }
 
   private setupRoutes(): void {
