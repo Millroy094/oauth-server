@@ -55,58 +55,61 @@ hash_password() {
 # Get the hashed password
 hashed_password=$(hash_password)
 
-# Try to insert the user into DynamoDB conditionally
-set +e  # Disable exit on error to handle the conditional check gracefully
-put_result=$(aws dynamodb put-item \
+# Step 1: Check if the email already exists
+existing_item=$(aws dynamodb query \
   --table-name User \
-  --item "{
-    \"userId\": {\"S\": \"$(uuidgen)\"},
-    \"email\": {\"S\": \"admin@admin.com\"},
-    \"emailVerified\": {\"BOOL\": true},
-    \"firstName\": {\"S\": \"Admin\"},
-    \"lastName\": {\"S\": \"Admin\"},
-    \"mobile\": {\"S\": \"\"},
-    \"password\": {\"S\": \"$hashed_password\"},
-    \"roles\": {\"L\": [{\"S\": \"admin\"}]},
-    \"lastLoggedIn\": {\"N\": \"0\"},
-    \"failedLogins\": {\"N\": \"0\"},
-    \"suspended\": {\"BOOL\": false},
-    \"mfa\": {
-      \"M\": {
-        \"preference\": {\"S\": \"\"},
-        \"recoveryCodes\": {\"L\": []},
-        \"app\": {
+  --index-name email-index \
+  --key-condition-expression "email = :email_val" \
+  --expression-attribute-values '{":email_val": {"S": "admin@admin.com"}}' \
+  --output json)
+
+# Step 2: Insert if email does not already exist
+if [ -z "$(echo $existing_item | jq -r '.Items[]?')" ]; then
+  echo "No existing user found with email admin@admin.com. Creating user..."
+  if ! put_result=$(aws dynamodb put-item \
+      --table-name User \
+      --item "{
+        \"userId\": {\"S\": \"$(uuidgen)\"},
+        \"email\": {\"S\": \"admin@admin.com\"},
+        \"emailVerified\": {\"BOOL\": true},
+        \"firstName\": {\"S\": \"Admin\"},
+        \"lastName\": {\"S\": \"Admin\"},
+        \"mobile\": {\"S\": \"\"},
+        \"password\": {\"S\": \"$hashed_password\"},
+        \"roles\": {\"L\": [{\"S\": \"admin\"}]},
+        \"lastLoggedIn\": {\"N\": \"0\"},
+        \"failedLogins\": {\"N\": \"0\"},
+        \"suspended\": {\"BOOL\": false},
+        \"mfa\": {
           \"M\": {
-            \"secret\": {\"S\": \"\"},
-            \"subscriber\": {\"S\": \"\"},
-            \"verified\": {\"BOOL\": false}
-          }
-        },
-        \"sms\": {
-          \"M\": {
-            \"subscriber\": {\"S\": \"\"},
-            \"verified\": {\"BOOL\": false}
-          }
-        },
-        \"email\": {
-          \"M\": {
-            \"subscriber\": {\"S\": \"\"},
-            \"verified\": {\"BOOL\": false}
+            \"preference\": {\"S\": \"\"},
+            \"recoveryCodes\": {\"L\": []},
+            \"app\": {
+              \"M\": {
+                \"secret\": {\"S\": \"\"},
+                \"subscriber\": {\"S\": \"\"},
+                \"verified\": {\"BOOL\": false}
+              }
+            },
+            \"sms\": {
+              \"M\": {
+                \"subscriber\": {\"S\": \"\"},
+                \"verified\": {\"BOOL\": false}
+              }
+            },
+            \"email\": {
+              \"M\": {
+                \"subscriber\": {\"S\": \"\"},
+                \"verified\": {\"BOOL\": false}
+              }
+            }
           }
         }
-      }
-    }
-  }" \
-  --condition-expression "attribute_not_exists(email)" 2>&1)
-exit_code=$?
-set -e  # Re-enable exit on error
-
-# Check the result and log appropriately
-if [ $exit_code -eq 0 ]; then
+      }" 2>&1); then
+    echo "An error occurred while trying to insert the user: $put_result"
+    exit 1
+  fi
   echo "User created successfully."
-elif [[ $put_result == *"ConditionalCheckFailedException"* ]]; then
-  echo "User already exists, skipping insert."
 else
-  echo "An error occurred while trying to insert the user: $put_result"
-  exit $exit_code
+  echo "User with email admin@admin.com already exists, skipping insert."
 fi
