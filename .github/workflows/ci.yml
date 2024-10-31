@@ -9,6 +9,7 @@ on:
 jobs:
   unit-tests:
     runs-on: ubuntu-latest
+    environment: Production
     strategy:
       fail-fast: false
       matrix:
@@ -33,6 +34,7 @@ jobs:
     name: Build & push docker image
     needs: unit-tests
     runs-on: ubuntu-latest
+    environment: Production
     env:
       IMG_NAME: "ghcr.io/${{ github.repository }}"
     steps:

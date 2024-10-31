@@ -7,6 +7,7 @@ on:
         required: true
 jobs:
   provision-and-deploy:
+    environment: Production
     runs-on: ubuntu-latest
     outputs:
       lb_host: ${{ steps.get-lb-host.outputs.lb_host }}
@@ -96,6 +97,7 @@ jobs:
           ./create-admin-user.sh
   e2e-tests:
     runs-on: ubuntu-latest
+    environment: Production
     needs: provision-and-deploy
     env:
       BASE_URL: "https://${{ needs.provision-and-deploy.outputs.lb_host }}"
