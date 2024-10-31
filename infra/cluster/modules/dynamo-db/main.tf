@@ -4,9 +4,24 @@ resource "aws_dynamodb_table" "user_dynamodb_table" {
   billing_mode   = "PROVISIONED"
   read_capacity  = 5
   write_capacity = 5
+
+  # Primary key attribute
   attribute {
     name = "userId"
     type = "S"
+  }
+
+  attribute {
+    name = "email"
+    type = "S"
+  }
+
+  global_secondary_index {
+    name               = "email-index"
+    hash_key           = "email"
+    projection_type    = "ALL"
+    read_capacity      = 5
+    write_capacity     = 5
   }
 }
 

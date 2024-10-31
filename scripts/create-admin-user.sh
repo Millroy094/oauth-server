@@ -55,7 +55,7 @@ hash_password() {
 # Get the hashed password
 hashed_password=$(hash_password)
 
-# Step 1: Check if the email already exists
+# Step 1: Check if the email already exists using the email-index
 existing_item=$(aws dynamodb query \
   --table-name User \
   --index-name email-index \
