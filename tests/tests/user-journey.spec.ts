@@ -42,8 +42,7 @@ test.describe('User Journey', () => {
       await expect(page.getByRole('tab', { name: 'Users' })).toBeVisible();
     });
 
-    test('Can create clients', async ({ page, context }) => {
-      await context.grantPermissions(['clipboard-write']);
+    test('Can create clients', async ({ page }) => {
       await page.getByRole('tab', { name: 'Clients' }).click();
       await page.getByRole('button', { name: 'Create New Client' }).click();
 
@@ -61,19 +60,6 @@ test.describe('User Journey', () => {
       ]);
       await page.locator('[name="redirectUris.0.value"]').fill(clientURL);
       await page.getByRole('button', { name: 'Create Client' }).click();
-
-      try {
-        const exists = await findTextOnPaginatedTable(page, clientName);
-
-        if (exists) {
-          await page
-            .getByRole('row', { name: clientId })
-            .getByLabel('Copy Secret')
-            .click();
-        }
-      } catch (err) {
-        console.log(err);
-      }
     });
   });
 
@@ -209,6 +195,27 @@ test.describe('User Journey', () => {
 
     const state = uuid();
     const nonce = uuid();
+
+    test.beforeAll(async ({ page, context }) => {
+      await context.grantPermissions(['clipboard-write']);
+      await loginAsAdmin(page);
+      await page.getByRole('tab', { name: 'Clients' }).click();
+
+      try {
+        const exists = await findTextOnPaginatedTable(page, clientName);
+
+        if (exists) {
+          await page
+            .getByRole('row', { name: clientId })
+            .getByLabel('Copy Secret')
+            .click();
+        }
+      } catch (err) {
+        console.log(err);
+      }
+
+      await logout(page);
+    });
 
     test('can retrieve access token & refresh token via auth code flow', async ({
       page,
