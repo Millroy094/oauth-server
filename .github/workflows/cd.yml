@@ -85,9 +85,6 @@ jobs:
         run: | 
           chmod +x get-lb-hostname.sh
           ./get-lb-hostname.sh
-      - name: Wait for Pods to be Ready
-        run: |
-          kubectl wait --for=condition=ready pod --all --timeout=300s
       - name: Create Admin User
         working-directory: "./scripts"
         env:
