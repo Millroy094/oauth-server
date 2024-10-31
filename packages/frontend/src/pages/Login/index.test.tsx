@@ -34,7 +34,7 @@ describe('Login Component', () => {
       </MemoryRouter>
     );
 
-    expect(screen.getByText('Log In')).toBeInTheDocument();
+    expect(screen.getByText('Log in')).toBeInTheDocument();
     expect(screen.getByLabelText('Email Address')).toBeInTheDocument();
   });
 
