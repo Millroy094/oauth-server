@@ -29,6 +29,15 @@ spec:
               cpu: "500m"
           ports:
             - containerPort: 3000
+          livenessProbe:
+            httpGet:
+              scheme: 'HTTPS'
+              path: /api/health-check/status
+              port: 3000
+            periodSeconds: 60
+            timeoutSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
           env:
             - name: COOKIE_SECRETS
               valueFrom:
