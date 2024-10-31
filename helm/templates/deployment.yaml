@@ -41,6 +41,7 @@ spec:
               scheme: 'HTTPS'
               path: /api/health-check/status
               port: 3000
+              initialDelaySeconds: 30
               failureThreshold: 30
               periodSeconds: 10
           readinessProbe:
