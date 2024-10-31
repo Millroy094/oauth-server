@@ -1,4 +1,4 @@
-FROM node:20-alpine3.20 AS builder
+FROM node:22-alpine3.20 AS builder
 
 WORKDIR /build
 
@@ -10,7 +10,7 @@ RUN npm install -g pnpm &&\
     pnpm run --filter=@oauth-server/backend build &&\
     pnpm run --filter=@oauth-server/backend generateJwks
 
-FROM node:20-alpine3.20 AS app
+FROM node:22-alpine3.20 AS app
 
 WORKDIR /app
 

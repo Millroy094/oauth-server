@@ -30,8 +30,8 @@ setup_node() {
   [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 
   # Install Node.js if it's not already installed
-  nvm install 20.11.0
-  nvm use 20.11.0
+  nvm install 22.11.0
+  nvm use 22.11.0
 
   # Install bcrypt
   npm install bcrypt

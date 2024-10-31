@@ -28,13 +28,13 @@ const authorize = (permissions: string[] | undefined) => {
         }
       } catch (error) {
         logger.error((error as Error).message);
-        return res.status(403).json({
+        res.status(403).json({
           error:
             "Authorisation failed! user doesn't have sufficient permissions to carry out this task"
         });
       }
     }
-    return next();
+    next();
   };
 };
 

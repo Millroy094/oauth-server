@@ -29,7 +29,7 @@
     "@types/jest": "^29.5.14",
     "@types/jsonwebtoken": "^9.0.6",
     "@types/lodash": "^4.14.186",
-    "@types/node": "^20.11.27",
+    "@types/node": "^22.8.6",
     "@types/node-jose": "^1.1.13",
     "@types/nodemailer": "^6.4.16",
     "@types/oidc-provider": "^8.5.2",
