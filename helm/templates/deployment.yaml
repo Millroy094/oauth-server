@@ -5,7 +5,7 @@ metadata:
   labels:
     app: oauth-server
 spec:
-  replicas: 2
+  replicas: 3
   selector:
     matchLabels:
       app: oauth-server
@@ -31,14 +31,14 @@ spec:
             - containerPort: 3000
           livenessProbe:
             httpGet:
-              httpHeaders:
-                - name: Accept
-                  value: application/json
               scheme: 'HTTPS'
               path: /api/health-check/status
               port: 3000
-            failureThreshold: 30
-            periodSeconds: 60
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 3
           env:
             - name: COOKIE_SECRETS
               valueFrom:
