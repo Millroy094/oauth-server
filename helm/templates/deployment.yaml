@@ -29,14 +29,6 @@ spec:
               cpu: "500m"
           ports:
             - containerPort: 3000
-          livenessProbe:
-            httpGet:
-              httpHeaders:
-                - name: Accept
-                  value: application/json
-              scheme: 'HTTPS'
-              path: /api/health-check/status
-              port: 3000
           startupProbe:
             httpGet:
               httpHeaders:
@@ -45,9 +37,19 @@ spec:
               scheme: 'HTTPS'
               path: /api/health-check/status
               port: 3000
-              initialDelaySeconds: 300
-              failureThreshold: 30
-              periodSeconds: 10
+            initialDelaySeconds: 300
+            failureThreshold: 30
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              httpHeaders:
+                - name: Accept
+                  value: application/json
+              scheme: 'HTTPS'
+              path: /api/health-check/status
+              port: 3000
+            failureThreshold: 1
+            periodSeconds: 60
           readinessProbe:
             httpGet:
               httpHeaders:
@@ -56,6 +58,8 @@ spec:
               scheme: 'HTTPS'
               path: /api/health-check/status
               port: 3000
+            failureThreshold: 1
+            periodSeconds: 60
           env:
             - name: COOKIE_SECRETS
               valueFrom:
