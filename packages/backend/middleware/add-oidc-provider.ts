@@ -8,7 +8,7 @@ const addOIDCProvider = async (
   next: NextFunction
 ) => {
   const configuration = await getConfiguration();
-  const provider = new Provider('http://localhost:3000', configuration);
+  const provider = new Provider('https://localhost:3000', configuration);
   req.oidcProvider = provider;
   next();
 };
