@@ -45,7 +45,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y awscli
       - name: Install kubectl
-        uses: azure/setup-kubectl@v3
+        uses: azure/setup-kubectl@v4
         with:
           version: 'latest'
       - name: Generate KUBECONFIG for EKS
