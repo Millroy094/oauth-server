@@ -85,7 +85,7 @@ export async function findTextOnPaginatedTable(page: Page, text: string) {
       await page.waitForSelector(`text=${text}`, { timeout: 5000 });
       return true;
     } catch (error) {
-      const nextButton = await page.$('button[aria-label="Go to next page"]');
+      const nextButton = await page.$('button[aria-label="Go to next page"]').catch(() => console.log('Next button not found'));
       if (!nextButton || (await nextButton.isDisabled())) {
         console.log(`Text "${text}" not found after checking all pages.`);
         return false;

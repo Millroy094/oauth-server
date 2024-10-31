@@ -72,6 +72,13 @@ test.describe('User Journey', () => {
         .getByRole('row', { name: clientId })
         .getByLabel('Delete Client')
         .click();
+
+      await page.waitForResponse(
+        (response) =>
+          /\/api\/admin\/clients\/.*/.test(response.url()) &&
+          response.request().method() === 'DELETE'
+      );
+
       await expect(page.getByRole('row', { name: clientId })).not.toBeVisible();
     });
   });
@@ -98,10 +105,6 @@ test.describe('User Journey', () => {
 
   test.describe('User registration', () => {
     test.describe.configure({ mode: 'serial' });
-
-    test.afterAll(async ({ mailslurp, inbox }) => {
-      await mailslurp.deleteInbox(inbox.id);
-    });
 
     test('Has all the fields', async ({ page }) => {
       page.goto('/');
@@ -256,6 +259,12 @@ test.describe('User Journey', () => {
         .getByLabel('Delete Client')
         .click();
 
+      await page.waitForResponse(
+        (response) =>
+          /\/api\/admin\/clients\/.*/.test(response.url()) &&
+          response.request().method() === 'DELETE'
+      );
+
       await expect(page.getByRole('row', { name: clientId })).not.toBeVisible();
 
       await logout(page);
@@ -286,14 +295,14 @@ test.describe('User Journey', () => {
       });
       await page.goto(authorizationCodeURL);
 
-      await expect(page).toHaveURL(/\oauth\/login\/.*/);
+      await expect(page).toHaveURL(/\/oauth\/login\/.*/);
 
       await page.locator('[name="email"]').fill(inbox.emailAddress);
       await page.getByRole('button', { name: 'NEXT' }).click();
       await page.locator('[name="password"]').fill(inbox.password);
       await page.getByRole('button', { name: 'Sign in', exact: true }).click();
 
-      await expect(page).toHaveURL(/\oauth\/consent\/.*/);
+      await expect(page).toHaveURL(/\/oauth\/consent\/.*/);
       await page.getByRole('button', { name: 'Yes' }).click();
 
       const clientURLRegex = new RegExp(`^${clientURL}/?(\\?.*)?$`);
@@ -386,10 +395,21 @@ test.describe('User Journey', () => {
         .getByRole('row', { name: inbox.emailAddress })
         .getByLabel('Delete User')
         .click();
+
+      await page.waitForResponse(
+        (response) =>
+          /\/api\/admin\/users\/.*/.test(response.url()) &&
+          response.request().method() === 'DELETE'
+      );
+
       await expect(
         page.getByRole('row', { name: inbox.emailAddress })
       ).not.toBeVisible();
       await logout(page);
     });
+  });
+
+  test.afterAll(async ({ mailslurp, inbox }) => {
+    await mailslurp.deleteInbox(inbox.id);
   });
 });
