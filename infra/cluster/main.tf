@@ -9,10 +9,6 @@ module "vpc" {
   eks_cluster_name = "${var.app_name}-cluster"
 }
 
-module "dynamodb" {
-  source = "./modules/dynamo-db"
-}
-
 module "eks" {
   source             = "./modules/eks"
   aws_account_id     = var.aws_account_id

@@ -22,14 +22,14 @@ variable "cluster_name" {
   default     = "oauth-server-cluster"
 }
 
-variable "dynamodb_service_account_name" {
-  type = string
-  description = "Dynamo DB Policy Service Account Name"
-  default = "oauth-server-dynamob-service-account"
+variable "oauth_server_service_account_name" {
+  type        = string
+  description = "Oauth Server Policy Service Account Name"
+  default     = "oauth-server-service-account"
 }
 
 variable "cluster_namespace" {
-  type = string
+  type        = string
   description = "Cluster namespace"
-  default = "default"
+  default     = "default"
 }
