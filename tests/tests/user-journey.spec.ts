@@ -196,7 +196,7 @@ test.describe('User Journey', () => {
     const state = uuid();
     const nonce = uuid();
 
-    test.beforeAll(async ({ page, context }) => {
+    test.beforeEach(async ({ page, context }) => {
       await context.grantPermissions(['clipboard-write']);
       await loginAsAdmin(page);
       await page.getByRole('tab', { name: 'Clients' }).click();
