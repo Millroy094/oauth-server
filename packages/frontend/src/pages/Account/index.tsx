@@ -54,7 +54,6 @@ export default function Account() {
               sx={{
                 mr: 2,
                 display: { xs: 'none', md: 'flex' },
-                fontFamily: 'monospace',
                 fontWeight: 700,
                 letterSpacing: '.3rem',
                 color: 'inherit',
@@ -62,7 +61,7 @@ export default function Account() {
                 flexGrow: 1
               }}
             >
-              LOGO
+              INNOVO
             </Typography>
 
             <Button variant='contained' color='error' onClick={Auth?.logout}>

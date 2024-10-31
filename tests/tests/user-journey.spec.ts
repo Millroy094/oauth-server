@@ -72,9 +72,7 @@ test.describe('User Journey', () => {
         .getByRole('row', { name: clientId })
         .getByLabel('Delete Client')
         .click();
-                  await expect(
-        page.getByRole('row', { name: clientId })
-      ).not.toBeVisible();
+      await expect(page.getByRole('row', { name: clientId })).not.toBeVisible();
     });
   });
 
@@ -257,10 +255,8 @@ test.describe('User Journey', () => {
         .getByRole('row', { name: clientId })
         .getByLabel('Delete Client')
         .click();
-      
-            await expect(
-        page.getByRole('row', { name: clientId })
-      ).not.toBeVisible();
+
+      await expect(page.getByRole('row', { name: clientId })).not.toBeVisible();
 
       await logout(page);
     });

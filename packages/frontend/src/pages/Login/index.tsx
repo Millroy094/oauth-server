@@ -1,5 +1,6 @@
 import { FC, useState } from 'react';
 import {
+  Box,
   Button,
   Card,
   CardActions,
@@ -31,6 +32,7 @@ import UsernameInput from './UsernameInput';
 import PasswordInput from './PasswordInput';
 import VerifyMFAOtpInput from './VerifyOtpInput';
 import RecoveryCodeInput from './RecoveryCodeInput';
+import Logo from '../../assets/logo.svg';
 
 const StyledCard = styled(Card)({
   borderTop: '2px solid red',
@@ -131,13 +133,19 @@ const Login: FC = () => {
 
   return (
     <Container maxWidth='sm'>
-      <StyledCard>
+      <StyledCard sx={{ marginTop: 15 }}>
         <CardHeader
-          title='Log In'
-          titleTypographyProps={{ align: 'center' }}
-          subheader={
-            !interactionId && (
-              <>
+          title={
+            <Grid container spacing={2} justifyContent='center'>
+              <Grid container item xs={3}>
+                <Box sx={{ height: 100, padding: '1 2', display: 'flex' }}>
+                  <Logo />
+                </Box>
+              </Grid>
+              <Grid xs={9} container item direction='column' justifyContent='flex-end' alignContent='baseline'>
+                <Grid item><Typography variant='h5'>Log in</Typography></Grid>
+               { !interactionId && (<Grid item>
+                <Box sx={{display: 'flex', gap: '2px'}}>
                 <Typography variant='caption'>Not registered?</Typography>
                 <Link
                   variant='caption'
@@ -147,18 +155,15 @@ const Login: FC = () => {
                 >
                   Click here
                 </Link>
-                <Typography variant='caption'>to register</Typography>
-              </>
-            )
+                    <Typography variant='caption'>to register</Typography>
+                    </Box>
+              </Grid>) }
+              </Grid>
+            </Grid>
           }
-          subheaderTypographyProps={{
-            display: 'flex',
-            gap: '4px',
-            justifyContent: 'center'
-          }}
         />
         <CardContent>
-          <Grid container direction='column' spacing={2} sx={{ p: 2 }}>
+          <Grid container direction='column' spacing={2} sx={{ p: '2' }}>
             {loginStage === USERNAME_LOGIN_STAGE && (
               <UsernameInput register={register} errors={errors} />
             )}
