@@ -31,18 +31,31 @@ spec:
             - containerPort: 3000
           livenessProbe:
             httpGet:
+              httpHeaders:
+                - name: Accept
+                  value: application/json
+              scheme: 'HTTPS'
+              path: /api/health-check/status
+              port: 3000
+          startupProbe:
+            httpGet:
+              httpHeaders:
+                - name: Accept
+                  value: application/json
               scheme: 'HTTPS'
               path: /api/health-check/status
               port: 3000
               initialDelaySeconds: 300
-              periodSeconds: 60
+              failureThreshold: 30
+              periodSeconds: 10
           readinessProbe:
             httpGet:
+              httpHeaders:
+                - name: Accept
+                  value: application/json
               scheme: 'HTTPS'
               path: /api/health-check/status
               port: 3000
-              initialDelaySeconds: 5
-              periodSeconds: 30
           env:
             - name: COOKIE_SECRETS
               valueFrom:
