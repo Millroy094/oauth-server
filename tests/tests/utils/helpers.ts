@@ -16,7 +16,7 @@ export async function loginAsAdmin(page: Page) {
 
 export async function login(page: Page, email: string, password: string) {
   await page.goto('/');
-  await page.waitForURL('/login')
+  await page.waitForURL('/login');
   await page.locator('[name="email"]').fill(email);
   await page.getByRole('button', { name: 'NEXT' }).click();
   await page.locator('[name="password"]').fill(password);
@@ -29,7 +29,7 @@ export async function loginFirstTime(
   mailslurp: MailSlurp
 ) {
   await page.goto('/');
-  await page.waitForURL('/login')
+  await page.waitForURL('/login');
   await page.locator('[name="email"]').fill(inbox.emailAddress);
   await page.getByRole('button', { name: 'NEXT' }).click();
   await page.locator('[name="password"]').fill(inbox.password);
@@ -46,7 +46,7 @@ export async function loginWithMfa(
   mailslurp: MailSlurp
 ) {
   await page.goto('/');
-  await page.waitForURL('/login')
+  await page.waitForURL('/login');
   await page.locator('[name="email"]').fill(inbox.emailAddress);
   await page.getByRole('button', { name: 'NEXT' }).click();
   await page.locator('[name="password"]').fill(inbox.password);
@@ -83,10 +83,15 @@ export async function fillOtp(page: Page, otp: string) {
 export async function findTextOnPaginatedTable(page: Page, text: string) {
   while (true) {
     try {
-      await page.waitForSelector(`text=${text}`, { timeout: 5000 });
+      await Promise.race([
+        page.waitForSelector(`[title="${text}"]`, { timeout: 5000 }),
+        page.waitForSelector(`text="${text}"`, { timeout: 5000 })
+      ]);
       return true;
     } catch (error) {
-      const nextButton = await page.$('button[aria-label="Go to next page"]').catch(() => console.log('Next button not found'));
+      const nextButton = await page
+        .$('button[aria-label="Go to next page"]')
+        .catch(() => console.log('Next button not found'));
       if (!nextButton || (await nextButton.isDisabled())) {
         console.log(`Text "${text}" not found after checking all pages.`);
         return false;
