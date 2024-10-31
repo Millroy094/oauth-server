@@ -142,22 +142,33 @@ const Login: FC = () => {
                   <Logo />
                 </Box>
               </Grid>
-              <Grid xs={9} container item direction='column' justifyContent='flex-end' alignContent='baseline'>
-                <Grid item><Typography variant='h5'>Log in</Typography></Grid>
-               { !interactionId && (<Grid item>
-                <Box sx={{display: 'flex', gap: '2px'}}>
-                <Typography variant='caption'>Not registered?</Typography>
-                <Link
-                  variant='caption'
-                  underline='none'
-                  sx={{ cursor: 'pointer' }}
-                  onClick={() => navigate('/registration')}
-                >
-                  Click here
-                </Link>
-                    <Typography variant='caption'>to register</Typography>
+              <Grid
+                xs={9}
+                container
+                item
+                direction='column'
+                justifyContent='flex-end'
+                alignContent='baseline'
+              >
+                <Grid item>
+                  <Typography variant='h5'>Log in</Typography>
+                </Grid>
+                {!interactionId && (
+                  <Grid item>
+                    <Box sx={{ display: 'flex', gap: '2px' }}>
+                      <Typography variant='caption'>Not registered?</Typography>
+                      <Link
+                        variant='caption'
+                        underline='none'
+                        sx={{ cursor: 'pointer' }}
+                        onClick={() => navigate('/registration')}
+                      >
+                        Click here
+                      </Link>
+                      <Typography variant='caption'>to register</Typography>
                     </Box>
-              </Grid>) }
+                  </Grid>
+                )}
               </Grid>
             </Grid>
           }
