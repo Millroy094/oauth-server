@@ -270,7 +270,7 @@ test.describe('User Journey', () => {
       await logout(page);
     });
 
-    test('can retrieve access token via auth code flow', async ({
+    test('can retrieve access token & refresh token via auth code flow', async ({
       page,
       inbox,
       baseURL,

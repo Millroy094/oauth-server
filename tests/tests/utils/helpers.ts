@@ -16,6 +16,7 @@ export async function loginAsAdmin(page: Page) {
 
 export async function login(page: Page, email: string, password: string) {
   await page.goto('/');
+  await page.waitForURL('/login')
   await page.locator('[name="email"]').fill(email);
   await page.getByRole('button', { name: 'NEXT' }).click();
   await page.locator('[name="password"]').fill(password);
@@ -28,7 +29,7 @@ export async function loginFirstTime(
   mailslurp: MailSlurp
 ) {
   await page.goto('/');
-
+  await page.waitForURL('/login')
   await page.locator('[name="email"]').fill(inbox.emailAddress);
   await page.getByRole('button', { name: 'NEXT' }).click();
   await page.locator('[name="password"]').fill(inbox.password);
@@ -45,7 +46,7 @@ export async function loginWithMfa(
   mailslurp: MailSlurp
 ) {
   await page.goto('/');
-
+  await page.waitForURL('/login')
   await page.locator('[name="email"]').fill(inbox.emailAddress);
   await page.getByRole('button', { name: 'NEXT' }).click();
   await page.locator('[name="password"]').fill(inbox.password);
