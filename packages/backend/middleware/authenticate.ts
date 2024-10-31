@@ -93,7 +93,7 @@ const authenticate = async (
     return next();
   } catch (err) {
     logger.error((err as Error).message);
-    return res.status(401).json({
+    res.status(401).json({
       error: 'Authenication failed, please check if you are still logged in'
     });
   }
