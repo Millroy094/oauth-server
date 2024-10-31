@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
+import logger from '../utils/logger.ts';
 import UserService from '../services/user.ts';
 import config from '../support/env-config.ts';
 import { ACCESS_TOKEN, REFRESH_TOKEN } from '../constants/authentication.ts';
@@ -70,7 +71,7 @@ const validateTokensFromCookies = (req: Request, res: Response) => {
     if ((error as Error).name === 'TokenExpiredError') {
       generateNewTokensFromRefreshToken(refreshToken, req, res);
     } else {
-      console.error(error);
+      logger.error((error as Error).message);
       throw new Error('Authentication failed, for an unexpected reason');
     }
   }
@@ -91,7 +92,7 @@ const authenticate = async (
     }
     return next();
   } catch (err) {
-    console.error(err);
+    logger.error((err as Error).message);
     return res.status(401).json({
       error: 'Authenication failed, please check if you are still logged in'
     });

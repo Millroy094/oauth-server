@@ -21,7 +21,7 @@ test.describe('User Journey', () => {
   test.describe.configure({ mode: 'serial' });
 
   const clientName = `example client ${Date.now()}`;
-  const clientId = clientName.replaceAll(" ", "_");
+  const clientId = clientName.replaceAll(' ', '_');
   const clientURL = 'https://www.example.com';
 
   test.describe('Admin prepare client', () => {

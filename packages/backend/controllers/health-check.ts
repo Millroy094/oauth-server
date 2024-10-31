@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import logger from '../utils/logger.ts';
 import User from '../models/User.ts';
 import OIDCStore from '../models/OIDCStore.ts';
 import Client from '../models/Client.ts';
@@ -15,7 +16,8 @@ class HealthCheckController {
 
       res.status(HTTP_STATUSES.ok).send({ status: 'healthy' });
     } catch (err) {
-      console.log(err);
+      logger.error((err as Error).message);
+
       res.status(HTTP_STATUSES.serverError).send({ status: 'unhealthy' });
     }
   }

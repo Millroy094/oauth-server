@@ -59,6 +59,7 @@
     "nodemailer": "^6.9.16",
     "oidc-provider": "^8.5.2",
     "otpauth": "^9.3.4",
-    "uuid": "^11.0.2"
+    "uuid": "^11.0.2",
+    "winston": "^3.15.0"
   }
 }

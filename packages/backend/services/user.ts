@@ -1,6 +1,7 @@
 import { AnyItem } from 'dynamoose/dist/Item';
 import isEmpty from 'lodash/isEmpty.js';
 import bcrypt from 'bcryptjs';
+import logger from '../utils/logger.ts';
 import User from '../models/User.ts';
 import OIDCService from './oidc.ts';
 import generateOtp from '../utils/generate-otp.ts';
@@ -125,7 +126,7 @@ class UserService {
     try {
       user = await UserService.getUserByEmail(email);
     } catch (err) {
-      console.error('User not found');
+      logger.error('User not found');
     }
 
     if (!user) {

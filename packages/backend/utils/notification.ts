@@ -1,5 +1,6 @@
 import nodemailer from 'nodemailer';
 import { SNSClient, PublishCommand } from '@aws-sdk/client-sns';
+import logger from './logger.ts';
 import config from '../support/env-config.ts';
 
 const transporter = nodemailer.createTransport({
@@ -33,10 +34,9 @@ export const sendSMS = async (
         }
       }
     };
-    const response = await client.send(new PublishCommand(params));
-    console.log(response);
+    await client.send(new PublishCommand(params));
   } catch (err) {
-    console.log(err);
+    logger.error((err as Error).message);
     throw new Error('Unable to send SMS');
   }
 };

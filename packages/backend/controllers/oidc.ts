@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import logger from '../utils/logger.ts';
 import UserService from '../services/user.ts';
 import MFAService from '../services/mfa/index.ts';
 import HTTP_STATUSES from '../constants/http-status.ts';
@@ -11,7 +12,7 @@ class OIDCController {
       } = await req.oidcProvider.interactionDetails(req, res);
       res.status(HTTP_STATUSES.ok).json({ status: name });
     } catch (err) {
-      console.log(err);
+      logger.error((err as Error).message);
       res
         .status(HTTP_STATUSES.badRequest)
         .json({ error: `Unable to process authentication: ${err}` });

@@ -1,4 +1,5 @@
 import { Adapter, AdapterPayload } from 'oidc-provider';
+import logger from '../utils/logger.ts';
 import OIDCStore from '../models/OIDCStore.ts';
 
 class DynamoDBAdapter implements Adapter {
@@ -27,7 +28,7 @@ class DynamoDBAdapter implements Adapter {
         ...(payload.grantId ? { grantId: payload.grantId } : {})
       });
     } catch (error) {
-      console.error(error);
+      logger.error((error as Error).message);
       throw new Error(`There was an error updating ${modelId}`);
     }
   }
@@ -47,7 +48,7 @@ class DynamoDBAdapter implements Adapter {
 
       return record.payload;
     } catch (error) {
-      console.error(error);
+      logger.error((error as Error).message);
       throw new Error(`There was an error finding ${modelId}`);
     }
   }
@@ -67,7 +68,7 @@ class DynamoDBAdapter implements Adapter {
 
       return record.payload;
     } catch (error) {
-      console.error(error);
+      logger.error((error as Error).message);
       throw new Error(
         `There was an error finding record by user code ${userCode}`
       );
@@ -86,7 +87,7 @@ class DynamoDBAdapter implements Adapter {
 
       return record.payload;
     } catch (error: any) {
-      console.error(error);
+      logger.error((error as Error).message);
       throw new Error(`There was an error finding record by uid ${uid}`);
     }
   }
@@ -100,7 +101,7 @@ class DynamoDBAdapter implements Adapter {
       };
       await record.save();
     } catch (error) {
-      console.error(error);
+      logger.error((error as Error).message);
       throw new Error(`There was an error marking ${modelId} as consumed`);
     }
   }
@@ -109,7 +110,7 @@ class DynamoDBAdapter implements Adapter {
     try {
       await OIDCStore.delete(modelId);
     } catch (error) {
-      console.error(error);
+      logger.error((error as Error).message);
       throw new Error(`There was an error deleting ${modelId}`);
     }
   }
@@ -127,12 +128,11 @@ class DynamoDBAdapter implements Adapter {
       }, []);
 
       const response = await OIDCStore.batchDelete(modelIds);
-      console.log(
+      logger.info(
         `Successfully deleted items. ${response.unprocessedItems.length} of unprocessed items.`
       );
     } catch (error) {
-      console.error(error);
-
+      logger.error((error as Error).message);
       throw new Error(`There was an error revoking by ${grantId}`);
     }
   }

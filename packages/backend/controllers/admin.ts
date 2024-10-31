@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { AnyItem } from 'dynamoose/dist/Item';
+import logger from '../utils/logger.ts';
 import ClientService from '../services/client.ts';
 import MFAService from '../services/mfa/index.ts';
 import OIDCService from '../services/oidc.ts';
@@ -14,7 +15,7 @@ class AdminController {
         .json({ message: 'Successfully registered client!' })
         .status(HTTP_STATUSES.ok);
     } catch (err) {
-      console.log(err);
+      logger.error((err as Error).message);
       res
         .status(HTTP_STATUSES.serverError)
         .json({ error: 'Failed registering client' });
@@ -36,7 +37,7 @@ class AdminController {
         .json({ results, message: 'Successfully retrieved clients!' })
         .status(HTTP_STATUSES.ok);
     } catch (err) {
-      console.log(err);
+      logger.error((err as Error).message);
       res
         .status(HTTP_STATUSES.serverError)
         .json({ error: 'Failed retrieve clients' });
@@ -49,7 +50,7 @@ class AdminController {
       const clientRecord = await ClientService.getClientById(id);
       res.status(HTTP_STATUSES.ok).json({ client: clientRecord });
     } catch (err) {
-      console.log(err);
+      logger.error((err as Error).message);
       res
         .status(HTTP_STATUSES.notFound)
         .json({ error: 'There was an issue fetching client info' });
@@ -64,7 +65,7 @@ class AdminController {
         .status(HTTP_STATUSES.ok)
         .json({ message: 'Successfully updated client record!' });
     } catch (err) {
-      console.log(err);
+      logger.error((err as Error).message);
       res
         .status(HTTP_STATUSES.notFound)
         .json({ error: 'There was an issue updating client record' });
@@ -79,7 +80,7 @@ class AdminController {
         .status(HTTP_STATUSES.ok)
         .json({ message: 'Successfully deleted client record!' });
     } catch (err) {
-      console.log(err);
+      logger.error((err as Error).message);
       res
         .status(HTTP_STATUSES.notFound)
         .json({ error: 'There was an issue deleting client' });
@@ -107,7 +108,7 @@ class AdminController {
         .json({ results, message: 'Successfully retrieved users!' })
         .status(HTTP_STATUSES.ok);
     } catch (err) {
-      console.log(err);
+      logger.error((err as Error).message);
       res
         .status(HTTP_STATUSES.serverError)
         .json({ error: 'Failed retrieve users' });
@@ -122,7 +123,7 @@ class AdminController {
         .status(HTTP_STATUSES.ok)
         .json({ message: 'Successfully deleted user record!' });
     } catch (err) {
-      console.log(err);
+      logger.error((err as Error).message);
       res
         .status(HTTP_STATUSES.notFound)
         .json({ error: 'There was an issue deleting user' });
@@ -135,7 +136,7 @@ class AdminController {
       const userRecord = await UserService.getUserById(id);
       res.status(HTTP_STATUSES.ok).json({ user: userRecord });
     } catch (err) {
-      console.log(err);
+      logger.error((err as Error).message);
       res
         .status(HTTP_STATUSES.notFound)
         .json({ error: 'There was an issue fetching user info' });
@@ -155,7 +156,7 @@ class AdminController {
         .status(HTTP_STATUSES.ok)
         .json({ message: 'Successfully updated user record!' });
     } catch (err) {
-      console.log(err);
+      logger.error((err as Error).message);
       res
         .status(HTTP_STATUSES.notFound)
         .json({ error: 'There was an issue updating user info' });
@@ -170,7 +171,7 @@ class AdminController {
         .status(HTTP_STATUSES.ok)
         .json({ message: 'Successfully deleted all user sessions!' });
     } catch (err) {
-      console.log(err);
+      logger.error((err as Error).message);
       res
         .status(HTTP_STATUSES.notFound)
         .json({ error: 'There was an issue deleting user session' });
@@ -183,7 +184,7 @@ class AdminController {
       await MFAService.resetMFA(id);
       res.status(HTTP_STATUSES.ok).json({ message: 'Successfully reset MFA!' });
     } catch (err) {
-      console.log(err);
+      logger.error((err as Error).message);
       res
         .status(HTTP_STATUSES.serverError)
         .json({ error: 'Failed to reset MFA' });

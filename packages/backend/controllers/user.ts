@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
+import logger from '../utils/logger.ts';
 import UserService from '../services/user.ts';
 import OIDCService from '../services/oidc.ts';
 import MFAService from '../services/mfa/index.ts';
@@ -15,7 +16,8 @@ class UserController {
         .json({ message: 'Successfully registered user!' })
         .status(HTTP_STATUSES.ok);
     } catch (err) {
-      console.log(err);
+      logger.error((err as Error).message);
+
       res
         .status(HTTP_STATUSES.serverError)
         .json({ error: 'Failed registering user' });
@@ -82,7 +84,7 @@ class UserController {
           message: 'Login Successful'
         });
     } catch (err) {
-      console.log(err);
+      logger.error((err as Error).message);
       res
         .status(HTTP_STATUSES.unauthorised)
         .json({ error: 'Invalid username or password' });
@@ -107,7 +109,7 @@ class UserController {
         user: { ...req.user, roles: userAccount?.roles ?? [] }
       });
     } catch (err) {
-      console.log(err);
+      logger.error((err as Error).message);
       res
         .status(HTTP_STATUSES.notFound)
         .json({ error: 'There was an issue checking authentication status' });
@@ -122,7 +124,7 @@ class UserController {
       const userRecord = await UserService.getUserById(userId);
       res.status(HTTP_STATUSES.ok).json({ user: userRecord });
     } catch (err) {
-      console.log(err);
+      logger.error((err as Error).message);
       res
         .status(HTTP_STATUSES.notFound)
         .json({ error: 'There was an issue fetching user info' });
@@ -138,7 +140,7 @@ class UserController {
         .status(HTTP_STATUSES.ok)
         .json({ message: 'Successfully updated user record!' });
     } catch (err) {
-      console.log(err);
+      logger.error((err as Error).message);
       res
         .status(HTTP_STATUSES.notFound)
         .json({ error: 'There was an issue updating user info' });
@@ -152,7 +154,7 @@ class UserController {
       const sessions = await OIDCService.getSessions(userId);
       res.status(HTTP_STATUSES.ok).json({ sessions });
     } catch (err) {
-      console.log(err);
+      logger.error((err as Error).message);
       res
         .status(HTTP_STATUSES.notFound)
         .json({ error: 'Unable to retreive user sessions' });
@@ -168,7 +170,7 @@ class UserController {
         .status(HTTP_STATUSES.ok)
         .json({ message: 'Successfully deleted all user sessions' });
     } catch (err) {
-      console.log(err);
+      logger.error((err as Error).message);
       res
         .status(HTTP_STATUSES.serverError)
         .json({ error: 'Unable to delete user sessions' });
@@ -183,7 +185,7 @@ class UserController {
         .status(HTTP_STATUSES.ok)
         .json({ message: 'Successfully deleted all user sessions' });
     } catch (err) {
-      console.log(err);
+      logger.error((err as Error).message);
       res
         .status(HTTP_STATUSES.serverError)
         .json({ error: 'Unable to delete user sessions' });
@@ -197,7 +199,7 @@ class UserController {
       const settings = await MFAService.getMFASetting(userId);
       res.status(HTTP_STATUSES.ok).json({ settings });
     } catch (err) {
-      console.log(err);
+      logger.error((err as Error).message);
       res
         .status(HTTP_STATUSES.notFound)
         .json({ error: 'Unable to retrieve user MFA settings' });
@@ -213,7 +215,7 @@ class UserController {
         .status(HTTP_STATUSES.ok)
         .json({ uri: result?.uri, message: 'Initiated MFA Setup' });
     } catch (err) {
-      console.log(err);
+      logger.error((err as Error).message);
       res
         .status(HTTP_STATUSES.serverError)
         .json({ error: 'Unable to setup MFA' });
@@ -230,7 +232,7 @@ class UserController {
         .status(HTTP_STATUSES.ok)
         .json({ message: 'Successfully verified MFA' });
     } catch (err) {
-      console.log(err);
+      logger.error((err as Error).message);
       res.status(HTTP_STATUSES.badRequest).json({ error: 'Invalid OTP' });
     }
   }
@@ -243,7 +245,7 @@ class UserController {
       await MFAService.resetMFAByType(userId, type);
       res.status(HTTP_STATUSES.ok).json({ message: 'Successfully reset MFA' });
     } catch (err) {
-      console.log(err);
+      logger.error((err as Error).message);
       res
         .status(HTTP_STATUSES.serverError)
         .json({ error: 'Failed to reset MFA' });
@@ -260,7 +262,7 @@ class UserController {
         .status(HTTP_STATUSES.ok)
         .json({ message: 'Successfully changed MFA preference' });
     } catch (err) {
-      console.log(err);
+      logger.error((err as Error).message);
       res
         .status(HTTP_STATUSES.serverError)
         .json({ error: 'Failed to change MFA preference' });
@@ -278,7 +280,7 @@ class UserController {
         recoveryCodes
       });
     } catch (err) {
-      console.log(err);
+      logger.error((err as Error).message);
       res
         .status(HTTP_STATUSES.serverError)
         .json({ error: 'Failed to generate recovery codes' });
@@ -298,7 +300,7 @@ class UserController {
       }
       res.status(HTTP_STATUSES.ok).json({ message: 'Successfully sent OTP' });
     } catch (err) {
-      console.log(err);
+      logger.error((err as Error).message);
       res
         .status(HTTP_STATUSES.serverError)
         .json({ error: 'Failed to send OTP' });
@@ -313,7 +315,7 @@ class UserController {
       );
       res.status(HTTP_STATUSES.ok).json(loginConfiguration);
     } catch (err) {
-      console.log(err);
+      logger.error((err as Error).message);
       res
         .status(HTTP_STATUSES.notFound)
         .json({ error: 'Failed to retrieve users login configuration' });
@@ -330,7 +332,7 @@ class UserController {
       );
       res.status(HTTP_STATUSES.ok).json(loginConfiguration);
     } catch (err) {
-      console.log(err);
+      logger.error((err as Error).message);
       res
         .status(HTTP_STATUSES.notFound)
         .json({ error: 'Failed to change password' });

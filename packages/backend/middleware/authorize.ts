@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
+import logger from '../utils/logger.ts';
 import UserService from '../services/user.ts';
 
 const authorize = (permissions: string[] | undefined) => {
@@ -26,7 +27,7 @@ const authorize = (permissions: string[] | undefined) => {
           );
         }
       } catch (error) {
-        console.error(error);
+        logger.error((error as Error).message);
         return res.status(403).json({
           error:
             "Authorisation failed! user doesn't have sufficient permissions to carry out this task"
