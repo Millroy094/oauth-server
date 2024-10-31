@@ -89,6 +89,7 @@ test.describe('User Journey', () => {
     });
 
     test('Redirected to login', async ({ page }) => {
+      await page.waitForURL('/login')
       await expect(page).toHaveURL('/login');
     });
 
