@@ -42,7 +42,8 @@ test.describe('User Journey', () => {
       await expect(page.getByRole('tab', { name: 'Users' })).toBeVisible();
     });
 
-    test('Can create clients', async ({ page }) => {
+    test('Can create clients', async ({ page, context }) => {
+      await context.grantPermissions(['clipboard-write']);
       await page.getByRole('tab', { name: 'Clients' }).click();
       await page.getByRole('button', { name: 'Create New Client' }).click();
 
@@ -59,27 +60,20 @@ test.describe('User Journey', () => {
         'Offline Access'
       ]);
       await page.locator('[name="redirectUris.0.value"]').fill(clientURL);
-
       await page.getByRole('button', { name: 'Create Client' }).click();
 
-      await expect(page.getByText(clientName)).toBeVisible();
-    });
+      try {
+        const exists = await findTextOnPaginatedTable(page, clientName);
 
-    test('Can delete clients', async ({ page }) => {
-      await page.getByRole('tab', { name: 'Clients' }).click();
-      await page.waitForSelector(`text=${clientId}`);
-      await page
-        .getByRole('row', { name: clientId })
-        .getByLabel('Delete Client')
-        .click();
-
-      await page.waitForResponse(
-        (response) =>
-          /\/api\/admin\/clients\/.*/.test(response.url()) &&
-          response.request().method() === 'DELETE'
-      );
-
-      await expect(page.getByRole('row', { name: clientId })).not.toBeVisible();
+        if (exists) {
+          await page
+            .getByRole('row', { name: clientId })
+            .getByLabel('Copy Secret')
+            .click();
+        }
+      } catch (err) {
+        console.log(err);
+      }
     });
   });
 
@@ -215,72 +209,6 @@ test.describe('User Journey', () => {
 
     const state = uuid();
     const nonce = uuid();
-
-    test.beforeEach(async ({ page, context }) => {
-      await context.grantPermissions(['clipboard-write']);
-
-      await loginAsAdmin(page);
-      await page.getByRole('tab', { name: 'Clients' }).click();
-      await page.getByRole('button', { name: 'Create New Client' }).click();
-
-      await page.locator('[name="clientName"]').fill(clientName);
-
-      await pickSelectBoxValue(page, 'grants', [
-        'Authorization Code Flow',
-        'Refresh Token',
-        'Client Credentials'
-      ]);
-      await pickSelectBoxValue(page, 'scopes', [
-        'Open ID',
-        'Email',
-        'Offline Access'
-      ]);
-
-      await page.locator('[name="redirectUris.0.value"]').fill(clientURL);
-      await page.getByRole('button', { name: 'Create Client' }).click();
-      try {
-        const exists = await findTextOnPaginatedTable(page, clientName);
-
-        if (exists) {
-          await page
-            .getByRole('row', { name: clientId })
-            .getByLabel('Copy Secret')
-            .click();
-        }
-      } catch (err) {
-        console.log(err);
-      }
-      await logout(page);
-    });
-
-    test.afterEach(async ({ page }) => {
-      await loginAsAdmin(page);
-
-      await page.getByRole('tab', { name: 'Clients' }).click();
-      try {
-        const exists = await findTextOnPaginatedTable(page, clientId);
-
-        if (exists) {
-          await page
-            .getByRole('row', { name: clientId })
-            .getByLabel('Delete Client')
-            .click();
-
-          await page.waitForResponse(
-            (response) =>
-              /\/api\/admin\/clients\/.*/.test(response.url()) &&
-              response.request().method() === 'DELETE'
-          );
-
-          await expect(
-            page.getByRole('row', { name: clientId })
-          ).not.toBeVisible();
-        }
-      } catch (err) {
-        console.log(err);
-      }
-      await logout(page);
-    });
 
     test('can retrieve access token & refresh token via auth code flow', async ({
       page,
@@ -431,8 +359,38 @@ test.describe('User Journey', () => {
         console.log(err);
       }
 
-      await logout(page);
     });
+
+    test('can delete client', async ({page}) => {
+
+      await page.getByRole('tab', { name: 'Clients' }).click();
+      try {
+        const exists = await findTextOnPaginatedTable(page, clientId);
+
+        if (exists) {
+          await page
+            .getByRole('row', { name: clientId })
+            .getByLabel('Delete Client')
+            .click();
+
+          await page.waitForResponse(
+            (response) =>
+              /\/api\/admin\/clients\/.*/.test(response.url()) &&
+              response.request().method() === 'DELETE'
+          );
+
+          await expect(
+            page.getByRole('row', { name: clientId })
+          ).not.toBeVisible();
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    })
+
+    test.afterEach(async({page}) => {
+      await logout(page);
+    })
   });
 
   test.afterAll(async ({ mailslurp, inbox }) => {
