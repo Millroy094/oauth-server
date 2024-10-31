@@ -83,7 +83,7 @@ test.describe('User Journey', () => {
     });
 
     test('Redirected to login', async ({ page }) => {
-      await page.waitForURL('/login')
+      await page.waitForURL('/login');
       await expect(page).toHaveURL('/login');
     });
 
@@ -358,11 +358,9 @@ test.describe('User Journey', () => {
       } catch (err) {
         console.log(err);
       }
-
     });
 
-    test('can delete client', async ({page}) => {
-
+    test('can delete client', async ({ page }) => {
       await page.getByRole('tab', { name: 'Clients' }).click();
       try {
         const exists = await findTextOnPaginatedTable(page, clientId);
@@ -386,11 +384,11 @@ test.describe('User Journey', () => {
       } catch (err) {
         console.log(err);
       }
-    })
+    });
 
-    test.afterEach(async({page}) => {
+    test.afterEach(async ({ page }) => {
       await logout(page);
-    })
+    });
   });
 
   test.afterAll(async ({ mailslurp, inbox }) => {
