@@ -33,10 +33,10 @@ for ((i=1; i<=RETRIES; i++)); do
 
   if [ -n "$LB_HOST" ]; then
     echo "LoadBalancer Host found: $LB_HOST"
-    echo "Checking HTTP response from http://$LB_HOST..."
+    echo "Checking HTTPS response from https://$LB_HOST..."
 
     for ((j=1; j<=RETRIES; j++)); do
-      HTTP_STATUS=$(curl -s -o /dev/null -w '%{http_code}' "http://$LB_HOST")
+      HTTP_STATUS=$(curl -s -o /dev/null -w '%{http_code}' "https://$LB_HOST")
       
       if [ "$HTTP_STATUS" -eq 200 ]; then
         echo "LoadBalancer is returning HTTP 200 status code. Ready for requests."
