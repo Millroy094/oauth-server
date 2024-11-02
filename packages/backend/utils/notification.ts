@@ -55,7 +55,7 @@ export const sendEmail = async (
 
   transporter.sendMail(mailOptions, function (error, info) {
     if (error) {
-      console.log(error);
+      logger.error(error.message);
       throw new Error('Unable to send Email');
     }
   });
