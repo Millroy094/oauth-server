@@ -130,6 +130,26 @@ const UserSchema = new Schema(
     suspended: {
       type: Boolean,
       default: false
+    },
+    currentChallenge: {
+      type: String,
+      default: '',
+      set: (value: ValueType) => (value ? encryptData(value as string) : ''),
+      get: (value: ValueType) => (value ? decryptData(value as string) : '')
+    },
+    credentials: {
+      type: Array,
+      schema: [
+        {
+          type: Object,
+          schema: {
+            id: { type: String },
+            publicKey: { type: Buffer },
+            counter: { type: Number }
+          }
+        }
+      ],
+      default: []
     }
   },
   {
