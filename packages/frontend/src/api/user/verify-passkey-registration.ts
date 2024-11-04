@@ -12,7 +12,7 @@ const verifyPasskeyRegistration = async (
 ): Promise<AxiosResponse> => {
   const { userId, credential, deviceName } = args
   const response = await axios.post(
-    '/api/passkey/verify-registration',
+    '/api/user/verify-passkey-registration',
     {
       userId,
       credential,

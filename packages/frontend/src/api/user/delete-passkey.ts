@@ -5,7 +5,7 @@ const deletePasskey = async (
   userId: string,
   deviceName: string,
 ): Promise<AxiosResponse> => {
-  const response = await axios.delete('/api/passkey/delete-passkey', {
+  const response = await axios.delete('/api/user/delete-passkey', {
     withCredentials: true,
     data: { userId, deviceName },
   })

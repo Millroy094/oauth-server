@@ -9,7 +9,6 @@ import bodyParser from 'body-parser'
 import cookieParser from 'cookie-parser'
 import adminRoutes from './routes/admin.ts'
 import oidcRoutes from './routes/oidc.ts'
-import PasskeyRoutes from './routes/passkey.ts'
 import userRoutes from './routes/user.ts'
 import healthCheckRoutes from './routes/health-check.ts'
 import addOIDCProvider from './middleware/add-oidc-provider.ts'
@@ -84,7 +83,6 @@ class Application {
 
   private setupRoutes(): void {
     this.expressApp.use('/api/oidc', oidcRoutes)
-    this.expressApp.use('/api/passkey', PasskeyRoutes)
     this.expressApp.use('/api/user', userRoutes)
     this.expressApp.use('/api/admin', adminRoutes)
     this.expressApp.use('/api/health-check', healthCheckRoutes)

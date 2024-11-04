@@ -10,7 +10,7 @@ const registerPasskey = async (
 ): Promise<AxiosResponse> => {
   const { userId } = args
   const response = await axios.post(
-    '/api/passkey/register',
+    '/api/user/register-passkey',
     {
       userId,
     },
