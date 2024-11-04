@@ -11,7 +11,7 @@ import registerPasskey from '../../../../../api/passkey/register-passkey'
 import verifyPasskeyRegistration from '../../../../../api/passkey/verify-passkey-registration'
 import { useAuth } from '../../../../../context/AuthProvider'
 import checkPasskeyAlreadyExists from '../../../../../api/passkey/check-passkey-exists'
-import { useEffect, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 import useFeedback from '../../../../../hooks/useFeedback'
 import getPasskeys from '../../../../../api/passkey/get-passkeys'
 import { List } from '@mui/material'
@@ -19,6 +19,8 @@ import { ListItem } from '@mui/material'
 import { IconButton } from '@mui/material'
 import { Delete } from '@mui/icons-material'
 import deletePasskey from '../../../../../api/passkey/delete-passkey'
+import { Switch } from '@mui/material'
+import { FormControlLabel } from '@mui/material'
 
 function getDetailedDeviceInfo(): string {
   const userAgent = navigator.userAgent
@@ -51,8 +53,18 @@ function getBrowserName(userAgent: string): string {
   return 'Unknown Browser'
 }
 
-const Passkeys = () => {
+interface PasskeysProps {
+  mfaPreference: string
+  onMfaPreferenceChange: (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => Promise<void>
+}
+
+const Passkeys: FC<PasskeysProps> = props => {
+  const { mfaPreference, onMfaPreferenceChange } = props
   const [devices, setDevices] = useState([])
+  const [passkeyVerified, setPasskeyVerified] = useState(false)
+
   const auth = useAuth()
   const { feedbackAxiosError, feedbackAxiosResponse, feedback } = useFeedback()
 
@@ -60,6 +72,7 @@ const Passkeys = () => {
     try {
       const response = await getPasskeys(userId)
       setDevices(response.data.deviceNames)
+      setPasskeyVerified(response.data.verified)
     } catch (err) {
       feedbackAxiosError(
         err,
@@ -122,7 +135,24 @@ const Passkeys = () => {
 
   return (
     <Card elevation={0}>
-      <CardHeader title='Passkeys' />
+      <CardHeader
+        title='Passkeys'
+        action={
+          <FormControlLabel
+            labelPlacement='start'
+            control={
+              <Switch
+                disabled={!passkeyVerified}
+                color='error'
+                value='passkey'
+                checked={mfaPreference === 'passkey'}
+                onChange={onMfaPreferenceChange}
+              />
+            }
+            label='Use passkey for MFA'
+          />
+        }
+      />
       <CardContent>
         <Typography>
           Passkeys are webauthn credentials that validate your identity using
@@ -136,6 +166,7 @@ const Passkeys = () => {
                 border: '1px solid #cccccc',
                 borderRadius: '4px',
                 padding: '10px',
+                marginBottom: '10px',
               }}
               key={device}
               secondaryAction={

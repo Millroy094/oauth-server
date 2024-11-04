@@ -210,7 +210,10 @@ const MFA: FC = () => {
           </Grid>
         </CardActions>
       </Card>
-      <Passkeys />
+      <Passkeys
+        mfaPreference={mfaPreference}
+        onMfaPreferenceChange={onChange}
+      />
       <Divider sx={{ m: '30px 10px' }} />
       <RecoveryCodes
         recoveryCodeCount={recoveryCodeCount}

@@ -103,6 +103,37 @@ const UserSchema = new Schema(
             },
           },
         },
+        passkey: {
+          type: Object,
+          schema: {
+            currentChallenge: {
+              type: String,
+              set: (value: ValueType) =>
+                value ? encryptData(value as string) : '',
+              get: (value: ValueType) =>
+                value ? decryptData(value as string) : '',
+            },
+            credentials: {
+              type: Array,
+              schema: [
+                {
+                  type: Object,
+                  schema: {
+                    id: { type: String },
+                    publicKey: {
+                      type: Buffer,
+                    },
+                    counter: { type: Number },
+                    deviceName: { type: String },
+                  },
+                },
+              ],
+            },
+            verified: {
+              type: Boolean,
+            },
+          },
+        },
       },
       default: {
         preference: '',
@@ -118,6 +149,11 @@ const UserSchema = new Schema(
         },
         email: {
           subscriber: '',
+          verified: false,
+        },
+        passkey: {
+          currentChallenge: '',
+          credentials: [],
           verified: false,
         },
       },

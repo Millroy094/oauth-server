@@ -14,16 +14,16 @@ class PasskeyController {
       const userId = req.query.userId
       const user = await User.get(userId as string)
 
-      const deviceNames = user.credentials.map(
+      const deviceNames = user.mfa.passkey.credentials.map(
         (credentials: { deviceName: string }) => credentials.deviceName,
       )
 
       res.status(HTTP_STATUSES.ok).send({
         messages: 'Successfully retrieved passkey device names',
         deviceNames,
+        verified: user.mfa.passkey.verified,
       })
     } catch (error) {
-      console.log(error)
       logger.error(
         `Failed to retrieve registered passkeys: ${(error as Error).message}`,
       )
@@ -39,10 +39,19 @@ class PasskeyController {
       const deviceName = req.body.deviceName
       const user = await User.get(userId as string)
 
-      user.credentials = user.credentials.filter(
+      user.mfa.passkey.credentials = user.mfa.passkey.credentials.filter(
         (credential: { deviceName: string }) =>
           credential.deviceName !== deviceName,
       )
+
+      if (
+        user.mfa.passkey.credentials.length === 0 &&
+        user.mfa.preference === 'passkey'
+      ) {
+        user.mfa.preference = ''
+        user.mfa.passkey.verified = false
+      }
+
       await user.save()
 
       res.status(HTTP_STATUSES.ok).send({
@@ -74,7 +83,7 @@ class PasskeyController {
         },
       })
 
-      user.currentChallenge = options.challenge
+      user.mfa.passkey.currentChallenge = options.challenge
       await user.save()
       res.status(HTTP_STATUSES.ok).send({ options })
     } catch (error) {
@@ -92,14 +101,14 @@ class PasskeyController {
 
       const verification = await verifyRegistrationResponse({
         response: req.body.credential,
-        expectedChallenge: user.currentChallenge,
+        expectedChallenge: user.mfa.passkey.currentChallenge,
         expectedOrigin:
           req.headers.origin ?? `${req.protocol}://${req.hostname}`,
         expectedRPID: req.hostname,
       })
 
       if (verification.verified) {
-        user.credentials.push({
+        user.mfa.passkey.credentials.push({
           id: verification?.registrationInfo?.credential?.id,
           publicKey: Buffer.from(
             verification?.registrationInfo?.credential?.publicKey ?? '',
@@ -108,7 +117,13 @@ class PasskeyController {
           deviceName: req.body.deviceName,
         })
 
-        user.currentChallenge = ''
+        user.mfa.passkey.currentChallenge = ''
+        user.mfa.passkey.verified = true
+
+        if (!user.mfa.preference) {
+          user.mfa.preference = 'passkey'
+        }
+
         await user.save()
 
         res.status(HTTP_STATUSES.ok).send({ verified: true })
@@ -130,8 +145,8 @@ class PasskeyController {
 
     try {
       const user = await User.get(userId)
-      if (user && user.credentials) {
-        const existingCredential = user.credentials.find(
+      if (user && user.mfa.passkey.credentials) {
+        const existingCredential = user.mfa.passkey.credentials.find(
           (credential: { deviceName: string }) =>
             credential.deviceName === deviceName,
         )
