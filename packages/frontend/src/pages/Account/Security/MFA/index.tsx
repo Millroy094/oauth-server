@@ -90,6 +90,7 @@ const MFA: FC = () => {
 
   useEffect(() => {
     fetchMFASettings()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (
@@ -231,4 +232,5 @@ const MFA: FC = () => {
   )
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export default MFA

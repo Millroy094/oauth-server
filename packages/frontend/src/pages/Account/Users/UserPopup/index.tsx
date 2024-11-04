@@ -110,6 +110,7 @@ const UserPopup: FC<UserPopupProps> = (props) => {
     if (open && userIdentifier) {
       fetchUser(userIdentifier);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, userIdentifier]);
 
   const onSubmit = async (data: IUserPopupInput): Promise<void> => {

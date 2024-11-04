@@ -41,6 +41,7 @@ const Sessions: FC = () => {
 
   useEffect(() => {
     fetchSessions();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const columns: GridColDef<(typeof sessions)[number]>[] = [

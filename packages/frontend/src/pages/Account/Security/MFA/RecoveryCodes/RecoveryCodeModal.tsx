@@ -51,6 +51,7 @@ const RecoveryCodeModal: FC<RecoveryCodeModalProps> = (props) => {
     if (open) {
       fetchRecoveryCodes();
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
 
   const handleClose = () => {

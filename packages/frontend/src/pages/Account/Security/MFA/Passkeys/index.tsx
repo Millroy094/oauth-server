@@ -23,34 +23,34 @@ import { Switch } from '@mui/material'
 import { FormControlLabel } from '@mui/material'
 
 function getDetailedDeviceInfo(): string {
-  const userAgent = navigator.userAgent
-  const platform = navigator.platform || 'Unknown platform'
-  const browserName = getBrowserName(userAgent)
+  const userAgent = navigator.userAgent;
+  const platform = navigator.platform || 'Unknown platform';
+  const browserName = getBrowserName(userAgent);
 
-  let deviceType = 'Unknown Device'
+  let deviceType = 'Unknown Device';
 
   if (/Mobi|Android/i.test(userAgent)) {
-    deviceType = 'Mobile Device'
+    deviceType = 'Mobile Device';
   } else if (/Tablet/i.test(userAgent)) {
-    deviceType = 'Tablet'
+    deviceType = 'Tablet';
   } else if (/Windows/i.test(userAgent)) {
-    deviceType = 'Windows PC'
+    deviceType = 'Windows PC';
   } else if (/Mac/i.test(userAgent)) {
-    deviceType = 'Mac'
+    deviceType = 'Mac';
   } else if (/Linux/i.test(userAgent)) {
-    deviceType = 'Linux PC'
+    deviceType = 'Linux PC';
   }
 
-  return `${deviceType} (${browserName}) on ${platform}`
+  return `${deviceType} (${browserName}) on ${platform}`;
 }
 
 function getBrowserName(userAgent: string): string {
-  if (userAgent.includes('Firefox')) return 'Firefox'
-  if (userAgent.includes('Edg')) return 'Edge'
-  if (userAgent.includes('Chrome')) return 'Chrome'
-  if (userAgent.includes('Safari')) return 'Safari'
-  if (userAgent.includes('Opera') || userAgent.includes('OPR')) return 'Opera'
-  return 'Unknown Browser'
+  if (userAgent.includes('Firefox')) return 'Firefox';
+  if (userAgent.includes('Edg')) return 'Edge';
+  if (userAgent.includes('Chrome')) return 'Chrome';
+  if (userAgent.includes('Safari')) return 'Safari';
+  if (userAgent.includes('Opera') || userAgent.includes('OPR')) return 'Opera';
+  return 'Unknown Browser';
 }
 
 interface PasskeysProps {
@@ -131,6 +131,7 @@ const Passkeys: FC<PasskeysProps> = props => {
 
   useEffect(() => {
     fetchPasskeys(auth?.user?.userId ?? '')
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (

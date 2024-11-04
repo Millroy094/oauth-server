@@ -3,6 +3,7 @@ import { describe, it, expect, vi } from 'vitest';
 import PasswordField from './PasswordField';
 import { UseFormRegister } from 'react-hook-form';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const mockRegister = vi.fn() as unknown as UseFormRegister<any>;
 
 describe('PasswordField', () => {

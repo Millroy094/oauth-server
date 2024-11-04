@@ -6,6 +6,7 @@ import { IRegisterFormInput } from '../pages/Register/types';
 import { ILoginFormInput } from '../pages/Login/types';
 
 interface PasswordFieldProps {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   register: UseFormRegister<any>;
   name: keyof IRegisterFormInput | keyof ILoginFormInput;
   label?: string;

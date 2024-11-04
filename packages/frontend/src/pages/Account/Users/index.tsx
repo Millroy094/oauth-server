@@ -44,6 +44,7 @@ const Users: FC = () => {
 
   useEffect(() => {
     fetchUsers();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleDelete = async (id: string): Promise<void> => {

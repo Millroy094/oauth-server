@@ -90,6 +90,7 @@ const ClientPopup: FC<ClientPopupProps> = (props) => {
     if (open && clientIdentifier) {
       fetchClient(clientIdentifier);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, clientIdentifier]);
 
   const clientName = watch('clientName', '');

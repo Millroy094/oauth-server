@@ -17,6 +17,7 @@ const FeedbackComponent = () => {
         data-testid='successButton'
         onClick={() =>
           feedbackAxiosResponse(
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             { data: { message: 'Success' } } as any,
             'Default Success Message',
             'success'
