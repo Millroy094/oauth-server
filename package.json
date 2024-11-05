@@ -20,6 +20,9 @@
     "*.tf": [
       "prettier --write"
     ],
+    "*.yaml": [
+      "prettier --write"
+    ],
     "./helm/**/*": [
       "helm lint ./helm"
     ]
