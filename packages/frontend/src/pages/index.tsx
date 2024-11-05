@@ -6,7 +6,7 @@ import {
   useNavigate,
   useSearchParams,
 } from "react-router-dom";
-import { CirclesWithBar } from "react-loader-spinner";
+import { MutatingDots } from "react-loader-spinner";
 
 import getInteractionStatus from "../api/oidc/get-interaction-status";
 import { PUBLIC_ROUTES } from "../constants";
@@ -65,17 +65,16 @@ function Pages() {
             alignItems: "center",
           }}
         >
-          <CirclesWithBar
+          <MutatingDots
+            visible
             height="100"
             width="100"
             color="#4fa94d"
-            outerCircleColor="#4fa94d"
-            innerCircleColor="#4fa94d"
-            barColor="#4fa94d"
-            ariaLabel="circles-with-bar-loading"
+            secondaryColor="#4fa94d"
+            radius="12.5"
+            ariaLabel="mutating-dots-loading"
             wrapperStyle={{}}
             wrapperClass=""
-            visible={true}
           />
         </Container>
       }

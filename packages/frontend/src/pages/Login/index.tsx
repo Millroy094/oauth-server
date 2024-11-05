@@ -33,6 +33,7 @@ import PasswordInput from "./PasswordInput";
 import VerifyMFAOtpInput from "./VerifyOtpInput";
 import RecoveryCodeInput from "./RecoveryCodeInput";
 import Logo from "../../assets/logo.svg";
+import PasskeyAuthentication from "./PasskeyAuthentication";
 
 const StyledCard = styled(Card)({
   borderTop: "2px solid red",
@@ -131,6 +132,12 @@ const Login: FC = () => {
     setLoginStage(RECOVERY_CODE_STAGE);
   };
 
+  const showButton = !(mfaType === "passkey" && loginStage === MFA_LOGIN_STAGE);
+  const buttonText =
+    [MFA_LOGIN_STAGE, RECOVERY_CODE_STAGE].includes(loginStage) ||
+    (loginStage === PASSWORD_LOGIN_STAGE && !mfaType)
+      ? "Sign in"
+      : "Next";
   return (
     <Container maxWidth="sm">
       <StyledCard sx={{ marginTop: 15 }}>
@@ -186,11 +193,17 @@ const Login: FC = () => {
                 navigateToForgotPassword={navigateToForgotPassword}
               />
             )}
-            {loginStage === MFA_LOGIN_STAGE && (
+            {loginStage === MFA_LOGIN_STAGE && mfaType !== "passkey" && (
               <VerifyMFAOtpInput
                 email={email}
                 control={control}
                 type={mfaType ?? ""}
+              />
+            )}
+            {loginStage === MFA_LOGIN_STAGE && mfaType === "passkey" && (
+              <PasskeyAuthentication
+                email={email}
+                handleSubmit={handleSubmit(onSubmit)}
               />
             )}
             {loginStage === RECOVERY_CODE_STAGE && (
@@ -218,15 +231,14 @@ const Login: FC = () => {
             )}
           {loginStage === MFA_LOGIN_STAGE && (
             <Button color="error" onClick={loginViaRecoveryCode}>
-              Don't have OTP?
+              Having trouble with MFA?
             </Button>
           )}
-          <Button variant="contained" color="error" onClick={onNextStep}>
-            {[MFA_LOGIN_STAGE, RECOVERY_CODE_STAGE].includes(loginStage) ||
-            (loginStage === PASSWORD_LOGIN_STAGE && !mfaType)
-              ? "Sign in"
-              : "Next"}
-          </Button>
+          {showButton && (
+            <Button variant="contained" color="error" onClick={onNextStep}>
+              {buttonText}
+            </Button>
+          )}
         </CardActions>
       </StyledCard>
     </Container>

@@ -39,7 +39,11 @@ class UserController {
           req.body.recoveryCode,
           req.body.resetMfa,
         );
-      } else if (user.mfa.preference && req.body.otp) {
+      } else if (
+        user.mfa.preference &&
+        user.mfa.preference === "passkey" &&
+        req.body.otp
+      ) {
         await MFAService.verifyMFA(
           user.userId,
           user.mfa.preference,

@@ -9,7 +9,7 @@ const schema = yup
       .string()
       .when(["mfaType", "loginWithRecoveryCode"], (fields, schema) => {
         const [mfaType, loginWithRecoveryCode] = fields;
-        return mfaType && !loginWithRecoveryCode
+        return mfaType && mfaType !== "passkey" && !loginWithRecoveryCode
           ? schema.required().min(6)
           : schema;
       }),

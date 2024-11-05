@@ -9,6 +9,8 @@ import User from "../models/User";
 import logger from "../utils/logger";
 import config from "../support/env-config";
 import HTTP_STATUSES from "../constants/http-status";
+import UserService from "../services/user";
+import PasskeyService from "../services/passkey";
 
 class PasskeyController {
   public static async getPasskeys(req: Request, res: Response) {
@@ -85,7 +87,8 @@ class PasskeyController {
         },
       });
 
-      user.mfa.passkey.currentChallenge = options.challenge;
+      await PasskeyService.createChallenge(userId, options.challenge);
+
       await user.save();
       res.status(HTTP_STATUSES.ok).send({ options });
     } catch (error) {
@@ -100,10 +103,21 @@ class PasskeyController {
     try {
       const userId = req.body.userId;
       const user = await User.get(userId);
+      const { challenge: signedChallenge } = PasskeyService.decodeClientData(
+        req.body.credential.response.clientDataJSON,
+      );
+      const storedChallenge = await PasskeyService.retrieveChallenge(
+        userId,
+        signedChallenge,
+      );
+
+      if (!storedChallenge) {
+        throw new Error("Unable to find challenge")
+      }
 
       const verification = await verifyRegistrationResponse({
         response: req.body.credential,
-        expectedChallenge: user.mfa.passkey.currentChallenge,
+        expectedChallenge: storedChallenge,
         expectedOrigin:
           req.headers.origin ?? `${req.protocol}://${req.hostname}`,
         expectedRPID: req.hostname,
@@ -119,7 +133,8 @@ class PasskeyController {
           deviceName: req.body.deviceName,
         });
 
-        user.mfa.passkey.currentChallenge = "";
+        await PasskeyService.deleteChallenge(userId, storedChallenge);
+
         user.mfa.passkey.verified = true;
 
         if (!user.mfa.preference) {
@@ -144,8 +159,8 @@ class PasskeyController {
 
   public static async loginWithPasskey(req: Request, res: Response) {
     try {
-      const userId = req.body.userId;
-      const user = await User.get(userId);
+      const userEmail = req.body.email;
+      const user = await UserService.getUserByEmail(userEmail);
 
       const options = await generateAuthenticationOptions({
         rpID: req.hostname,
@@ -154,11 +169,11 @@ class PasskeyController {
             id: cred.id,
             type: "public-key",
           })) ?? [],
-        userVerification: "preferred",
+        userVerification: "required",
       });
 
-      user.currentChallenge = options.challenge;
-      await user.save();
+      await PasskeyService.createChallenge(user.userId, options.challenge);
+
       res.status(HTTP_STATUSES.ok).send({ options });
     } catch (error) {
       logger.error(
@@ -172,15 +187,32 @@ class PasskeyController {
 
   public static async verifyLoginPasskey(req: Request, res: Response) {
     try {
-      const userId = req.body.userId;
-      const user = await User.get(userId);
+      const userEmail = req.body.email;
+      const user = await UserService.getUserByEmail(userEmail);
+
       const credential = user.mfa.passkey.credentials.find(
         (cred: { id: string }) => cred.id === req.body.credential.id,
       );
 
+      if (!credential) {
+        throw new Error("Could not find a passkey");
+      }
+
+      const { challenge: signedChallenge } = PasskeyService.decodeClientData(
+        req.body.credential.response.clientDataJSON,
+      );
+      const storedChallenge = await PasskeyService.retrieveChallenge(
+        user.userId,
+        signedChallenge,
+      );
+
+      if (!storedChallenge) {
+        throw new Error("Unable to find challenge")
+      }
+
       const verification = await verifyAuthenticationResponse({
         response: req.body.credential,
-        expectedChallenge: user.currentChallenge,
+        expectedChallenge: storedChallenge,
         expectedOrigin:
           req.headers.origin ?? `${req.protocol}://${req.hostname}`,
         expectedRPID: req.hostname,
@@ -194,15 +226,17 @@ class PasskeyController {
       if (verification.verified) {
         user.mfa.passkey.credentials = user.mfa.passkey.credentials.map(
           (cred: { id: string }) =>
-            req.body.response.id === cred.id
+            req.body.credential.id === cred.id
               ? { ...cred, counter: verification.authenticationInfo.newCounter }
               : cred,
         );
-        user.mfa.passkey.currentChallenge = "";
+
+        await PasskeyService.deleteChallenge(user.userId, storedChallenge);
+
         await user.save();
-        res.send({ verified: true });
+        res.status(HTTP_STATUSES.ok).send({ verified: true });
       } else {
-        res.send({ verified: false });
+        res.status(HTTP_STATUSES.ok).send({ verified: false });
       }
     } catch (error) {
       logger.error(
