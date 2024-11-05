@@ -1,7 +1,7 @@
-import dotenv from "dotenv";
-import { defineConfig, loadEnv } from "vite";
-import react from "@vitejs/plugin-react";
-import svgr from "vite-plugin-svgr";
+import dotenv from 'dotenv';
+import { defineConfig, loadEnv } from 'vite';
+import react from '@vitejs/plugin-react';
+import svgr from 'vite-plugin-svgr';
 
 dotenv.config();
 
@@ -13,23 +13,23 @@ export default ({ mode }: { mode: string }) => {
       react(),
       svgr({
         svgrOptions: {
-          exportType: "default",
+          exportType: 'default',
           ref: true,
           svgo: false,
           titleProp: true,
         },
-        include: "**/*.svg",
+        include: '**/*.svg',
       }),
     ],
     define: {
-      "process.env": process.env,
+      'process.env': process.env,
     },
     server: {
       proxy: {
-        "/api": {
+        '/api': {
           target: process.env.VITE_BACKEND_ENDPOINT,
           changeOrigin: true,
-          rewrite: (path: string) => path.replace(/^\/api/, ""),
+          rewrite: (path: string) => path.replace(/^\/api/, ''),
           secure: false,
         },
       },
@@ -38,8 +38,8 @@ export default ({ mode }: { mode: string }) => {
       rollupOptions: {
         plugins: [
           {
-            name: "exclude-test-files",
-            enforce: "post",
+            name: 'exclude-test-files',
+            enforce: 'post',
             resolveId(source: string) {
               if (source.match(/\.(test|spec)\.(js|ts|jsx|tsx)$/)) {
                 return { id: source, external: true };
@@ -51,8 +51,8 @@ export default ({ mode }: { mode: string }) => {
     },
     test: {
       globals: true,
-      environment: "jsdom",
-      setupFiles: "./setup.ts",
+      environment: 'jsdom',
+      setupFiles: './setup.ts',
     },
   };
   return defineConfig(config);

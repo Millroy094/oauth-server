@@ -1,9 +1,9 @@
-import React, { FC, useState } from "react";
-import { IconButton, InputAdornment, TextField } from "@mui/material";
-import { VisibilityOff, Visibility } from "@mui/icons-material";
-import { UseFormRegister } from "react-hook-form";
-import { IRegisterFormInput } from "../pages/Register/types";
-import { ILoginFormInput } from "../pages/Login/types";
+import React, { FC, useState } from 'react';
+import { IconButton, InputAdornment, TextField } from '@mui/material';
+import { VisibilityOff, Visibility } from '@mui/icons-material';
+import { UseFormRegister } from 'react-hook-form';
+import { IRegisterFormInput } from '../pages/Register/types';
+import { ILoginFormInput } from '../pages/Login/types';
 
 interface PasswordFieldProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -43,7 +43,7 @@ const PasswordField: FC<PasswordFieldProps> = (props) => {
       required={required ?? false}
       error={error}
       helperText={helperText}
-      type={showPassword ? "text" : "password"}
+      type={showPassword ? 'text' : 'password'}
       variant="outlined"
       InputProps={{
         endAdornment: (

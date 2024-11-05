@@ -1,7 +1,7 @@
-import { FC } from "react";
-import { Typography, Grid } from "@mui/material";
-import { APP_MFA, EMAIL_MFA, SMS_MFA } from "../../../../../constants";
-import { QRCodeSVG } from "qrcode.react";
+import { FC } from 'react';
+import { Typography, Grid } from '@mui/material';
+import { APP_MFA, EMAIL_MFA, SMS_MFA } from '../../../../../constants';
+import { QRCodeSVG } from 'qrcode.react';
 
 interface IOtpMessageProps {
   type: string;
@@ -9,7 +9,7 @@ interface IOtpMessageProps {
 }
 
 const OtpMessage: FC<IOtpMessageProps> = (props) => {
-  const { type, uri = "" } = props;
+  const { type, uri = '' } = props;
   switch (type) {
     case APP_MFA:
       return (

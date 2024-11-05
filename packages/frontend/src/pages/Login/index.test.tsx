@@ -4,20 +4,20 @@ import {
   fireEvent,
   waitFor,
   act,
-} from "@testing-library/react";
-import { MemoryRouter } from "react-router-dom";
-import Login from "./index";
-import { useAuth } from "../../context/AuthProvider";
-import { describe, expect, it, vi, beforeEach } from "vitest";
-import getLoginConfiguration from "../../api/user/get-login-configuration";
+} from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
+import Login from './index';
+import { useAuth } from '../../context/AuthProvider';
+import { describe, expect, it, vi, beforeEach } from 'vitest';
+import getLoginConfiguration from '../../api/user/get-login-configuration';
 
-vi.mock("../../context/AuthProvider", () => ({
+vi.mock('../../context/AuthProvider', () => ({
   useAuth: vi.fn(),
 }));
 
-vi.mock("../../api/user/get-login-configuration");
+vi.mock('../../api/user/get-login-configuration');
 
-describe("Login Component", () => {
+describe('Login Component', () => {
   const mockLogin = vi.fn();
 
   beforeEach(() => {
@@ -27,18 +27,18 @@ describe("Login Component", () => {
     });
   });
 
-  it("renders the Login component", () => {
+  it('renders the Login component', () => {
     render(
       <MemoryRouter>
         <Login />
       </MemoryRouter>,
     );
 
-    expect(screen.getByText("Log in")).toBeInTheDocument();
-    expect(screen.getByLabelText("Email Address")).toBeInTheDocument();
+    expect(screen.getByText('Log in')).toBeInTheDocument();
+    expect(screen.getByLabelText('Email Address')).toBeInTheDocument();
   });
 
-  it("submits the login form", async () => {
+  it('submits the login form', async () => {
     render(
       <MemoryRouter>
         <Login />
@@ -46,40 +46,40 @@ describe("Login Component", () => {
     );
 
     act(() => {
-      fireEvent.input(screen.getByLabelText("Email Address"), {
-        target: { value: "test@example.com" },
+      fireEvent.input(screen.getByLabelText('Email Address'), {
+        target: { value: 'test@example.com' },
       });
 
-      fireEvent.click(screen.getByText("Next"));
+      fireEvent.click(screen.getByText('Next'));
     });
 
     await waitFor(() => {
-      expect(getLoginConfiguration).toHaveBeenCalledWith("test@example.com");
+      expect(getLoginConfiguration).toHaveBeenCalledWith('test@example.com');
     });
 
     act(() => {
-      fireEvent.input(screen.getByLabelText("Password"), {
-        target: { value: "password123" },
+      fireEvent.input(screen.getByLabelText('Password'), {
+        target: { value: 'password123' },
       });
 
-      fireEvent.click(screen.getByText("Sign in"));
+      fireEvent.click(screen.getByText('Sign in'));
     });
 
     await waitFor(() => {
       expect(mockLogin).toHaveBeenCalledWith({
         loginWithRecoveryCode: false,
-        otp: "",
-        email: "test@example.com",
-        password: "password123",
-        recoveryCode: "",
+        otp: '',
+        email: 'test@example.com',
+        password: 'password123',
+        recoveryCode: '',
         resetMfa: false,
       });
     });
   });
 
-  it("handles MFA flow", async () => {
+  it('handles MFA flow', async () => {
     (getLoginConfiguration as jest.Mock).mockResolvedValueOnce({
-      data: { emailVerified: true, mfa: { enabled: true, type: "app" } },
+      data: { emailVerified: true, mfa: { enabled: true, type: 'app' } },
     });
 
     render(
@@ -88,26 +88,26 @@ describe("Login Component", () => {
       </MemoryRouter>,
     );
 
-    fireEvent.input(screen.getByLabelText("Email Address"), {
-      target: { value: "test@example.com" },
+    fireEvent.input(screen.getByLabelText('Email Address'), {
+      target: { value: 'test@example.com' },
     });
 
-    fireEvent.click(screen.getByText("Next"));
+    fireEvent.click(screen.getByText('Next'));
 
     await waitFor(() => {
-      expect(getLoginConfiguration).toHaveBeenCalledWith("test@example.com");
+      expect(getLoginConfiguration).toHaveBeenCalledWith('test@example.com');
     });
 
-    fireEvent.input(screen.getByLabelText("Password"), {
-      target: { value: "password123" },
+    fireEvent.input(screen.getByLabelText('Password'), {
+      target: { value: 'password123' },
     });
 
-    fireEvent.click(screen.getByText("Next"));
+    fireEvent.click(screen.getByText('Next'));
 
     await waitFor(() => {
       expect(
         screen.getByText(
-          "Please enter the 6 digit passcode shown on your authenticator app",
+          'Please enter the 6 digit passcode shown on your authenticator app',
         ),
       ).toBeInTheDocument();
     });

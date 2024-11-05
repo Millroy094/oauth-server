@@ -1,4 +1,4 @@
-import { FC, useEffect, useMemo, useState } from "react";
+import { FC, useEffect, useMemo, useState } from 'react';
 import {
   Button,
   Card,
@@ -10,19 +10,19 @@ import {
   Modal,
   Switch,
   TextField,
-} from "@mui/material";
-import { format } from "date-fns";
-import { AccountCircle } from "@mui/icons-material";
-import { Controller, useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import schema from "./schema";
-import updateUser from "../../../../api/admin/update-user";
-import useFeedback from "../../../../hooks/useFeedback";
-import getUser from "../../../../api/admin/get-user";
-import { MobileNumberInput } from "../../../../components/MobileNumberInput";
-import ControlledSelect from "../../../../components/ControlledSelect";
-import { IUserPopupInput } from "./type";
-import resetMfa from "../../../../api/admin/reset-mfa";
+} from '@mui/material';
+import { format } from 'date-fns';
+import { AccountCircle } from '@mui/icons-material';
+import { Controller, useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import schema from './schema';
+import updateUser from '../../../../api/admin/update-user';
+import useFeedback from '../../../../hooks/useFeedback';
+import getUser from '../../../../api/admin/get-user';
+import { MobileNumberInput } from '../../../../components/MobileNumberInput';
+import ControlledSelect from '../../../../components/ControlledSelect';
+import { IUserPopupInput } from './type';
+import resetMfa from '../../../../api/admin/reset-mfa';
 
 interface UserPopupProps {
   open: boolean;
@@ -31,10 +31,10 @@ interface UserPopupProps {
 }
 
 const defaultValues: IUserPopupInput = {
-  firstName: "",
-  lastName: "",
-  email: "",
-  mobile: "",
+  firstName: '',
+  lastName: '',
+  email: '',
+  mobile: '',
   roles: [],
   emailVerified: false,
   suspended: false,
@@ -54,18 +54,18 @@ const UserPopup: FC<UserPopupProps> = (props) => {
     reset,
   } = useForm<IUserPopupInput>({
     resolver: yupResolver(schema),
-    criteriaMode: "all",
-    mode: "onChange",
+    criteriaMode: 'all',
+    mode: 'onChange',
     values: user,
   });
 
-  const lastLoggedIn = watch("lastLoggedIn", 0);
+  const lastLoggedIn = watch('lastLoggedIn', 0);
 
   const lastLoggedInAsDate = useMemo(
     () =>
       lastLoggedIn
-        ? format(new Date(lastLoggedIn), "dd/MM/yyyy HH:mm:ss")
-        : "Never",
+        ? format(new Date(lastLoggedIn), 'dd/MM/yyyy HH:mm:ss')
+        : 'Never',
 
     [lastLoggedIn],
   );
@@ -91,7 +91,7 @@ const UserPopup: FC<UserPopupProps> = (props) => {
     } catch (err) {
       feedbackAxiosError(
         err,
-        "There was an issue retrieving the user, please try again",
+        'There was an issue retrieving the user, please try again',
       );
       handleClose();
     }
@@ -100,9 +100,9 @@ const UserPopup: FC<UserPopupProps> = (props) => {
   const onResetMFA = async (): Promise<void> => {
     try {
       const response = await resetMfa(userIdentifier);
-      feedbackAxiosResponse(response, "Successfully reset MFA!", "success");
+      feedbackAxiosResponse(response, 'Successfully reset MFA!', 'success');
     } catch (err) {
-      feedbackAxiosError(err, "Failed to reset MFA");
+      feedbackAxiosError(err, 'Failed to reset MFA');
     }
   };
 
@@ -117,13 +117,13 @@ const UserPopup: FC<UserPopupProps> = (props) => {
     try {
       const response = await updateUser(userIdentifier, data);
 
-      feedbackAxiosResponse(response, "Successfully updated user", "success");
+      feedbackAxiosResponse(response, 'Successfully updated user', 'success');
       reset();
       handleClose();
     } catch (err) {
       feedbackAxiosError(
         err,
-        "There was an issue updating the user, please try again",
+        'There was an issue updating the user, please try again',
       );
     }
   };
@@ -132,12 +132,12 @@ const UserPopup: FC<UserPopupProps> = (props) => {
     <Modal open={open} onClose={handleClose}>
       <Card
         sx={{
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
           width: 600,
-          bgcolor: "background.paper",
+          bgcolor: 'background.paper',
           p: 2,
         }}
       >
@@ -157,7 +157,7 @@ const UserPopup: FC<UserPopupProps> = (props) => {
             <Grid container direction="column" spacing={2}>
               <Grid item>
                 <TextField
-                  {...register("email")}
+                  {...register('email')}
                   InputLabelProps={{ shrink: true }}
                   label="Email Address"
                   variant="outlined"
@@ -169,26 +169,26 @@ const UserPopup: FC<UserPopupProps> = (props) => {
               <Grid item container spacing={2}>
                 <Grid item xs={6}>
                   <TextField
-                    {...register("firstName")}
+                    {...register('firstName')}
                     InputLabelProps={{ shrink: true }}
                     label="First Name"
                     variant="outlined"
                     fullWidth
                     error={!!errors.firstName}
                     helperText={
-                      errors.firstName ? errors.firstName.message : ""
+                      errors.firstName ? errors.firstName.message : ''
                     }
                   />
                 </Grid>
                 <Grid item xs={6}>
                   <TextField
-                    {...register("lastName")}
+                    {...register('lastName')}
                     InputLabelProps={{ shrink: true }}
                     label="Last Name"
                     variant="outlined"
                     fullWidth
                     error={!!errors.lastName}
-                    helperText={errors.lastName ? errors.lastName.message : ""}
+                    helperText={errors.lastName ? errors.lastName.message : ''}
                   />
                 </Grid>
               </Grid>
@@ -226,8 +226,8 @@ const UserPopup: FC<UserPopupProps> = (props) => {
                   multiple
                   options={[
                     {
-                      label: "Admin",
-                      value: "admin",
+                      label: 'Admin',
+                      value: 'admin',
                     },
                   ]}
                   errors={errors}
@@ -245,9 +245,9 @@ const UserPopup: FC<UserPopupProps> = (props) => {
                       variant="outlined"
                       fullWidth
                       onChange={onChange}
-                      value={value ?? ""}
+                      value={value ?? ''}
                       error={!!errors.mobile}
-                      helperText={errors.mobile ? errors.mobile.message : ""}
+                      helperText={errors.mobile ? errors.mobile.message : ''}
                     />
                   )}
                 />

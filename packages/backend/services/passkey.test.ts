@@ -33,9 +33,9 @@ describe('PasskeyService', () => {
     it('should create a challenge for the user', async () => {
       const userId = 'testUserId';
       const challenge = 'testChallenge';
-      
+
       await PasskeyService.createChallenge(userId, challenge);
-      
+
       expect(Challenge.create).toHaveBeenCalledWith({
         userId,
         challenge,
@@ -50,9 +50,8 @@ describe('PasskeyService', () => {
       const challenge = 'testChallenge';
       const mockChallengeResult = { challenge: 'testChallenge' };
 
-
       // Mock the full chain of methods
-        (Challenge.scan as jest.Mock).mockReturnValue({
+      (Challenge.scan as jest.Mock).mockReturnValue({
         eq: jest.fn().mockReturnThis(),
         and: jest.fn().mockReturnThis(),
         where: jest.fn().mockReturnThis(),
@@ -60,7 +59,7 @@ describe('PasskeyService', () => {
       });
 
       const result = await PasskeyService.retrieveChallenge(userId, challenge);
-      
+
       expect(result).toBe('testChallenge');
       expect(Challenge.scan).toHaveBeenCalled();
     });
@@ -70,7 +69,7 @@ describe('PasskeyService', () => {
       const challenge = 'nonExistingChallenge';
 
       // Setup the exec mock to return an empty array
-                (Challenge.scan as jest.Mock).mockReturnValue({
+      (Challenge.scan as jest.Mock).mockReturnValue({
         eq: jest.fn().mockReturnThis(),
         and: jest.fn().mockReturnThis(),
         where: jest.fn().mockReturnThis(),
@@ -78,7 +77,7 @@ describe('PasskeyService', () => {
       });
 
       const result = await PasskeyService.retrieveChallenge(userId, challenge);
-      
+
       expect(result).toBeUndefined();
     });
   });
@@ -90,7 +89,7 @@ describe('PasskeyService', () => {
       const mockChallengeResult = { delete: jest.fn() };
 
       // Setup the exec mock to return the mock challenge
-                        (Challenge.scan as jest.Mock).mockReturnValue({
+      (Challenge.scan as jest.Mock).mockReturnValue({
         eq: jest.fn().mockReturnThis(),
         and: jest.fn().mockReturnThis(),
         where: jest.fn().mockReturnThis(),
@@ -107,14 +106,16 @@ describe('PasskeyService', () => {
       const challenge = 'nonExistingChallenge';
 
       // Setup the exec mock to return an empty array
-                                (Challenge.scan as jest.Mock).mockReturnValue({
+      (Challenge.scan as jest.Mock).mockReturnValue({
         eq: jest.fn().mockReturnThis(),
         and: jest.fn().mockReturnThis(),
         where: jest.fn().mockReturnThis(),
         exec: jest.fn().mockResolvedValue([]),
       });
 
-      await expect(PasskeyService.deleteChallenge(userId, challenge)).resolves.not.toThrow();
+      await expect(
+        PasskeyService.deleteChallenge(userId, challenge),
+      ).resolves.not.toThrow();
     });
   });
 });

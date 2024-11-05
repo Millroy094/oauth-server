@@ -1,7 +1,7 @@
-import { TextField } from "@mui/material";
-import React, { FC } from "react";
-import { MobileNumberInput } from "../../../../components/MobileNumberInput";
-import { APP_MFA, EMAIL_MFA, SMS_MFA } from "../../../../constants";
+import { TextField } from '@mui/material';
+import React, { FC } from 'react';
+import { MobileNumberInput } from '../../../../components/MobileNumberInput';
+import { APP_MFA, EMAIL_MFA, SMS_MFA } from '../../../../constants';
 interface ISubscriberInput {
   value: string;
   onChange: React.Dispatch<React.SetStateAction<string>>;
@@ -29,7 +29,7 @@ const SubscriberInput: FC<ISubscriberInput> = (props) => {
         value={value}
         fullWidth
         error={error}
-        helperText={error ? "Required" : ""}
+        helperText={error ? 'Required' : ''}
         disabled={disabled}
       />
     );
@@ -41,7 +41,7 @@ const SubscriberInput: FC<ISubscriberInput> = (props) => {
         value={value}
         fullWidth
         error={error}
-        helperText={error ? "Invalid number" : ""}
+        helperText={error ? 'Invalid number' : ''}
         disabled={disabled}
       />
     );
@@ -55,7 +55,7 @@ const SubscriberInput: FC<ISubscriberInput> = (props) => {
         type="email"
         fullWidth
         error={error}
-        helperText={error ? "Invalid Email" : ""}
+        helperText={error ? 'Invalid Email' : ''}
         disabled={disabled}
       />
     );

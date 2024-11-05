@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC } from 'react';
 import {
   Button,
   Card,
@@ -8,15 +8,15 @@ import {
   Grid,
   Typography,
   styled,
-} from "@mui/material";
+} from '@mui/material';
 
-import { useParams } from "react-router-dom";
+import { useParams } from 'react-router-dom';
 
-import authorizeInteraction from "../../api/oidc/authorize-interaction";
-import useFeedback from "../../hooks/useFeedback";
+import authorizeInteraction from '../../api/oidc/authorize-interaction';
+import useFeedback from '../../hooks/useFeedback';
 
 const StyledCard = styled(Card)({
-  borderTop: "2px solid red",
+  borderTop: '2px solid red',
 });
 
 const Confirm: FC = () => {
@@ -25,14 +25,14 @@ const Confirm: FC = () => {
   const onAuthorize = async (authorize: boolean): Promise<void> => {
     try {
       const response = await authorizeInteraction(
-        interactionId ?? "",
+        interactionId ?? '',
         authorize,
       );
       if (response.data.redirect) {
         window.location.href = response.data.redirect;
       }
     } catch (err) {
-      feedbackAxiosError(err, "Failed to authorize request, please try again.");
+      feedbackAxiosError(err, 'Failed to authorize request, please try again.');
     }
   };
 

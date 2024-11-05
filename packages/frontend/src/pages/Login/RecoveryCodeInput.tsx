@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC } from 'react';
 
 import {
   Checkbox,
@@ -6,14 +6,14 @@ import {
   Grid,
   TextField,
   Typography,
-} from "@mui/material";
+} from '@mui/material';
 import {
   Control,
   Controller,
   FieldErrors,
   UseFormRegister,
-} from "react-hook-form";
-import { ILoginFormInput } from "./types";
+} from 'react-hook-form';
+import { ILoginFormInput } from './types';
 
 interface IRecoveryCodeInput {
   control: Control<ILoginFormInput>;
@@ -34,12 +34,12 @@ const RecoveryCodeInput: FC<IRecoveryCodeInput> = React.memo((props) => {
       <Grid container item spacing={1}>
         <Grid container item>
           <TextField
-            {...register("recoveryCode")}
+            {...register('recoveryCode')}
             label="Recovery Code"
             variant="outlined"
             fullWidth
             error={!!errors.recoveryCode}
-            helperText={errors.recoveryCode ? errors.recoveryCode.message : ""}
+            helperText={errors.recoveryCode ? errors.recoveryCode.message : ''}
           />
         </Grid>
         <Grid container item>

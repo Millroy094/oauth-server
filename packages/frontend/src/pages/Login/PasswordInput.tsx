@@ -1,8 +1,8 @@
-import { FC } from "react";
-import { Grid, Button, Typography } from "@mui/material";
-import PasswordField from "../../components/PasswordField"; // Ensure you have this component defined
-import { UseFormRegister } from "react-hook-form";
-import { ILoginFormInput } from "./types"; // Ensure you have this type defined somewhere
+import { FC } from 'react';
+import { Grid, Button, Typography } from '@mui/material';
+import PasswordField from '../../components/PasswordField'; // Ensure you have this component defined
+import { UseFormRegister } from 'react-hook-form';
+import { ILoginFormInput } from './types'; // Ensure you have this type defined somewhere
 
 interface PasswordInputProps {
   register: UseFormRegister<ILoginFormInput>;

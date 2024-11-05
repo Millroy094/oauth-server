@@ -1,26 +1,26 @@
-import * as React from "react";
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
-import Typography from "@mui/material/Typography";
-import Box from "@mui/material/Box";
+import * as React from 'react';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
 import {
   AccountBox,
   Business,
   RecentActors,
   LocalPolice,
-} from "@mui/icons-material";
-import { AppBar, Button, Container, Toolbar } from "@mui/material";
-import Profile from "./Profile";
-import Clients from "./Clients";
-import Users from "./Users";
-import { useAuth } from "../../context/AuthProvider";
-import Security from "./Security";
+} from '@mui/icons-material';
+import { AppBar, Button, Container, Toolbar } from '@mui/material';
+import Profile from './Profile';
+import Clients from './Clients';
+import Users from './Users';
+import { useAuth } from '../../context/AuthProvider';
+import Security from './Security';
 
 interface TabPanelProps {
   children?: React.ReactNode;
   index: number;
   value: number;
-  size: "sm" | "md" | "lg" | "xl";
+  size: 'sm' | 'md' | 'lg' | 'xl';
 }
 
 function TabPanel(props: TabPanelProps) {
@@ -45,7 +45,7 @@ export default function Account() {
 
   return (
     <>
-      <AppBar position="static" sx={{ mb: "50px" }}>
+      <AppBar position="static" sx={{ mb: '50px' }}>
         <Container maxWidth="xl">
           <Toolbar>
             <Typography
@@ -53,11 +53,11 @@ export default function Account() {
               noWrap
               sx={{
                 mr: 2,
-                display: { xs: "none", md: "flex" },
+                display: { xs: 'none', md: 'flex' },
                 fontWeight: 700,
-                letterSpacing: ".3rem",
-                color: "inherit",
-                textDecoration: "none",
+                letterSpacing: '.3rem',
+                color: 'inherit',
+                textDecoration: 'none',
                 flexGrow: 1,
               }}
             >
@@ -73,8 +73,8 @@ export default function Account() {
       <Box
         sx={{
           flexGrow: 1,
-          bgcolor: "background.paper",
-          display: "flex",
+          bgcolor: 'background.paper',
+          display: 'flex',
         }}
       >
         <Tabs
@@ -83,14 +83,14 @@ export default function Account() {
           value={value}
           onChange={handleChange}
           aria-label="User Account Tabs"
-          sx={{ borderRight: 1, borderColor: "divider", width: 100 }}
+          sx={{ borderRight: 1, borderColor: 'divider', width: 100 }}
         >
           <Tab label="Profile" icon={<AccountBox color="error" />} />
           <Tab label="Security" icon={<LocalPolice color="warning" />} />
-          {Auth?.user?.roles?.includes("admin") && (
+          {Auth?.user?.roles?.includes('admin') && (
             <Tab label="Clients" icon={<Business color="info" />} />
           )}
-          {Auth?.user?.roles?.includes("admin") && (
+          {Auth?.user?.roles?.includes('admin') && (
             <Tab label="Users" icon={<RecentActors color="secondary" />} />
           )}
         </Tabs>
@@ -101,7 +101,7 @@ export default function Account() {
         <TabPanel value={value} index={1} size="md">
           <Security />
         </TabPanel>
-        {Auth?.user?.roles?.includes("admin") && (
+        {Auth?.user?.roles?.includes('admin') && (
           <>
             <TabPanel value={value} index={2} size="md">
               <Clients />

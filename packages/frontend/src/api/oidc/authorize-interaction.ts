@@ -1,5 +1,5 @@
-import { AxiosResponse } from "axios";
-import axios from "../../utils/axios-instance";
+import { AxiosResponse } from 'axios';
+import axios from '../../utils/axios-instance';
 
 const authorizeInteraction = async (
   interactionId: string,

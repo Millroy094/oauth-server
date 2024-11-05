@@ -1,5 +1,5 @@
-import { AxiosResponse } from "axios";
-import axios from "../../utils/axios-instance";
+import { AxiosResponse } from 'axios';
+import axios from '../../utils/axios-instance';
 
 type registrationPasskeyVerificationArgs = {
   userId: string;
@@ -12,7 +12,7 @@ const verifyPasskeyRegistration = async (
 ): Promise<AxiosResponse> => {
   const { userId, credential, deviceName } = args;
   const response = await axios.post(
-    "/api/user/verify-passkey-registration",
+    '/api/user/verify-passkey-registration',
     {
       userId,
       credential,

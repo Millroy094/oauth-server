@@ -1,10 +1,10 @@
-import { Button, Grid, Typography } from "@mui/material";
-import { FC, useEffect, useState } from "react";
-import { ThreeDots } from "react-loader-spinner";
-import loginWithPasskey from "../../api/user/login-with-passkey";
-import { startAuthentication } from "@simplewebauthn/browser";
-import verifyPasskeyLogin from "../../api/user/verify-passkey-login";
-import useFeedback from "../../hooks/useFeedback";
+import { Button, Grid, Typography } from '@mui/material';
+import { FC, useEffect, useState } from 'react';
+import { ThreeDots } from 'react-loader-spinner';
+import loginWithPasskey from '../../api/user/login-with-passkey';
+import { startAuthentication } from '@simplewebauthn/browser';
+import verifyPasskeyLogin from '../../api/user/verify-passkey-login';
+import useFeedback from '../../hooks/useFeedback';
 
 interface PasskeyAuthenticationProps {
   email: string;
@@ -33,12 +33,12 @@ const PasskeyAuthentication: FC<PasskeyAuthenticationProps> = (props) => {
       });
 
       if (!verificationResponse.data.verified) {
-        throw new Error("There was issue login in with your passkey");
+        throw new Error('There was issue login in with your passkey');
       }
 
       await handleSubmit();
     } catch (error) {
-      feedbackAxiosError(error, "There was issue login in with your passkey");
+      feedbackAxiosError(error, 'There was issue login in with your passkey');
       setError(true);
     }
     setLoading(false);

@@ -1,5 +1,5 @@
-import { AxiosResponse } from "axios";
-import axios from "../../utils/axios-instance";
+import { AxiosResponse } from 'axios';
+import axios from '../../utils/axios-instance';
 
 type registerUserArgs = {
   email: string;
@@ -12,7 +12,7 @@ type registerUserArgs = {
 const registerUser = async (args: registerUserArgs): Promise<AxiosResponse> => {
   const { email, password, firstName, lastName, mobile } = args;
   const response = await axios.post(
-    "/api/user/register",
+    '/api/user/register',
     {
       email,
       password,

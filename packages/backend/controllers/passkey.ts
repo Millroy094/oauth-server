@@ -3,14 +3,14 @@ import {
   generateRegistrationOptions,
   verifyAuthenticationResponse,
   verifyRegistrationResponse,
-} from "@simplewebauthn/server";
-import { Request, Response } from "express";
-import User from "../models/User";
-import logger from "../utils/logger";
-import config from "../support/env-config";
-import HTTP_STATUSES from "../constants/http-status";
-import UserService from "../services/user";
-import PasskeyService from "../services/passkey";
+} from '@simplewebauthn/server';
+import { Request, Response } from 'express';
+import User from '../models/User';
+import logger from '../utils/logger';
+import config from '../support/env-config';
+import HTTP_STATUSES from '../constants/http-status';
+import UserService from '../services/user';
+import PasskeyService from '../services/passkey';
 
 class PasskeyController {
   public static async getPasskeys(req: Request, res: Response) {
@@ -23,7 +23,7 @@ class PasskeyController {
       );
 
       res.status(HTTP_STATUSES.ok).send({
-        messages: "Successfully retrieved passkey device names",
+        messages: 'Successfully retrieved passkey device names',
         deviceNames,
         verified: user.mfa.passkey.verified,
       });
@@ -33,7 +33,7 @@ class PasskeyController {
       );
       res
         .status(HTTP_STATUSES.badRequest)
-        .send({ error: "There was an issue retrieving pass keys" });
+        .send({ error: 'There was an issue retrieving pass keys' });
     }
   }
 
@@ -50,22 +50,22 @@ class PasskeyController {
 
       if (
         user.mfa.passkey.credentials.length === 0 &&
-        user.mfa.preference === "passkey"
+        user.mfa.preference === 'passkey'
       ) {
-        user.mfa.preference = "";
+        user.mfa.preference = '';
         user.mfa.passkey.verified = false;
       }
 
       await user.save();
 
       res.status(HTTP_STATUSES.ok).send({
-        messages: "Successfully deleted passkey",
+        messages: 'Successfully deleted passkey',
       });
     } catch (error) {
       logger.error(`Failed to delete passkey: ${(error as Error).message}`);
       res
         .status(HTTP_STATUSES.badRequest)
-        .send({ error: "There was an issue deleting passkey" });
+        .send({ error: 'There was an issue deleting passkey' });
     }
   }
 
@@ -77,13 +77,13 @@ class PasskeyController {
 
       const options = await generateRegistrationOptions({
         rpID: req.hostname,
-        rpName: config.get("authentication.issuer"),
+        rpName: config.get('authentication.issuer'),
         userName: userId,
         userDisplayName: user.email,
-        attestationType: "none",
+        attestationType: 'none',
         authenticatorSelection: {
-          authenticatorAttachment: "platform",
-          userVerification: "required",
+          authenticatorAttachment: 'platform',
+          userVerification: 'required',
         },
       });
 
@@ -95,7 +95,7 @@ class PasskeyController {
       logger.error(`Failed passkey registration ${(error as Error).message}`);
       res
         .status(HTTP_STATUSES.badRequest)
-        .send({ error: "There was an issue registering for passkey" });
+        .send({ error: 'There was an issue registering for passkey' });
     }
   }
 
@@ -112,7 +112,7 @@ class PasskeyController {
       );
 
       if (!storedChallenge) {
-        throw new Error("Unable to find challenge")
+        throw new Error('Unable to find challenge');
       }
 
       const verification = await verifyRegistrationResponse({
@@ -127,7 +127,7 @@ class PasskeyController {
         user.mfa.passkey.credentials.push({
           id: verification?.registrationInfo?.credential?.id,
           publicKey: Buffer.from(
-            verification?.registrationInfo?.credential?.publicKey ?? "",
+            verification?.registrationInfo?.credential?.publicKey ?? '',
           ),
           counter: verification?.registrationInfo?.credential?.counter,
           deviceName: req.body.deviceName,
@@ -138,7 +138,7 @@ class PasskeyController {
         user.mfa.passkey.verified = true;
 
         if (!user.mfa.preference) {
-          user.mfa.preference = "passkey";
+          user.mfa.preference = 'passkey';
         }
 
         await user.save();
@@ -153,7 +153,7 @@ class PasskeyController {
       );
       res
         .status(HTTP_STATUSES.badRequest)
-        .send({ error: "There was an issue verifying passkey registration" });
+        .send({ error: 'There was an issue verifying passkey registration' });
     }
   }
 
@@ -167,9 +167,9 @@ class PasskeyController {
         allowCredentials:
           user?.credentials?.map((cred: { id: string }) => ({
             id: cred.id,
-            type: "public-key",
+            type: 'public-key',
           })) ?? [],
-        userVerification: "required",
+        userVerification: 'required',
       });
 
       await PasskeyService.createChallenge(user.userId, options.challenge);
@@ -181,7 +181,7 @@ class PasskeyController {
       );
       res
         .status(HTTP_STATUSES.badRequest)
-        .send({ error: "There was an issue with passkey login" });
+        .send({ error: 'There was an issue with passkey login' });
     }
   }
 
@@ -195,7 +195,7 @@ class PasskeyController {
       );
 
       if (!credential) {
-        throw new Error("Could not find a passkey");
+        throw new Error('Could not find a passkey');
       }
 
       const { challenge: signedChallenge } = PasskeyService.decodeClientData(
@@ -207,7 +207,7 @@ class PasskeyController {
       );
 
       if (!storedChallenge) {
-        throw new Error("Unable to find challenge")
+        throw new Error('Unable to find challenge');
       }
 
       const verification = await verifyAuthenticationResponse({
@@ -244,7 +244,7 @@ class PasskeyController {
       );
       res
         .status(HTTP_STATUSES.badRequest)
-        .send({ error: "There was an issue with passkey login" });
+        .send({ error: 'There was an issue with passkey login' });
     }
   }
 
@@ -264,8 +264,8 @@ class PasskeyController {
 
       res.status(200).send({ exists: false });
     } catch (error) {
-      console.error("Error checking passkey:", error);
-      res.status(500).send({ error: "Internal server error" });
+      console.error('Error checking passkey:', error);
+      res.status(500).send({ error: 'Internal server error' });
     }
   }
 }

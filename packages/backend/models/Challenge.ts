@@ -1,8 +1,8 @@
-import dynamoose from "dynamoose";
-import { v4 as uuid } from "uuid";
-import isEmpty from "lodash/isEmpty.js";
-import { ValueType } from "dynamoose/dist/Schema";
-import { decryptData, encryptData } from "../utils/encryption.ts";
+import dynamoose from 'dynamoose';
+import { v4 as uuid } from 'uuid';
+import isEmpty from 'lodash/isEmpty.js';
+import { ValueType } from 'dynamoose/dist/Schema';
+import { decryptData, encryptData } from '../utils/encryption.ts';
 
 const { Schema, model } = dynamoose;
 
@@ -30,10 +30,10 @@ const ChallengeSchema = new Schema(
     timestamps: true,
   },
 );
-const Challenge = model("Challenge", ChallengeSchema, {
+const Challenge = model('Challenge', ChallengeSchema, {
   expires: {
     ttl: 300,
-    attribute: "expiresAt",
+    attribute: 'expiresAt',
     items: {
       returnExpired: false,
     },

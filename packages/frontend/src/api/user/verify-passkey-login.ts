@@ -1,5 +1,5 @@
-import { AxiosResponse } from "axios";
-import axios from "../../utils/axios-instance";
+import { AxiosResponse } from 'axios';
+import axios from '../../utils/axios-instance';
 
 type loginPasskeyVerificationArgs = {
   email: string;
@@ -11,7 +11,7 @@ const verifyPasskeyLogin = async (
 ): Promise<AxiosResponse> => {
   const { email, credential } = args;
   const response = await axios.post(
-    "/api/user/verify-passkey-login",
+    '/api/user/verify-passkey-login',
     {
       email,
       credential,

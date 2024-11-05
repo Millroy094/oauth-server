@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useState } from 'react';
 import {
   Button,
   Card,
@@ -7,22 +7,22 @@ import {
   CardHeader,
   Grid,
   Modal,
-} from "@mui/material";
-import setupMFA from "../../../../api/user/setup-mfa";
-import SubscriberInput from "./SubscriberInput";
+} from '@mui/material';
+import setupMFA from '../../../../api/user/setup-mfa';
+import SubscriberInput from './SubscriberInput';
 import {
   APP_MFA,
   EMAIL_MFA,
   MFA_SETUP,
   MFA_VERIFY,
   SMS_MFA,
-} from "../../../../constants";
-import { isEmpty } from "lodash";
-import isPhoneValid from "../../../../utils/is-phone-valid";
-import VerifyOtpInput from "./VerifyOtpInput";
-import verifyMFA from "../../../../api/user/verify-mfa";
-import useFeedback from "../../../../hooks/useFeedback";
-import { KeyboardDoubleArrowDown } from "@mui/icons-material";
+} from '../../../../constants';
+import { isEmpty } from 'lodash';
+import isPhoneValid from '../../../../utils/is-phone-valid';
+import VerifyOtpInput from './VerifyOtpInput';
+import verifyMFA from '../../../../api/user/verify-mfa';
+import useFeedback from '../../../../hooks/useFeedback';
+import { KeyboardDoubleArrowDown } from '@mui/icons-material';
 
 interface SetupModalProps {
   open: boolean;
@@ -36,9 +36,9 @@ const SetupModal: FC<SetupModalProps> = (props) => {
   const [subscriber, setSubscriber] = useState(defaultValue);
   const [subscriberError, setSubscriberError] = useState(false);
   const [stage, setStage] = useState(MFA_SETUP);
-  const [otp, setOtp] = useState("");
+  const [otp, setOtp] = useState('');
   const [otpError, setOtpError] = useState(false);
-  const [uri, setUri] = useState("");
+  const [uri, setUri] = useState('');
 
   const { feedbackAxiosError } = useFeedback();
 
@@ -68,7 +68,7 @@ const SetupModal: FC<SetupModalProps> = (props) => {
         setSubscriberError(true);
       }
     } catch (err) {
-      feedbackAxiosError(err, "There was an issue setting up MFA");
+      feedbackAxiosError(err, 'There was an issue setting up MFA');
     }
   };
 
@@ -85,16 +85,16 @@ const SetupModal: FC<SetupModalProps> = (props) => {
         setOtpError(true);
       }
     } catch (err) {
-      feedbackAxiosError(err, "Invalid OTP");
+      feedbackAxiosError(err, 'Invalid OTP');
     }
   };
 
   const onCloseModal = () => {
-    setSubscriber("");
+    setSubscriber('');
     setSubscriberError(false);
     setStage(MFA_SETUP);
-    setUri("");
-    setOtp("");
+    setUri('');
+    setOtp('');
     setOtpError(false);
     onClose();
   };
@@ -103,12 +103,12 @@ const SetupModal: FC<SetupModalProps> = (props) => {
     <Modal open={open} onClose={onCloseModal}>
       <Card
         sx={{
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
           width: 600,
-          bgcolor: "background.paper",
+          bgcolor: 'background.paper',
           p: 2,
         }}
       >
@@ -142,7 +142,7 @@ const SetupModal: FC<SetupModalProps> = (props) => {
             )}
           </Grid>
         </CardContent>
-        <CardActions sx={{ display: "flex", justifyContent: "flex-end" }}>
+        <CardActions sx={{ display: 'flex', justifyContent: 'flex-end' }}>
           <Button variant="contained" onClick={onCloseModal} color="error">
             Cancel
           </Button>

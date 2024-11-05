@@ -1,11 +1,11 @@
-import { AxiosResponse } from "axios";
-import axios from "../../utils/axios-instance";
+import { AxiosResponse } from 'axios';
+import axios from '../../utils/axios-instance';
 
 const changeMFAPreference = async (
   preference: string,
 ): Promise<AxiosResponse> => {
   const response = await axios.post(
-    "/api/user/mfa-change-preference",
+    '/api/user/mfa-change-preference',
     {
       preference,
     },

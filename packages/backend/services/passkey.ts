@@ -1,10 +1,9 @@
-import Challenge from "../models/Challenge.ts";
+import Challenge from '../models/Challenge.ts';
 
 class PasskeyService {
-
   public static decodeClientData(encodedClientData: string) {
     const base64 = encodedClientData.replace(/_/g, '/').replace(/-/g, '+');
-    const binaryData = Uint8Array.from(atob(base64), c => c.charCodeAt(0));
+    const binaryData = Uint8Array.from(atob(base64), (c) => c.charCodeAt(0));
     const decodedString = new TextDecoder().decode(binaryData);
     return JSON.parse(decodedString);
   }
@@ -24,30 +23,30 @@ class PasskeyService {
     userId: string,
     challenge: string,
   ): Promise<string> {
-    const [challengeResult] = await Challenge.scan("userId")
+    const [challengeResult] = await Challenge.scan('userId')
       .eq(userId)
       .and()
-      .where("challenge")
+      .where('challenge')
       .eq(challenge)
-        .exec();
+      .exec();
 
     return challengeResult?.challenge;
   }
-    
-      public static async deleteChallenge(
+
+  public static async deleteChallenge(
     userId: string,
     challenge: string,
   ): Promise<void> {
-    const [challengeResult] = await Challenge.scan("userId")
+    const [challengeResult] = await Challenge.scan('userId')
       .eq(userId)
       .and()
-      .where("challenge")
+      .where('challenge')
       .eq(challenge)
-        .exec();
-          
-          if (challengeResult) {
-              await challengeResult.delete()
-          }
+      .exec();
+
+    if (challengeResult) {
+      await challengeResult.delete();
+    }
   }
 }
 

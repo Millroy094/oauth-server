@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useState } from 'react';
 import {
   Button,
   Card,
@@ -6,8 +6,8 @@ import {
   CardContent,
   CardHeader,
   Typography,
-} from "@mui/material";
-import RecoveryCodeModal from "./RecoveryCodeModal";
+} from '@mui/material';
+import RecoveryCodeModal from './RecoveryCodeModal';
 
 interface IRecoveryCodeProps {
   recoveryCodeCount: number;
@@ -40,14 +40,14 @@ const RecoveryCodes: FC<IRecoveryCodeProps> = (props) => {
         </CardContent>
         <CardActions
           sx={{
-            padding: "20px 20px 0 20px",
-            display: "flex",
-            justifyContent: "space-between",
+            padding: '20px 20px 0 20px',
+            display: 'flex',
+            justifyContent: 'space-between',
           }}
         >
           <Typography
             variant="button"
-            color={recoveryCodeCount === 0 ? "red" : "green"}
+            color={recoveryCodeCount === 0 ? 'red' : 'green'}
           >{`${recoveryCodeCount}/10 Recovery codes left`}</Typography>
           <Button
             variant="outlined"

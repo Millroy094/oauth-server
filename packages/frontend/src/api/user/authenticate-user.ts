@@ -1,5 +1,5 @@
-import { AxiosResponse } from "axios";
-import axios from "../../utils/axios-instance";
+import { AxiosResponse } from 'axios';
+import axios from '../../utils/axios-instance';
 
 type AuthenticateUserArgs = {
   email: string;
@@ -22,7 +22,7 @@ const authenticateUser = async (
     resetMfa,
   } = args;
   const response = await axios.post(
-    "/api/user/login",
+    '/api/user/login',
     {
       email,
       password,

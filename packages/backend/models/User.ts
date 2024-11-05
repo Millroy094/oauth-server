@@ -1,8 +1,8 @@
-import dynamoose from "dynamoose";
-import bcrypt from "bcryptjs";
-import { v4 as uuid } from "uuid";
-import { ValueType } from "dynamoose/dist/Schema";
-import { decryptData, encryptData } from "../utils/encryption.ts";
+import dynamoose from 'dynamoose';
+import bcrypt from 'bcryptjs';
+import { v4 as uuid } from 'uuid';
+import { ValueType } from 'dynamoose/dist/Schema';
+import { decryptData, encryptData } from '../utils/encryption.ts';
 
 const { Schema, model } = dynamoose;
 
@@ -28,11 +28,11 @@ const UserSchema = new Schema(
     },
     firstName: {
       type: String,
-      default: "",
+      default: '',
     },
     lastName: {
       type: String,
-      default: "",
+      default: '',
     },
     mobile: {
       type: String,
@@ -41,7 +41,7 @@ const UserSchema = new Schema(
       type: String,
       set: async (value, oldValue) => {
         if (!value) {
-          return "";
+          return '';
         }
 
         if (value === oldValue) {
@@ -69,9 +69,9 @@ const UserSchema = new Schema(
             secret: {
               type: String,
               set: (value: ValueType) =>
-                value ? encryptData(value as string) : "",
+                value ? encryptData(value as string) : '',
               get: (value: ValueType) =>
-                value ? decryptData(value as string) : "",
+                value ? decryptData(value as string) : '',
             },
             subscriber: {
               type: String,
@@ -129,19 +129,19 @@ const UserSchema = new Schema(
         },
       },
       default: {
-        preference: "",
+        preference: '',
         recoveryCodes: [],
         app: {
-          secret: "",
-          subscriber: "",
+          secret: '',
+          subscriber: '',
           verified: false,
         },
         sms: {
-          subscriber: "",
+          subscriber: '',
           verified: false,
         },
         email: {
-          subscriber: "",
+          subscriber: '',
           verified: false,
         },
         passkey: {
@@ -181,6 +181,6 @@ const UserSchema = new Schema(
     timestamps: true,
   },
 );
-const User = model("User", UserSchema);
+const User = model('User', UserSchema);
 
 export default User;

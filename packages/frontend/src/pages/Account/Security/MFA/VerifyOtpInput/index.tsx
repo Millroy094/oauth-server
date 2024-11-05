@@ -1,12 +1,12 @@
-import React, { FC } from "react";
-import { APP_MFA } from "../../../../../constants";
-import { Button, FormHelperText, Grid, Typography } from "@mui/material";
-import OTPInput from "react-otp-input";
-import useTimer from "../../../../../hooks/useTimer";
-import sendOtp from "../../../../../api/user/send-otp";
-import { useAuth } from "../../../../../context/AuthProvider";
-import useFeedback from "../../../../../hooks/useFeedback";
-import OtpMessage from "./OtpMessage";
+import React, { FC } from 'react';
+import { APP_MFA } from '../../../../../constants';
+import { Button, FormHelperText, Grid, Typography } from '@mui/material';
+import OTPInput from 'react-otp-input';
+import useTimer from '../../../../../hooks/useTimer';
+import sendOtp from '../../../../../api/user/send-otp';
+import { useAuth } from '../../../../../context/AuthProvider';
+import useFeedback from '../../../../../hooks/useFeedback';
+import OtpMessage from './OtpMessage';
 
 interface IVerifyOtpInput {
   value: string;
@@ -23,7 +23,7 @@ const OtpResendSection: FC<{ handleResend: () => void; timer: number }> = ({
   <Grid item container alignItems="center" justifyContent="center">
     <Typography>Haven't received OTP?</Typography>
     <Button onClick={handleResend} disabled={timer !== 0}>
-      {timer ? `Click here in ${timer} seconds` : "Click here"}
+      {timer ? `Click here in ${timer} seconds` : 'Click here'}
     </Button>
   </Grid>
 );
@@ -44,7 +44,7 @@ const VerifyOtpInput: FC<IVerifyOtpInput> = ({
       await sendOtp({ type, email: auth!.user!.email });
       resetTimer();
     } catch (err) {
-      feedbackAxiosError(err, "Failed to resend OTP");
+      feedbackAxiosError(err, 'Failed to resend OTP');
     }
   };
 
@@ -68,11 +68,11 @@ const VerifyOtpInput: FC<IVerifyOtpInput> = ({
           renderInput={(props) => <input {...props} />}
           inputType="tel"
           containerStyle={{
-            display: "flex",
-            gap: "10px",
-            justifyContent: "center",
+            display: 'flex',
+            gap: '10px',
+            justifyContent: 'center',
           }}
-          inputStyle={{ width: "50px", height: "50px", fontSize: "20px" }}
+          inputStyle={{ width: '50px', height: '50px', fontSize: '20px' }}
         />
         {error && (
           <Grid container justifyContent="center">

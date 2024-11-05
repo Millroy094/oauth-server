@@ -1,10 +1,10 @@
-import isEmpty from "lodash/isEmpty.js";
-import OTP from "../models/OTP.ts";
+import isEmpty from 'lodash/isEmpty.js';
+import OTP from '../models/OTP.ts';
 
 class OTPService {
   public static async storeOtp(
     userId: string,
-    type: "app" | "sms" | "email",
+    type: 'app' | 'sms' | 'email',
     otp: string,
   ): Promise<void> {
     await OTP.create({
@@ -17,17 +17,17 @@ class OTPService {
 
   public static async validateOtp(
     userId: string,
-    type: "sms" | "email",
+    type: 'sms' | 'email',
     otp: string,
   ): Promise<boolean> {
     let isValid = false;
-    const [otpResult] = await OTP.scan("userId")
+    const [otpResult] = await OTP.scan('userId')
       .eq(userId)
       .and()
-      .where("type")
+      .where('type')
       .eq(type)
       .and()
-      .where("otp")
+      .where('otp')
       .eq(otp)
       .exec();
     if (!isEmpty(otpResult)) {

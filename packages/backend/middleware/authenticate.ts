@@ -1,19 +1,19 @@
-import { Request, Response, NextFunction } from "express";
-import jwt from "jsonwebtoken";
-import logger from "../utils/logger.ts";
-import UserService from "../services/user.ts";
-import config from "../support/env-config.ts";
-import { ACCESS_TOKEN, REFRESH_TOKEN } from "../constants/authentication.ts";
+import { Request, Response, NextFunction } from 'express';
+import jwt from 'jsonwebtoken';
+import logger from '../utils/logger.ts';
+import UserService from '../services/user.ts';
+import config from '../support/env-config.ts';
+import { ACCESS_TOKEN, REFRESH_TOKEN } from '../constants/authentication.ts';
 
 interface JwtPayload {
   userId: string;
   email: string;
 }
 
-const accessTokenSecret = config.get("authentication.accessTokenSecret");
-const accessTokenExpiry = config.get("authentication.accessTokenExpiry");
-const refreshTokenSecret = config.get("authentication.refreshTokenSecret");
-const refreshTokenExpiry = config.get("authentication.accessTokenExpiry");
+const accessTokenSecret = config.get('authentication.accessTokenSecret');
+const accessTokenExpiry = config.get('authentication.accessTokenExpiry');
+const refreshTokenSecret = config.get('authentication.refreshTokenSecret');
+const refreshTokenExpiry = config.get('authentication.accessTokenExpiry');
 
 const generateNewTokensFromRefreshToken = (
   refreshToken: any,
@@ -35,17 +35,17 @@ const generateNewTokensFromRefreshToken = (
     res
       .cookie(ACCESS_TOKEN, newAccessToken, {
         httpOnly: true,
-        secure: config.get("env") === "production",
+        secure: config.get('env') === 'production',
       })
       .cookie(REFRESH_TOKEN, newRefreshToken, {
         httpOnly: true,
-        secure: config.get("env") === "production",
+        secure: config.get('env') === 'production',
       });
 
     req.user = { userId, email };
   } catch (error) {
     throw new Error(
-      "Authentication failed, authentication tokens have expired",
+      'Authentication failed, authentication tokens have expired',
     );
   }
 };
@@ -56,7 +56,7 @@ const validateTokensFromCookies = (req: Request, res: Response) => {
 
   if (!accessToken || !refreshToken) {
     throw new Error(
-      "Authentication failed, authentication tokens missing from header cookies",
+      'Authentication failed, authentication tokens missing from header cookies',
     );
   }
 
@@ -68,11 +68,11 @@ const validateTokensFromCookies = (req: Request, res: Response) => {
 
     req.user = { userId, email };
   } catch (error) {
-    if ((error as Error).name === "TokenExpiredError") {
+    if ((error as Error).name === 'TokenExpiredError') {
       generateNewTokensFromRefreshToken(refreshToken, req, res);
     } else {
       logger.error((error as Error).message);
-      throw new Error("Authentication failed, for an unexpected reason");
+      throw new Error('Authentication failed, for an unexpected reason');
     }
   }
 };
@@ -85,16 +85,16 @@ const authenticate = async (
   try {
     validateTokensFromCookies(req, res);
 
-    const userAccount = await UserService.getUserById(req.user?.userId ?? "");
+    const userAccount = await UserService.getUserById(req.user?.userId ?? '');
 
     if (userAccount.suspended) {
-      throw new Error("Authenication failed! User is suspened");
+      throw new Error('Authenication failed! User is suspened');
     }
     return next();
   } catch (err) {
     logger.error((err as Error).message);
     res.status(401).json({
-      error: "Authenication failed, please check if you are still logged in",
+      error: 'Authenication failed, please check if you are still logged in',
     });
   }
 };

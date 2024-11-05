@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useEffect, useState } from 'react';
 import {
   Box,
   Button,
@@ -12,15 +12,15 @@ import {
   Switch,
   Tooltip,
   Typography,
-} from "@mui/material";
-import getMFASettings from "../../../../api/user/get-mfa-settings";
-import useFeedback from "../../../../hooks/useFeedback";
-import SetupModal from "./SetupModal";
-import changeMFAPreference from "../../../../api/user/change-mfa-preference";
-import resetMfa from "../../../../api/user/reset-mfa";
-import { NewReleases, Verified } from "@mui/icons-material";
-import RecoveryCodes from "./RecoveryCodes";
-import Passkeys from "./Passkeys";
+} from '@mui/material';
+import getMFASettings from '../../../../api/user/get-mfa-settings';
+import useFeedback from '../../../../hooks/useFeedback';
+import SetupModal from './SetupModal';
+import changeMFAPreference from '../../../../api/user/change-mfa-preference';
+import resetMfa from '../../../../api/user/reset-mfa';
+import { NewReleases, Verified } from '@mui/icons-material';
+import RecoveryCodes from './RecoveryCodes';
+import Passkeys from './Passkeys';
 
 interface IMFAType {
   type: string;
@@ -34,10 +34,10 @@ interface ISetupModal {
   defaultValue: string;
 }
 
-const setupModalDefault = { open: false, type: "", defaultValue: "" };
+const setupModalDefault = { open: false, type: '', defaultValue: '' };
 
 const MFA: FC = () => {
-  const [mfaPreference, setMfaPreference] = useState<string>("");
+  const [mfaPreference, setMfaPreference] = useState<string>('');
   const [recoveryCodeCount, setRecoveryCodeCount] = useState<number>(0);
   const [mfaTypes, setMfaTypes] = useState<IMFAType[]>([]);
   const [setupModal, setSetupModal] = useState<ISetupModal>(setupModalDefault);
@@ -52,7 +52,7 @@ const MFA: FC = () => {
     } catch (err) {
       feedbackAxiosError(
         err,
-        "There was an issue retrieving mfa setting, please try again",
+        'There was an issue retrieving mfa setting, please try again',
       );
     }
   };
@@ -64,12 +64,12 @@ const MFA: FC = () => {
       if (checked) {
         await changeMFAPreference(name);
       } else {
-        await changeMFAPreference("");
+        await changeMFAPreference('');
       }
       await fetchMFASettings();
-      feedback("Successfully updated MFA preference", "success");
+      feedback('Successfully updated MFA preference', 'success');
     } catch (err) {
-      feedbackAxiosError(err, "There was an issue changing MFA preference");
+      feedbackAxiosError(err, 'There was an issue changing MFA preference');
     }
   };
 
@@ -82,9 +82,9 @@ const MFA: FC = () => {
     try {
       await resetMfa(type);
       await fetchMFASettings();
-      feedback("Successfully resetted MFA", "success");
+      feedback('Successfully resetted MFA', 'success');
     } catch (err) {
-      feedbackAxiosError(err, "Failed to reset MFA");
+      feedbackAxiosError(err, 'Failed to reset MFA');
     }
   };
 
@@ -105,14 +105,14 @@ const MFA: FC = () => {
           </Typography>
         </CardContent>
         <CardActions
-          sx={{ display: "flex", justifyContent: "flex-end", padding: "10px" }}
+          sx={{ display: 'flex', justifyContent: 'flex-end', padding: '10px' }}
         >
           <Grid container spacing={2}>
             {mfaTypes.map((mfaType) => (
               <Grid item key={mfaType.type}>
                 <Paper
                   elevation={2}
-                  sx={{ p: "10px", width: "240px", height: "120px" }}
+                  sx={{ p: '10px', width: '240px', height: '120px' }}
                 >
                   <Grid
                     container
@@ -140,7 +140,7 @@ const MFA: FC = () => {
                         />
                       </Grid>
                     </Grid>
-                    <Grid item sx={{ p: "10px 0" }}>
+                    <Grid item sx={{ p: '10px 0' }}>
                       <Grid container item alignContent="center" spacing={1}>
                         <Grid item>
                           <Typography variant="subtitle2">
@@ -162,17 +162,17 @@ const MFA: FC = () => {
                           </Grid>
                         )}
                       </Grid>
-                      <Tooltip title={mfaType.subscriber || "None"}>
+                      <Tooltip title={mfaType.subscriber || 'None'}>
                         <Box
                           sx={{
-                            textOverflow: "ellipsis",
-                            overflow: "hidden",
-                            width: "240px",
-                            whiteSpace: "normal",
+                            textOverflow: 'ellipsis',
+                            overflow: 'hidden',
+                            width: '240px',
+                            whiteSpace: 'normal',
                           }}
                         >
                           <Typography noWrap variant="caption">
-                            {mfaType.subscriber || "None"}
+                            {mfaType.subscriber || 'None'}
                           </Typography>
                         </Box>
                       </Tooltip>
@@ -187,7 +187,7 @@ const MFA: FC = () => {
                             setSetupModal({
                               open: true,
                               type: mfaType.type,
-                              defaultValue: mfaType.subscriber || "",
+                              defaultValue: mfaType.subscriber || '',
                             })
                           }
                         >
@@ -215,7 +215,7 @@ const MFA: FC = () => {
         mfaPreference={mfaPreference}
         onMfaPreferenceChange={onChange}
       />
-      <Divider sx={{ m: "30px 10px" }} />
+      <Divider sx={{ m: '30px 10px' }} />
       <RecoveryCodes
         recoveryCodeCount={recoveryCodeCount}
         fetchMFASettings={fetchMFASettings}

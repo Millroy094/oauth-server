@@ -1,8 +1,8 @@
-import { v4 as uuid } from "uuid";
-import { Secret, TOTP } from "otpauth";
-import User from "../../models/User.ts";
-import { sendEmailOtp, sendSMSOtp } from "./send.ts";
-import config from "../../support/env-config.ts";
+import { v4 as uuid } from 'uuid';
+import { Secret, TOTP } from 'otpauth';
+import User from '../../models/User.ts';
+import { sendEmailOtp, sendSMSOtp } from './send.ts';
+import config from '../../support/env-config.ts';
 
 export const setupAppMFA = async (
   userId: string,
@@ -11,15 +11,15 @@ export const setupAppMFA = async (
   const user = await User.get(userId);
 
   if (!user) {
-    throw new Error("User does not exist");
+    throw new Error('User does not exist');
   }
 
   const secret = uuid();
 
   const totp = new TOTP({
-    issuer: config.get("authentication.issuer"),
-    label: config.get("authentication.issuer"),
-    algorithm: "SHA1",
+    issuer: config.get('authentication.issuer'),
+    label: config.get('authentication.issuer'),
+    algorithm: 'SHA1',
     digits: 6,
     period: 30,
     secret: Secret.fromUTF8(secret),
@@ -41,7 +41,7 @@ export const setupSMSMFA = async (
   const user = await User.get(userId);
 
   if (!user) {
-    throw new Error("User does not exist");
+    throw new Error('User does not exist');
   }
 
   await sendSMSOtp(userId, subscriber);
@@ -57,7 +57,7 @@ export const setupEmailMFA = async (
   const user = await User.get(userId);
 
   if (!user) {
-    throw new Error("User does not exist");
+    throw new Error('User does not exist');
   }
   await sendEmailOtp(userId, subscriber);
 

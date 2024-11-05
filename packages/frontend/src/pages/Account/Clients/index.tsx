@@ -1,4 +1,4 @@
-import { FC, useEffect, useState, startTransition } from "react";
+import { FC, useEffect, useState, startTransition } from 'react';
 import {
   Box,
   Button,
@@ -8,13 +8,13 @@ import {
   IconButton,
   Tooltip,
   Typography,
-} from "@mui/material";
-import { AddBusiness, Delete, ContentCopy } from "@mui/icons-material";
-import { DataGrid, GridColDef, GridRowParams } from "@mui/x-data-grid";
-import ClientPopup from "./ClientPopup";
-import getClients from "../../../api/admin/get-clients";
-import deleteClient from "../../../api/admin/delete-client";
-import useFeedback from "../../../hooks/useFeedback";
+} from '@mui/material';
+import { AddBusiness, Delete, ContentCopy } from '@mui/icons-material';
+import { DataGrid, GridColDef, GridRowParams } from '@mui/x-data-grid';
+import ClientPopup from './ClientPopup';
+import getClients from '../../../api/admin/get-clients';
+import deleteClient from '../../../api/admin/delete-client';
+import useFeedback from '../../../hooks/useFeedback';
 
 interface Client {
   id: string;
@@ -25,7 +25,7 @@ interface Client {
 const Clients: FC = () => {
   const [open, setOpen] = useState(false);
   const [clients, setClients] = useState<Client[]>([]);
-  const [selectedClientId, setSelectedClientId] = useState<string>("");
+  const [selectedClientId, setSelectedClientId] = useState<string>('');
   const { feedbackAxiosError, feedbackAxiosResponse } = useFeedback();
 
   const fetchClients = async () => {
@@ -35,7 +35,7 @@ const Clients: FC = () => {
     } catch (err) {
       feedbackAxiosError(
         err,
-        "There was an issue retreiving clients, please try again",
+        'There was an issue retreiving clients, please try again',
       );
     }
   };
@@ -51,12 +51,12 @@ const Clients: FC = () => {
   const handleDelete = async (id: string): Promise<void> => {
     try {
       const response = await deleteClient(id);
-      feedbackAxiosResponse(response, "Successfully deleted cleint", "success");
+      feedbackAxiosResponse(response, 'Successfully deleted cleint', 'success');
       setClients(clients.filter((client) => client.id !== id));
     } catch (err) {
       feedbackAxiosError(
         err,
-        "There was an issue deleting the client, please try again",
+        'There was an issue deleting the client, please try again',
       );
     }
   };
@@ -68,42 +68,42 @@ const Clients: FC = () => {
 
   const onClose = () => {
     setOpen(false);
-    setSelectedClientId("");
+    setSelectedClientId('');
     fetchClients();
   };
 
   const columns: GridColDef<(typeof clients)[number]>[] = [
     {
-      field: "clientId",
-      headerName: "Client ID",
+      field: 'clientId',
+      headerName: 'Client ID',
       width: 275,
       editable: false,
     },
     {
-      field: "clientName",
-      headerName: "Name",
+      field: 'clientName',
+      headerName: 'Name',
       width: 275,
       editable: false,
     },
 
     {
-      field: "secret",
-      headerName: "Secret",
+      field: 'secret',
+      headerName: 'Secret',
       width: 200,
       editable: false,
       renderCell: (params) => (
         <Box
           sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            height: "100%",
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            height: '100%',
           }}
         >
           <Typography
             variant="caption"
             component="div"
-            sx={{ userSelect: "none" }}
+            sx={{ userSelect: 'none' }}
           >
             ************************
           </Typography>
@@ -123,8 +123,8 @@ const Clients: FC = () => {
       ),
     },
     {
-      field: "id",
-      headerName: "",
+      field: 'id',
+      headerName: '',
       width: 10,
       editable: false,
       sortable: false,

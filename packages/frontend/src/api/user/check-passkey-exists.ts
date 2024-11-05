@@ -1,5 +1,5 @@
-import { AxiosResponse } from "axios";
-import axios from "../../utils/axios-instance";
+import { AxiosResponse } from 'axios';
+import axios from '../../utils/axios-instance';
 
 type registerPasskeyExistsArgs = {
   userId: string;
@@ -11,7 +11,7 @@ const checkPasskeyAlreadyExists = async (
 ): Promise<AxiosResponse> => {
   const { userId, deviceName } = args;
   const response = await axios.post(
-    "/api/user/check-passkey-already-exists",
+    '/api/user/check-passkey-already-exists',
     {
       userId,
       deviceName,
