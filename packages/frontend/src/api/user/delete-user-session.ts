@@ -1,9 +1,9 @@
-import { AxiosResponse } from 'axios';
-import axios from '../../utils/axios-instance';
+import { AxiosResponse } from "axios";
+import axios from "../../utils/axios-instance";
 
 const deleteUserSession = async (sessionId: string): Promise<AxiosResponse> => {
   const response = await axios.delete(`/api/user/sessions/${sessionId}`, {
-    withCredentials: true
+    withCredentials: true,
   });
   return response;
 };

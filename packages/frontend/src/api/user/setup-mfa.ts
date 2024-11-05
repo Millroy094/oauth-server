@@ -1,5 +1,5 @@
-import { AxiosResponse } from 'axios';
-import axios from '../../utils/axios-instance';
+import { AxiosResponse } from "axios";
+import axios from "../../utils/axios-instance";
 
 type SetupMFAArgs = {
   type: string;
@@ -9,12 +9,12 @@ type SetupMFAArgs = {
 const setupMFA = async (args: SetupMFAArgs): Promise<AxiosResponse> => {
   const { type, subscriber } = args;
   const response = await axios.post(
-    '/api/user/mfa-setup',
+    "/api/user/mfa-setup",
     {
       type,
-      subscriber
+      subscriber,
     },
-    { withCredentials: true }
+    { withCredentials: true },
   );
 
   return response;

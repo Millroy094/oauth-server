@@ -1,6 +1,6 @@
-import isEmpty from 'lodash/isEmpty.js';
-import { AnyItem } from 'dynamoose/dist/Item';
-import Client from '../models/Client.ts';
+import isEmpty from "lodash/isEmpty.js";
+import { AnyItem } from "dynamoose/dist/Item";
+import Client from "../models/Client.ts";
 
 class ClientService {
   public static async createClient(fields: {
@@ -11,10 +11,10 @@ class ClientService {
     redirectUris: string[];
   }): Promise<void> {
     const { clientId } = fields;
-    const [clientAccount] = await Client.scan('clientId').eq(clientId).exec();
+    const [clientAccount] = await Client.scan("clientId").eq(clientId).exec();
 
     if (!isEmpty(clientAccount)) {
-      throw new Error('Client already exists');
+      throw new Error("Client already exists");
     }
 
     await Client.create(fields);
@@ -29,7 +29,7 @@ class ClientService {
     const client = await Client.get(id);
 
     if (isEmpty(client)) {
-      throw new Error('User does not exists');
+      throw new Error("User does not exists");
     }
 
     return client;
@@ -37,7 +37,7 @@ class ClientService {
 
   public static async updateClient(
     id: string,
-    updatedFields: any
+    updatedFields: any,
   ): Promise<boolean> {
     await Client.update(id, updatedFields);
 

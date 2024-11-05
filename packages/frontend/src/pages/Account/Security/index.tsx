@@ -1,15 +1,15 @@
-import { FC } from 'react';
+import { FC } from "react";
 
-import Sessions from './Session';
-import MFA from './MFA';
-import { Divider } from '@mui/material';
+import Sessions from "./Session";
+import MFA from "./MFA";
+import { Divider } from "@mui/material";
 
 const Security: FC = () => {
   return (
     <>
-      <Sessions />
-      <Divider sx={{ m: '30px 10px' }} />
       <MFA />
+      <Divider sx={{ m: "30px 10px" }} />
+      <Sessions />
     </>
   );
 };

@@ -1,11 +1,11 @@
-import { AxiosResponse } from 'axios';
-import axios from '../../utils/axios-instance';
+import { AxiosResponse } from "axios";
+import axios from "../../utils/axios-instance";
 
 const resetMfa = async (id: string): Promise<AxiosResponse> => {
   const response = await axios.post(
     `/api/admin/users/${id}/mfa-reset`,
     {},
-    { withCredentials: true }
+    { withCredentials: true },
   );
 
   return response;

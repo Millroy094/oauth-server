@@ -1,8 +1,8 @@
-import dynamoose from 'dynamoose';
-import bcrypt from 'bcryptjs';
-import { v4 as uuid } from 'uuid';
-import { ValueType } from 'dynamoose/dist/Schema';
-import { decryptData, encryptData } from '../utils/encryption.ts';
+import dynamoose from "dynamoose";
+import bcrypt from "bcryptjs";
+import { v4 as uuid } from "uuid";
+import { ValueType } from "dynamoose/dist/Schema";
+import { decryptData, encryptData } from "../utils/encryption.ts";
 
 const { Schema, model } = dynamoose;
 
@@ -11,37 +11,37 @@ const UserSchema = new Schema(
     userId: {
       type: String,
       hashKey: true,
-      default: () => uuid()
+      default: () => uuid(),
     },
     email: {
       type: String,
-      required: true
+      required: true,
     },
     emailVerified: {
       type: Boolean,
-      default: false
+      default: false,
     },
     roles: {
       type: Array,
       schema: [String],
-      default: []
+      default: [],
     },
     firstName: {
       type: String,
-      default: ''
+      default: "",
     },
     lastName: {
       type: String,
-      default: ''
+      default: "",
     },
     mobile: {
-      type: String
+      type: String,
     },
     password: {
       type: String,
       set: async (value, oldValue) => {
         if (!value) {
-          return '';
+          return "";
         }
 
         if (value === oldValue) {
@@ -51,17 +51,17 @@ const UserSchema = new Schema(
         const salt = await bcrypt.genSalt(10);
         const encryptedPassword = await bcrypt.hash(value as string, salt);
         return encryptedPassword;
-      }
+      },
     },
     mfa: {
       type: Object,
       schema: {
         preference: {
-          type: String
+          type: String,
         },
         recoveryCodes: {
           type: Array,
-          schema: [String]
+          schema: [String],
         },
         app: {
           type: Object,
@@ -69,73 +69,132 @@ const UserSchema = new Schema(
             secret: {
               type: String,
               set: (value: ValueType) =>
-                value ? encryptData(value as string) : '',
+                value ? encryptData(value as string) : "",
               get: (value: ValueType) =>
-                value ? decryptData(value as string) : ''
+                value ? decryptData(value as string) : "",
             },
             subscriber: {
-              type: String
+              type: String,
             },
             verified: {
-              type: Boolean
-            }
-          }
+              type: Boolean,
+            },
+          },
         },
         sms: {
           type: Object,
           schema: {
             subscriber: {
-              type: String
+              type: String,
             },
             verified: {
-              type: Boolean
-            }
-          }
+              type: Boolean,
+            },
+          },
         },
         email: {
           type: Object,
           schema: {
             subscriber: {
-              type: String
+              type: String,
             },
             verified: {
-              type: Boolean
-            }
-          }
-        }
+              type: Boolean,
+            },
+          },
+        },
+        passkey: {
+          type: Object,
+          schema: {
+            currentChallenge: {
+              type: String,
+              set: (value: ValueType) =>
+                value ? encryptData(value as string) : "",
+              get: (value: ValueType) =>
+                value ? decryptData(value as string) : "",
+            },
+            credentials: {
+              type: Array,
+              schema: [
+                {
+                  type: Object,
+                  schema: {
+                    id: { type: String },
+                    publicKey: {
+                      type: Buffer,
+                    },
+                    counter: { type: Number },
+                    deviceName: { type: String },
+                  },
+                },
+              ],
+            },
+            verified: {
+              type: Boolean,
+            },
+          },
+        },
       },
       default: {
-        preference: '',
+        preference: "",
         recoveryCodes: [],
         app: {
-          secret: '',
-          subscriber: '',
-          verified: false
+          secret: "",
+          subscriber: "",
+          verified: false,
         },
         sms: {
-          subscriber: '',
-          verified: false
+          subscriber: "",
+          verified: false,
         },
         email: {
-          subscriber: '',
-          verified: false
-        }
-      }
+          subscriber: "",
+          verified: false,
+        },
+        passkey: {
+          currentChallenge: "",
+          credentials: [],
+          verified: false,
+        },
+      },
     },
     lastLoggedIn: {
       type: Number,
-      default: 0
+      default: 0,
     },
     failedLogins: { type: Number, default: 0 },
     suspended: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
+    currentChallenge: {
+      type: String,
+      default: "",
+      set: (value: ValueType) => (value ? encryptData(value as string) : ""),
+      get: (value: ValueType) => (value ? decryptData(value as string) : ""),
+    },
+    credentials: {
+      type: Array,
+      schema: [
+        {
+          type: Object,
+          schema: {
+            id: { type: String },
+            publicKey: {
+              type: Buffer,
+            },
+            counter: { type: Number },
+            deviceName: { type: String },
+          },
+        },
+      ],
+      default: [],
+    },
   },
   {
-    timestamps: true
-  }
+    timestamps: true,
+  },
 );
-const User = model('User', UserSchema);
+const User = model("User", UserSchema);
 
 export default User;

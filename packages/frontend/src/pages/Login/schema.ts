@@ -1,4 +1,4 @@
-import * as yup from 'yup';
+import * as yup from "yup";
 
 const schema = yup
   .object({
@@ -7,7 +7,7 @@ const schema = yup
     mfaType: yup.string(),
     otp: yup
       .string()
-      .when(['mfaType', 'loginWithRecoveryCode'], (fields, schema) => {
+      .when(["mfaType", "loginWithRecoveryCode"], (fields, schema) => {
         const [mfaType, loginWithRecoveryCode] = fields;
         return mfaType && !loginWithRecoveryCode
           ? schema.required().min(6)
@@ -16,13 +16,13 @@ const schema = yup
     loginWithRecoveryCode: yup.boolean().required(),
     recoveryCode: yup
       .string()
-      .when('loginWithRecoveryCode', (fields, schema) => {
+      .when("loginWithRecoveryCode", (fields, schema) => {
         const [loginWithRecoveryCode] = fields;
         return loginWithRecoveryCode
-          ? schema.required('Recovery code is required')
+          ? schema.required("Recovery code is required")
           : schema;
       }),
-    resetMfa: yup.boolean()
+    resetMfa: yup.boolean(),
   })
   .required();
 

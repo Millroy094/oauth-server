@@ -1,5 +1,5 @@
-import { AxiosResponse } from 'axios';
-import axios from '../../utils/axios-instance';
+import { AxiosResponse } from "axios";
+import axios from "../../utils/axios-instance";
 
 type CreateClientArgs = {
   clientId: string;
@@ -12,15 +12,15 @@ type CreateClientArgs = {
 const createClient = async (args: CreateClientArgs): Promise<AxiosResponse> => {
   const { clientId, clientName, scopes, grants, redirectUris } = args;
   const response = await axios.post(
-    '/api/admin/clients/new',
+    "/api/admin/clients/new",
     {
       clientId,
       clientName,
       scopes,
       grants,
-      redirectUris
+      redirectUris,
     },
-    { withCredentials: true }
+    { withCredentials: true },
   );
 
   return response;

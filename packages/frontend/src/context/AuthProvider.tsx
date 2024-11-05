@@ -1,11 +1,11 @@
-import { useContext, createContext, useState, FC, ReactElement } from 'react';
-import authenticateUser from '../api/user/authenticate-user';
-import { useLocation, useNavigate } from 'react-router-dom';
-import useFeedback from '../hooks/useFeedback';
-import logoutUser from '../api/user/logout-user';
-import { useSnackbar } from 'notistack';
-import isAuthenticated from '../api/user/is-authenticated-user';
-import { ILoginFormInput } from '../pages/Login/types';
+import { useContext, createContext, useState, FC, ReactElement } from "react";
+import authenticateUser from "../api/user/authenticate-user";
+import { useLocation, useNavigate } from "react-router-dom";
+import useFeedback from "../hooks/useFeedback";
+import logoutUser from "../api/user/logout-user";
+import { useSnackbar } from "notistack";
+import isAuthenticated from "../api/user/is-authenticated-user";
+import { ILoginFormInput } from "../pages/Login/types";
 
 interface IUser {
   userId: string;
@@ -32,14 +32,14 @@ const AuthProvider: FC<{ children: ReactElement }> = ({ children }) => {
   const login = async (data: ILoginFormInput): Promise<void> => {
     try {
       const response = await authenticateUser({
-        ...data
+        ...data,
       });
       setUser(response.data.user);
-      navigate('/account');
+      navigate("/account");
     } catch (err) {
       feedbackAxiosError(
         err,
-        'Failed to authenticate credentials, please try again.'
+        "Failed to authenticate credentials, please try again.",
       );
     }
   };
@@ -48,12 +48,12 @@ const AuthProvider: FC<{ children: ReactElement }> = ({ children }) => {
     try {
       const response = await isAuthenticated();
       setUser(response.data.user);
-      navigate('/account');
+      navigate("/account");
     } catch (err) {
       await logout();
-      if (pathname !== '/') {
-        enqueueSnackbar('Session expired, please login again', {
-          variant: 'error'
+      if (pathname !== "/") {
+        enqueueSnackbar("Session expired, please login again", {
+          variant: "error",
         });
       }
     }
@@ -63,9 +63,9 @@ const AuthProvider: FC<{ children: ReactElement }> = ({ children }) => {
     try {
       await logoutUser();
       setUser(null);
-      navigate('/login');
+      navigate("/login");
     } catch (err) {
-      feedbackAxiosError(err, 'Failed to logout user, please try again.');
+      feedbackAxiosError(err, "Failed to logout user, please try again.");
     }
   };
 
@@ -78,6 +78,7 @@ const AuthProvider: FC<{ children: ReactElement }> = ({ children }) => {
 
 export default AuthProvider;
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => {
   return useContext(AuthContext);
 };

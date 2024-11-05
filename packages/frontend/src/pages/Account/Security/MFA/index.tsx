@@ -1,5 +1,6 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useEffect, useState } from "react";
 import {
+  Box,
   Button,
   Card,
   CardActions,
@@ -10,15 +11,16 @@ import {
   Paper,
   Switch,
   Tooltip,
-  Typography
-} from '@mui/material';
-import getMFASettings from '../../../../api/user/get-mfa-settings';
-import useFeedback from '../../../../hooks/useFeedback';
-import SetupModal from './SetupModal';
-import changeMFAPreference from '../../../../api/user/change-mfa-preference';
-import resetMfa from '../../../../api/user/reset-mfa';
-import { NewReleases, Verified } from '@mui/icons-material';
-import RecoveryCodes from './RecoveryCodes';
+  Typography,
+} from "@mui/material";
+import getMFASettings from "../../../../api/user/get-mfa-settings";
+import useFeedback from "../../../../hooks/useFeedback";
+import SetupModal from "./SetupModal";
+import changeMFAPreference from "../../../../api/user/change-mfa-preference";
+import resetMfa from "../../../../api/user/reset-mfa";
+import { NewReleases, Verified } from "@mui/icons-material";
+import RecoveryCodes from "./RecoveryCodes";
+import Passkeys from "./Passkeys";
 
 interface IMFAType {
   type: string;
@@ -32,10 +34,10 @@ interface ISetupModal {
   defaultValue: string;
 }
 
-const setupModalDefault = { open: false, type: '', defaultValue: '' };
+const setupModalDefault = { open: false, type: "", defaultValue: "" };
 
 const MFA: FC = () => {
-  const [mfaPreference, setMfaPreference] = useState<string>('');
+  const [mfaPreference, setMfaPreference] = useState<string>("");
   const [recoveryCodeCount, setRecoveryCodeCount] = useState<number>(0);
   const [mfaTypes, setMfaTypes] = useState<IMFAType[]>([]);
   const [setupModal, setSetupModal] = useState<ISetupModal>(setupModalDefault);
@@ -50,7 +52,7 @@ const MFA: FC = () => {
     } catch (err) {
       feedbackAxiosError(
         err,
-        'There was an issue retrieving mfa setting, please try again'
+        "There was an issue retrieving mfa setting, please try again",
       );
     }
   };
@@ -62,12 +64,12 @@ const MFA: FC = () => {
       if (checked) {
         await changeMFAPreference(name);
       } else {
-        await changeMFAPreference('');
+        await changeMFAPreference("");
       }
       await fetchMFASettings();
-      feedback('Successfully updated MFA preference', 'success');
+      feedback("Successfully updated MFA preference", "success");
     } catch (err) {
-      feedbackAxiosError(err, 'There was an issue changing MFA preference');
+      feedbackAxiosError(err, "There was an issue changing MFA preference");
     }
   };
 
@@ -80,100 +82,112 @@ const MFA: FC = () => {
     try {
       await resetMfa(type);
       await fetchMFASettings();
-      feedback('Successfully resetted MFA', 'success');
+      feedback("Successfully resetted MFA", "success");
     } catch (err) {
-      feedbackAxiosError(err, 'Failed to reset MFA');
+      feedbackAxiosError(err, "Failed to reset MFA");
     }
   };
 
   useEffect(() => {
     fetchMFASettings();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <>
       <Card elevation={0}>
-        <CardHeader title='Mulit-Factor Authentication' />
+        <CardHeader title="Mulit-Factor Authentication" />
         <CardContent>
-          <Typography variant='body1'>
+          <Typography variant="body1">
             You can make your login more secure by enabling 2FA for your
             account. Once enabled you will be required to through an additional
             step of verification whilst logging in.
           </Typography>
         </CardContent>
         <CardActions
-          sx={{ display: 'flex', justifyContent: 'flex-end', padding: '10px' }}
+          sx={{ display: "flex", justifyContent: "flex-end", padding: "10px" }}
         >
           <Grid container spacing={2}>
             {mfaTypes.map((mfaType) => (
               <Grid item key={mfaType.type}>
                 <Paper
                   elevation={2}
-                  sx={{ p: '10px', width: '240px', height: '120px' }}
+                  sx={{ p: "10px", width: "240px", height: "120px" }}
                 >
                   <Grid
                     container
-                    direction='column'
-                    justifyContent='space-between'
-                    height='100%'
+                    direction="column"
+                    justifyContent="space-between"
+                    height="100%"
                   >
                     <Grid
                       item
                       container
-                      alignItems='center'
-                      justifyContent='space-between'
+                      alignItems="center"
+                      justifyContent="space-between"
                     >
                       <Grid item>
-                        <Typography variant='body1'>{`${mfaType.type.toUpperCase()} MFA`}</Typography>
+                        <Typography variant="body1">{`${mfaType.type.toUpperCase()} MFA`}</Typography>
                       </Grid>
                       <Grid item>
                         <Switch
-                          size='small'
+                          size="small"
                           disabled={!mfaType.verified}
-                          color='error'
+                          color="error"
                           value={mfaType.type}
                           checked={mfaPreference === mfaType.type}
                           onChange={onChange}
                         />
                       </Grid>
                     </Grid>
-                    <Grid item sx={{ p: '10px 0' }}>
-                      <Grid container item alignContent='center' spacing={1}>
+                    <Grid item sx={{ p: "10px 0" }}>
+                      <Grid container item alignContent="center" spacing={1}>
                         <Grid item>
-                          <Typography variant='subtitle2'>
+                          <Typography variant="subtitle2">
                             Subscriber
                           </Typography>
                         </Grid>
                         {mfaType.subscriber && mfaType.verified && (
                           <Grid item>
-                            <Tooltip title='Verified'>
-                              <Verified fontSize='small' color='success' />
+                            <Tooltip title="Verified">
+                              <Verified fontSize="small" color="success" />
                             </Tooltip>
                           </Grid>
                         )}
                         {mfaType.subscriber && !mfaType.verified && (
                           <Grid item>
-                            <Tooltip title='Not Verified'>
-                              <NewReleases fontSize='small' color='error' />
+                            <Tooltip title="Not Verified">
+                              <NewReleases fontSize="small" color="error" />
                             </Tooltip>
                           </Grid>
                         )}
                       </Grid>
-                      <Typography variant='caption'>
-                        {mfaType.subscriber || 'None'}
-                      </Typography>
+                      <Tooltip title={mfaType.subscriber || "None"}>
+                        <Box
+                          sx={{
+                            textOverflow: "ellipsis",
+                            overflow: "hidden",
+                            width: "240px",
+                            whiteSpace: "normal",
+                          }}
+                        >
+                          <Typography noWrap variant="caption">
+                            {mfaType.subscriber || "None"}
+                          </Typography>
+                        </Box>
+                      </Tooltip>
                     </Grid>
-                    <Grid container item justifyContent='flex-end'>
+                    <Grid container item justifyContent="flex-end">
                       {!mfaType.verified ? (
                         <Button
-                          variant='outlined'
-                          color='success'
-                          size='small'
+                          variant="outlined"
+                          color="success"
+                          size="small"
                           onClick={() =>
                             setSetupModal({
                               open: true,
                               type: mfaType.type,
-                              defaultValue: mfaType.subscriber || ''
+                              defaultValue: mfaType.subscriber || "",
                             })
                           }
                         >
@@ -181,9 +195,9 @@ const MFA: FC = () => {
                         </Button>
                       ) : (
                         <Button
-                          variant='outlined'
-                          color='success'
-                          size='small'
+                          variant="outlined"
+                          color="success"
+                          size="small"
                           onClick={() => onReset(mfaType.type)}
                         >
                           Reset MFA
@@ -197,7 +211,11 @@ const MFA: FC = () => {
           </Grid>
         </CardActions>
       </Card>
-      <Divider sx={{ m: '30px 10px' }} />
+      <Passkeys
+        mfaPreference={mfaPreference}
+        onMfaPreferenceChange={onChange}
+      />
+      <Divider sx={{ m: "30px 10px" }} />
       <RecoveryCodes
         recoveryCodeCount={recoveryCodeCount}
         fetchMFASettings={fetchMFASettings}
@@ -214,4 +232,5 @@ const MFA: FC = () => {
   );
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export default MFA;

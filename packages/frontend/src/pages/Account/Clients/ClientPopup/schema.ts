@@ -1,4 +1,4 @@
-import * as yup from 'yup';
+import * as yup from "yup";
 
 const schema = yup
   .object({
@@ -10,12 +10,12 @@ const schema = yup
       .array()
       .of(
         yup.object({
-          id: yup.string().required('redirect uri id is required'),
-          value: yup.string().url('url is invalid').required('url is required')
-        })
+          id: yup.string().required("redirect uri id is required"),
+          value: yup.string().url("url is invalid").required("url is required"),
+        }),
       )
-      .min(1, 'atleast one url should be present')
-      .required('url is required')
+      .min(1, "atleast one url should be present")
+      .required("url is required"),
   })
   .required();
 

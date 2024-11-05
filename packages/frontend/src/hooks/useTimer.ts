@@ -1,10 +1,10 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from "react";
 
 function useTimer() {
   const [timer, setTimer] = useState(60);
   const timeOutCallback = useCallback(
     () => setTimer((currentTime) => (currentTime > 0 ? currentTime - 1 : 0)),
-    []
+    [],
   );
   useEffect(() => {
     if (timer > 0) {

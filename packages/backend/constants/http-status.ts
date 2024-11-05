@@ -7,7 +7,7 @@ const HTTP_STATUSES = {
   unauthorised: 401,
   forbidden: 403,
   notFound: 404,
-  serverError: 500
+  serverError: 500,
 };
 
 export default HTTP_STATUSES;
