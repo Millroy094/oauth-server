@@ -61,3 +61,15 @@ resource "aws_dynamodb_table" "otp_dynamodb_table" {
     type = "S"
   }
 }
+
+resource "aws_dynamodb_table" "challenge_dynamodb_table" {
+  name           = "Challenge"
+  hash_key       = "id"
+  billing_mode   = "PROVISIONED"
+  read_capacity  = 5
+  write_capacity = 5
+  attribute {
+    name = "id"
+    type = "S"
+  }
+}

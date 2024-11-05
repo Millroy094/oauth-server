@@ -50,7 +50,7 @@ resource "aws_iam_policy" "oauth_server_dynamodb_access_policy" {
     Statement = [{
       Action   = ["dynamodb:*"]
       Effect   = "Allow"
-      Resource = [aws_dynamodb_table.user_dynamodb_table.arn, aws_dynamodb_table.client_dynamodb_table.arn, aws_dynamodb_table.oidc_store_dynamodb_table.arn, aws_dynamodb_table.otp_dynamodb_table.arn]
+      Resource = [aws_dynamodb_table.user_dynamodb_table.arn, aws_dynamodb_table.client_dynamodb_table.arn, aws_dynamodb_table.oidc_store_dynamodb_table.arn, aws_dynamodb_table.otp_dynamodb_table.arn, aws_dynamodb_table.challenge_dynamodb_table.arn]
     }]
   })
 }
