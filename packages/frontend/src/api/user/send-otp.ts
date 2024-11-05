@@ -1,5 +1,5 @@
-import { AxiosResponse } from 'axios';
-import axios from '../../utils/axios-instance';
+import { AxiosResponse } from "axios";
+import axios from "../../utils/axios-instance";
 
 interface ISendMFAOtpArgs {
   type: string;
@@ -9,12 +9,12 @@ interface ISendMFAOtpArgs {
 const sendOtp = async (args: ISendMFAOtpArgs): Promise<AxiosResponse> => {
   const { type, email } = args;
   const response = await axios.post(
-    '/api/user/send-otp',
+    "/api/user/send-otp",
     {
       type,
-      email
+      email,
     },
-    { withCredentials: true }
+    { withCredentials: true },
   );
 
   return response;

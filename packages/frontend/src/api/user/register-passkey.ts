@@ -1,23 +1,23 @@
-import { AxiosResponse } from 'axios'
-import axios from '../../utils/axios-instance'
+import { AxiosResponse } from "axios";
+import axios from "../../utils/axios-instance";
 
 type registerPasskeyArgs = {
-  userId: string
-}
+  userId: string;
+};
 
 const registerPasskey = async (
   args: registerPasskeyArgs,
 ): Promise<AxiosResponse> => {
-  const { userId } = args
+  const { userId } = args;
   const response = await axios.post(
-    '/api/user/register-passkey',
+    "/api/user/register-passkey",
     {
       userId,
     },
     { withCredentials: true },
-  )
+  );
 
-  return response
-}
+  return response;
+};
 
-export default registerPasskey
+export default registerPasskey;

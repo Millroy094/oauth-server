@@ -1,5 +1,5 @@
-import { AxiosResponse } from 'axios';
-import axios from '../../utils/axios-instance';
+import { AxiosResponse } from "axios";
+import axios from "../../utils/axios-instance";
 
 type updateUserProfileDetailsArgs = {
   email: string;
@@ -10,19 +10,19 @@ type updateUserProfileDetailsArgs = {
 };
 
 const updateUserProfileDetails = async (
-  args: updateUserProfileDetailsArgs
+  args: updateUserProfileDetailsArgs,
 ): Promise<AxiosResponse> => {
   const { email, emailVerified, firstName, lastName, mobile } = args;
   const response = await axios.put(
-    '/api/user/profile-details',
+    "/api/user/profile-details",
     {
       email,
       emailVerified,
       firstName,
       lastName,
-      mobile
+      mobile,
     },
-    { withCredentials: true }
+    { withCredentials: true },
   );
 
   return response;

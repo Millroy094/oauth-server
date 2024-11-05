@@ -4,10 +4,10 @@ import {
   FormHelperText,
   InputLabel,
   MenuItem,
-  Select
-} from '@mui/material';
-import { FC } from 'react';
-import { Control, Controller, FieldErrors } from 'react-hook-form';
+  Select,
+} from "@mui/material";
+import { FC } from "react";
+import { Control, Controller, FieldErrors } from "react-hook-form";
 
 type ControlledSelectOption = {
   label: string;
@@ -52,7 +52,7 @@ const ControlledSelect: FC<ControlledSelectProps> = (props) => {
       />
       {errors && errors[name] && (
         <FormHelperText error>
-          {(errors[name]?.message as string) ?? ''}
+          {(errors[name]?.message as string) ?? ""}
         </FormHelperText>
       )}
     </FormControl>

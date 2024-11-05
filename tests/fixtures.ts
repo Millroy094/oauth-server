@@ -1,5 +1,5 @@
-import { test as base } from '@playwright/test';
-import { MailSlurp } from 'mailslurp-client';
+import { test as base } from "@playwright/test";
+import { MailSlurp } from "mailslurp-client";
 
 const apiKey = process.env.MAILSLURP_API_KEY!;
 
@@ -15,17 +15,17 @@ export const test = base.extend<
       const mailslurp = new MailSlurp({ apiKey });
       await use(mailslurp);
     },
-    { scope: 'worker' }
+    { scope: "worker" },
   ],
 
   inbox: [
     async ({ mailslurp }, use) => {
       const { id, emailAddress } = await mailslurp.createInbox();
-      const password = 'Password123!';
+      const password = "Password123!";
       await use({ id, emailAddress, password });
     },
-    { scope: 'worker' }
-  ]
+    { scope: "worker" },
+  ],
 });
 
-export { expect } from '@playwright/test';
+export { expect } from "@playwright/test";
