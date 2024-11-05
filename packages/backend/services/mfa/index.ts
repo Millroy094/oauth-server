@@ -110,7 +110,7 @@ class MFAService {
 
     user.mfa.passkey = {
       credentials: [],
-      currentChallenge: "",
+      verified: false,
     };
 
     await user.save();
@@ -224,6 +224,11 @@ class MFAService {
 
       user.mfa.email = {
         subscriber: "",
+        verified: false,
+      };
+
+      user.mfa.passkey = {
+        credentials: [],
         verified: false,
       };
     }

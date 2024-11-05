@@ -54,16 +54,8 @@ router.post(
   authenticate,
   PasskeyController.verifyPasskeyRegistration,
 );
-router.post(
-  "/login-with-passkey",
-  authenticate,
-  PasskeyController.loginWithPasskey,
-);
-router.post(
-  "/verify-login-passkey",
-  authenticate,
-  PasskeyController.verifyLoginPasskey,
-);
+router.post("/login-with-passkey", PasskeyController.loginWithPasskey);
+router.post("/verify-passkey-login", PasskeyController.verifyLoginPasskey);
 router.post(
   "/check-passkey-already-exists",
   authenticate,
