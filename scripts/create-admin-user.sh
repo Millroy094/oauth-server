@@ -102,6 +102,12 @@ if [ -z "$(echo $existing_item | jq -r '.Items[]?')" ]; then
                 \"subscriber\": {\"S\": \"\"},
                 \"verified\": {\"BOOL\": false}
               }
+            },
+            \"passkey\": {
+              \"M\": {
+                \"crendentails\": {\"L\": []},
+                \"verified\": {\"BOOL\": false}
+              }
             }
           }
         }
