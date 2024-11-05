@@ -16,6 +16,12 @@
     "*.{js,ts,jsx,tsx}": [
       "eslint --fix",
       "prettier --write"
+    ],
+    "*.tf": [
+      "prettier --write"
+    ],
+    "./helm/**/*": [
+      "helm lint ./helm"
     ]
   },
   "keywords": [],
