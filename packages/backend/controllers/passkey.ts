@@ -5,12 +5,12 @@ import {
   verifyRegistrationResponse,
 } from '@simplewebauthn/server';
 import { Request, Response } from 'express';
-import User from '../models/User';
-import logger from '../utils/logger';
-import config from '../support/env-config';
-import HTTP_STATUSES from '../constants/http-status';
-import UserService from '../services/user';
-import PasskeyService from '../services/passkey';
+import User from '../models/User.ts';
+import logger from '../utils/logger.ts';
+import config from '../support/env-config.ts';
+import HTTP_STATUSES from '../constants/http-status.ts';
+import UserService from '../services/user.ts';
+import PasskeyService from '../services/passkey.ts';
 
 class PasskeyController {
   public static async getPasskeys(req: Request, res: Response) {
