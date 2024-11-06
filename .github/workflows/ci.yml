@@ -3,10 +3,36 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - "main"
+      - 'main'
+    paths:
+      - 'packages/frontend/**'
+      - 'packages/backend/**'
     tags:
-      - "v[0-9]+.[0-9]+.[0-9]+"
+      - 'v[0-9]+.[0-9]+.[0-9]+'
 jobs:
+  release:
+    runs-on: ubuntu-latest
+    outputs:
+      new_version: ${{ steps.semantic_release.outputs.new_version }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Semantic Release
+        id: semantic_release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          VERSION=$(npx semantic-release --dry-run | grep -oP 'next release version is \K[0-9.]+')
+          echo "new_version=$VERSION" >> $GITHUB_ENV
   unit-tests:
     runs-on: ubuntu-latest
     environment: Production
@@ -22,11 +48,11 @@ jobs:
       - name: Use Node.js 20
         uses: actions/setup-node@v4
         with:
-          node-version: "22.11.0"
+          node-version: '22.11.0'
           cache: npm
-          cache-dependency-path: "**/package-lock.json"
-      - name: "run ${{matrix.component}} unit tests"
-        working-directory: "./packages/${{matrix.component}}"
+          cache-dependency-path: '**/package-lock.json'
+      - name: 'run ${{matrix.component}} unit tests'
+        working-directory: './packages/${{matrix.component}}'
         run: |
           npm ci
           npm run test:unit
@@ -36,7 +62,8 @@ jobs:
     runs-on: ubuntu-latest
     environment: Production
     env:
-      IMG_NAME: "ghcr.io/${{ github.repository }}"
+      IMG_NAME: 'ghcr.io/${{ github.repository }}'
+      VERSION: ${{ needs.release.outputs.new_version }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -52,9 +79,8 @@ jobs:
         with:
           images: ${{ env.IMG_NAME }}
           tags: |
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=raw,value={{sha}},enable=${{ github.ref_type != 'tag' }}
+            type=raw,value=${{ env.VERSION }}
+            type=raw,value=${{ github.sha }}
       - name: Build and push Docker image
         uses: docker/build-push-action@v6
         with:
