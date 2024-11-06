@@ -43,7 +43,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.WORKFLOW_RELEASE_GITHUB_TOKEN }}
         run: |
           VERSION=$(npx semantic-release | grep -oP 'next release version is \K[0-9.]+')
-          echo "new_version=$VERSION" >> $GITHUB_OUTPUT
+          echo "new_version=${VERSION}" >> $GITHUB_OUTPUT
   unit-tests:
     runs-on: ubuntu-latest
     environment: Production
