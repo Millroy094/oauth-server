@@ -14,3 +14,6 @@ The code structure itself is divided as follows:
 4. Tests: This is the Playwright E2E test suite covering the admin, user registration, and oidc flow testing.
 5. Scripts: These are bash scripts that used by Github actions.
 6. Github Actions: Consisting of the CI that runs unit tests against the frontend & backend and builds an artefact. Then there is CD that provisions the infrastructure, installs the helm charts, and then runs E2E tests against the deployed application and finally there is a destroy workflow to destroy the application and infrastructure with it.
+
+## Features
+From a feature stand point of view its an OIDC server providing auth code with PKCE, refresh token, client credential flows. Besides that it supports user management, client management features for administrators whilst standard features included session management, mulit-factor authenication support via sms, email, authenticator app, and also passkey. 
