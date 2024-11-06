@@ -30,7 +30,7 @@ jobs:
       - name: Run Semantic Release
         id: semantic_release
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.WORKFLOW_RELEASE_GITHUB_TOKEN }}
         run: |
           VERSION=$(npx semantic-release --dry-run | grep -oP 'next release version is \K[0-9.]+')
           echo "new_version=$VERSION" >> $GITHUB_ENV
