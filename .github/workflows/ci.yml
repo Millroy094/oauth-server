@@ -59,7 +59,7 @@ jobs:
           npm run test:unit
   build:
     name: Build & push docker image
-    needs: unit-tests
+    needs: [release, unit-tests]
     runs-on: ubuntu-latest
     environment: Production
     env:
