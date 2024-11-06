@@ -16,7 +16,7 @@ const refreshTokenSecret = config.get('authentication.refreshTokenSecret');
 const refreshTokenExpiry = config.get('authentication.accessTokenExpiry');
 
 const generateNewTokensFromRefreshToken = (
-  refreshToken: any,
+  refreshToken: string,
   req: Request,
   res: Response,
 ) => {
@@ -88,13 +88,13 @@ const authenticate = async (
     const userAccount = await UserService.getUserById(req.user?.userId ?? '');
 
     if (userAccount.suspended) {
-      throw new Error('Authenication failed! User is suspened');
+      throw new Error('Authentication failed! User is suspended');
     }
     return next();
   } catch (err) {
     logger.error((err as Error).message);
     res.status(401).json({
-      error: 'Authenication failed, please check if you are still logged in',
+      error: 'Authentication failed, please check if you are still logged in',
     });
   }
 };

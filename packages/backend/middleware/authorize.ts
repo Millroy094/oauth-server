@@ -32,6 +32,7 @@ const authorize = (permissions: string[] | undefined) => {
           error:
             "Authorisation failed! user doesn't have sufficient permissions to carry out this task",
         });
+        return;
       }
     }
     next();
