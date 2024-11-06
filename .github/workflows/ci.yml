@@ -91,7 +91,7 @@ jobs:
           images: ${{ env.IMG_NAME }}
           tags: |
             type=raw,value=${{ env.VERSION }}
-            type=raw,value=${{ github.sha }}
+            type=raw,value=${{ github.sha }},enable=${{ github.ref_type != 'tag' }}
       - name: Build and push Docker image
         uses: docker/build-push-action@v6
         with:
