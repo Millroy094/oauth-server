@@ -42,8 +42,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.WORKFLOW_RELEASE_GITHUB_TOKEN }}
         run: |
-          VERSION=$(npx semantic-release | grep -oP 'next release version is \K[0-9.]+')
-          echo "new_version=${VERSION}" >> $GITHUB_OUTPUT
+          chmod +x ./scripts/update_version.sh
+          ./scripts/update_version.sh
   unit-tests:
     runs-on: ubuntu-latest
     environment: Production
