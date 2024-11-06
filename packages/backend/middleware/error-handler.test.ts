@@ -8,7 +8,7 @@ jest.mock('../constants/http-status', () => ({
   serverError: 500,
 }));
 
-describe('error Handler middleware', () => {
+describe('errorHandler middleware', () => {
   let req: Partial<Request>;
   let res: Partial<Response>;
 

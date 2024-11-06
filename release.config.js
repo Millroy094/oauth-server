@@ -1,4 +1,5 @@
 module.exports = {
+  repositoryUrl: 'https://github.com/Millroy094/oauth-server.git',
   branches: ['main'],
   plugins: [
     '@semantic-release/commit-analyzer',
