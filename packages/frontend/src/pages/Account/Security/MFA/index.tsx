@@ -214,6 +214,7 @@ const MFA: FC = () => {
       <Passkeys
         mfaPreference={mfaPreference}
         onMfaPreferenceChange={onChange}
+        fetchMFASettings={fetchMFASettings}
       />
       <Divider sx={{ m: '30px 10px' }} />
       <RecoveryCodes

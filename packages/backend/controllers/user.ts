@@ -88,7 +88,6 @@ class UserController {
           message: 'Login Successful',
         });
     } catch (err) {
-      console.log(err);
       logger.error((err as Error).message);
       res
         .status(HTTP_STATUSES.unauthorised)
@@ -124,7 +123,7 @@ class UserController {
   public static async getProfileDetails(req: Request, res: Response) {
     try {
       const { user } = req;
-      const { userId } = user as any;
+      const { userId } = user as { userId: string };
 
       const userRecord = await UserService.getUserById(userId);
       res.status(HTTP_STATUSES.ok).json({ user: userRecord });
@@ -139,7 +138,7 @@ class UserController {
   public static async updateProfileDetails(req: Request, res: Response) {
     try {
       const { user } = req;
-      const { userId } = user as any;
+      const { userId } = user as { userId: string };
       await UserService.updateUser(userId, req.body);
       res
         .status(HTTP_STATUSES.ok)
@@ -155,7 +154,7 @@ class UserController {
   public static async getSessions(req: Request, res: Response) {
     try {
       const { user } = req;
-      const { userId } = user as any;
+      const { userId } = user as { userId: string };
       const sessions = await OIDCService.getSessions(userId);
       res.status(HTTP_STATUSES.ok).json({ sessions });
     } catch (err) {
@@ -169,7 +168,7 @@ class UserController {
   public static async deleteAllSessions(req: Request, res: Response) {
     try {
       const { user } = req;
-      const { userId } = user as any;
+      const { userId } = user as { userId: string };
       await OIDCService.deleteAllSessions(userId);
       res
         .status(HTTP_STATUSES.ok)
@@ -200,7 +199,7 @@ class UserController {
   public static async getMFASettings(req: Request, res: Response) {
     try {
       const { user } = req;
-      const { userId } = user as any;
+      const { userId } = user as { userId: string };
       const settings = await MFAService.getMFASetting(userId);
       res.status(HTTP_STATUSES.ok).json({ settings });
     } catch (err) {
@@ -213,7 +212,7 @@ class UserController {
   public static async setupMFA(req: Request, res: Response) {
     try {
       const { user } = req;
-      const { userId } = user as any;
+      const { userId } = user as { userId: string };
       const { type, subscriber } = req.body;
       const result = await MFAService.setupMFA(userId, type, subscriber);
       res
@@ -230,7 +229,7 @@ class UserController {
   public static async verifyMFA(req: Request, res: Response) {
     try {
       const { user } = req;
-      const { userId } = user as any;
+      const { userId } = user as { userId: string };
       const { type, otp } = req.body;
       await MFAService.verifyMFA(userId, type, otp);
       res
@@ -245,7 +244,7 @@ class UserController {
   public static async resetMFA(req: Request, res: Response) {
     try {
       const { user } = req;
-      const { userId } = user as any;
+      const { userId } = user as { userId: string };
       const { type } = req.body;
       await MFAService.resetMFAByType(userId, type);
       res.status(HTTP_STATUSES.ok).json({ message: 'Successfully reset MFA' });
@@ -260,7 +259,7 @@ class UserController {
   public static async changeMFAPreference(req: Request, res: Response) {
     try {
       const { user } = req;
-      const { userId } = user as any;
+      const { userId } = user as { userId: string };
       const { preference } = req.body;
       await MFAService.changePreference(userId, preference);
       res
@@ -277,7 +276,7 @@ class UserController {
   public static async generateRecoveryCodes(req: Request, res: Response) {
     try {
       const { user } = req;
-      const { userId } = user as any;
+      const { userId } = user as { userId: string };
 
       const recoveryCodes = await MFAService.generateRecoveryCodes(userId);
       res.status(HTTP_STATUSES.ok).json({
@@ -320,6 +319,7 @@ class UserController {
       );
       res.status(HTTP_STATUSES.ok).json(loginConfiguration);
     } catch (err) {
+      console.log(err);
       logger.error((err as Error).message);
       res
         .status(HTTP_STATUSES.notFound)

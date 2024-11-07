@@ -58,10 +58,11 @@ interface PasskeysProps {
   onMfaPreferenceChange: (
     e: React.ChangeEvent<HTMLInputElement>,
   ) => Promise<void>;
+  fetchMFASettings: () => Promise<void>;
 }
 
 const Passkeys: FC<PasskeysProps> = (props) => {
-  const { mfaPreference, onMfaPreferenceChange } = props;
+  const { mfaPreference, onMfaPreferenceChange, fetchMFASettings } = props;
   const [devices, setDevices] = useState([]);
   const [passkeyVerified, setPasskeyVerified] = useState(false);
 
@@ -90,6 +91,7 @@ const Passkeys: FC<PasskeysProps> = (props) => {
         'success',
       );
       await fetchPasskeys(userId);
+      await fetchMFASettings();
     } catch (err) {
       feedbackAxiosError(
         err,
@@ -125,6 +127,7 @@ const Passkeys: FC<PasskeysProps> = (props) => {
       }
       feedback('Passkey registration successful', 'success');
       await fetchPasskeys(userId);
+      await fetchMFASettings();
     } catch (error) {
       feedback(
         `An error occurred during passkey registration: ${(error as Error).message}`,
