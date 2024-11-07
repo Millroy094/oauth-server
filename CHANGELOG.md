@@ -1,3 +1,11 @@
+## [1.0.1](https://github.com/Millroy094/oauth-server/compare/v1.0.0...v1.0.1) (2024-11-07)
+
+
+### Bug Fixes
+
+* passkey disable ([ef81c50](https://github.com/Millroy094/oauth-server/commit/ef81c50e221538165a7826681f658883d3b525b9))
+* passkey disable ([3a3a7b5](https://github.com/Millroy094/oauth-server/commit/3a3a7b5202f822f3b0da1162edcdb1d55c745f94))
+
 # 1.0.0 (2024-11-06)
 
 
