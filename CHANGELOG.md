@@ -1,3 +1,11 @@
+## [1.0.3](https://github.com/Millroy094/oauth-server/compare/v1.0.2...v1.0.3) (2024-11-07)
+
+
+### Bug Fixes
+
+* to https ([d7ed0ac](https://github.com/Millroy094/oauth-server/commit/d7ed0ac43a9da7f5e5ce4edf3e62310ce5f120f4))
+* to https ([3164dd0](https://github.com/Millroy094/oauth-server/commit/3164dd044450e15b7ecf1a5a819ce822e8e14e8e))
+
 ## [1.0.2](https://github.com/Millroy094/oauth-server/compare/v1.0.1...v1.0.2) (2024-11-07)
 
 
