@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import errorHandler from '../middleware/error-handler';
 import logger from '../utils/logger';
 import HTTP_STATUSES from '../constants/http-status';
@@ -11,6 +11,7 @@ jest.mock('../constants/http-status', () => ({
 describe('errorHandler middleware', () => {
   let req: Partial<Request>;
   let res: Partial<Response>;
+  let next: Partial<NextFunction>;
 
   beforeEach(() => {
     req = {};
@@ -18,6 +19,7 @@ describe('errorHandler middleware', () => {
       status: jest.fn().mockReturnThis(),
       send: jest.fn(),
     };
+    next = jest.fn();
   });
 
   afterEach(() => {
@@ -27,7 +29,7 @@ describe('errorHandler middleware', () => {
   it('logs the error message and sends a server error response', () => {
     const error = new Error('Test error');
 
-    errorHandler(error, req as Request, res as Response);
+    errorHandler(error, req as Request, res as Response, next as NextFunction);
 
     expect(logger.error).toHaveBeenCalledWith('Test error');
 
@@ -40,7 +42,7 @@ describe('errorHandler middleware', () => {
   it('handles cases with no error message', () => {
     const error = new Error();
 
-    errorHandler(error, req as Request, res as Response);
+    errorHandler(error, req as Request, res as Response, next as NextFunction);
 
     expect(logger.error).toHaveBeenCalledWith('');
 
