@@ -84,8 +84,9 @@ class Application {
   private openConnection(): void {
     const httpsServer = https.createServer(
       {
-        key: fs.readFileSync('./certs/key.pem'),
-        cert: fs.readFileSync('./certs/cert.pem'),
+        key: fs.readFileSync('./certs/private.key'),
+        cert: fs.readFileSync('./certs/certificate.crt'),
+        ca: fs.readFileSync('./certs/ca_bundle.crt'),
       },
       this.expressApp,
     );
