@@ -107,7 +107,7 @@ class OIDCController {
         prompt: { name, details },
         params,
         session: { accountId },
-      } = interactionDetails as any;
+      } = interactionDetails;
 
       if (name !== 'consent') {
         throw new Error('Interaction is not at consent stage');
@@ -135,7 +135,7 @@ class OIDCController {
           for (const [indicator, scopes] of Object.entries(
             details.missingResourceScopes,
           )) {
-            grant.addResourceScope(indicator, (scopes as any).join(' '));
+            grant.addResourceScope(indicator, (scopes as string[]).join(' '));
           }
         }
 

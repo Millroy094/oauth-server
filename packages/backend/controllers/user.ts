@@ -123,7 +123,7 @@ class UserController {
   public static async getProfileDetails(req: Request, res: Response) {
     try {
       const { user } = req;
-      const { userId } = user as { userId: string };
+      const { userId } = user!;
 
       const userRecord = await UserService.getUserById(userId);
       res.status(HTTP_STATUSES.ok).json({ user: userRecord });
@@ -138,7 +138,7 @@ class UserController {
   public static async updateProfileDetails(req: Request, res: Response) {
     try {
       const { user } = req;
-      const { userId } = user as { userId: string };
+      const { userId } = user!;
       await UserService.updateUser(userId, req.body);
       res
         .status(HTTP_STATUSES.ok)
@@ -154,7 +154,7 @@ class UserController {
   public static async getSessions(req: Request, res: Response) {
     try {
       const { user } = req;
-      const { userId } = user as { userId: string };
+      const { userId } = user!;
       const sessions = await OIDCService.getSessions(userId);
       res.status(HTTP_STATUSES.ok).json({ sessions });
     } catch (err) {
@@ -168,7 +168,7 @@ class UserController {
   public static async deleteAllSessions(req: Request, res: Response) {
     try {
       const { user } = req;
-      const { userId } = user as { userId: string };
+      const { userId } = user!;
       await OIDCService.deleteAllSessions(userId);
       res
         .status(HTTP_STATUSES.ok)
@@ -199,7 +199,7 @@ class UserController {
   public static async getMFASettings(req: Request, res: Response) {
     try {
       const { user } = req;
-      const { userId } = user as { userId: string };
+      const { userId } = user!;
       const settings = await MFAService.getMFASetting(userId);
       res.status(HTTP_STATUSES.ok).json({ settings });
     } catch (err) {
@@ -212,7 +212,7 @@ class UserController {
   public static async setupMFA(req: Request, res: Response) {
     try {
       const { user } = req;
-      const { userId } = user as { userId: string };
+      const { userId } = user!;
       const { type, subscriber } = req.body;
       const result = await MFAService.setupMFA(userId, type, subscriber);
       res
@@ -229,7 +229,7 @@ class UserController {
   public static async verifyMFA(req: Request, res: Response) {
     try {
       const { user } = req;
-      const { userId } = user as { userId: string };
+      const { userId } = user!;
       const { type, otp } = req.body;
       await MFAService.verifyMFA(userId, type, otp);
       res
@@ -244,7 +244,7 @@ class UserController {
   public static async resetMFA(req: Request, res: Response) {
     try {
       const { user } = req;
-      const { userId } = user as { userId: string };
+      const { userId } = user!;
       const { type } = req.body;
       await MFAService.resetMFAByType(userId, type);
       res.status(HTTP_STATUSES.ok).json({ message: 'Successfully reset MFA' });
@@ -259,7 +259,7 @@ class UserController {
   public static async changeMFAPreference(req: Request, res: Response) {
     try {
       const { user } = req;
-      const { userId } = user as { userId: string };
+      const { userId } = user!;
       const { preference } = req.body;
       await MFAService.changePreference(userId, preference);
       res
@@ -276,7 +276,7 @@ class UserController {
   public static async generateRecoveryCodes(req: Request, res: Response) {
     try {
       const { user } = req;
-      const { userId } = user as { userId: string };
+      const { userId } = user!;
 
       const recoveryCodes = await MFAService.generateRecoveryCodes(userId);
       res.status(HTTP_STATUSES.ok).json({
